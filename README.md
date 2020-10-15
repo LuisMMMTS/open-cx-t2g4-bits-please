@@ -26,10 +26,10 @@ Please contact us!
 
 Thank you!
 
-Breno Pimentel
-Diogo Rodrigues
-L. Miguel Pinto
-Nuno Oliveira
+Breno Pimentel  
+Diogo Rodrigues  
+L. Miguel Pinto  
+Nuno Oliveira  
 
 ---
 
