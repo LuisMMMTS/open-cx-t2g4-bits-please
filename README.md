@@ -1,6 +1,6 @@
-# open-cx-t2g4
+# open-cx-t2g4 Com4All
 
-Welcome to the documentation pages of the *your (sub)product name* of **openCX**!
+Welcome to the documentation pages of the *Com4All* of **openCX**!
 
 You can find here detailed about the (sub)product, hereby mentioned as module, from a high-level vision to low-level implementation decisions, a kind of Software Development Report (see [template](https://github.com/softeng-feup/open-cx/blob/master/docs/templates/Development-Report.md)), organized by discipline (as of RUP): 
 
@@ -34,11 +34,16 @@ Nuno Oliveira
 ---
 
 ## Product Vision
-Bring everyone to the conference sessions! Let the deaf hear and the mute speak
+Bring everyone to the conference sessions! Let the deaf hear and the mute speak.
 
 ---
 ## Elevator Pitch
+In every conference there are two main elements: to listen and to see. But the former is not always possible due to hearing loss.  
+The interaction between the audience and the speaker makes conferences alive, that's why whe created **Com4All**.
 
+The **Com4All** is an app that enables communication, allowing one to keep track of the session through a real-time transcription of what is being said.  
+
+This solution's main advantages are that it is free and open-source, in addiction to being simple, fast, and light resource- and data-wise.
 
 ---
 ## Requirements
