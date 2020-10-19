@@ -70,18 +70,13 @@ Briefly describe each use case mentioning the following:
 * **Alternative Flows and Exceptions**. Document other, legitimate usage scenarios that can take place within this use case, stating any differences in the sequence of steps that take place. In addition, describe any anticipated error conditions that could occur during execution of the use case, and define how the system is to respond to those conditions. 
 
 **Get talk transcript:**
-
 *  **Actor**. Attendee
-
 *  **Description**. With this use case the attendee can follow and understand the speaker by reading the transcript of the talk.
-
 *  **Preconditions and Postconditions**.  The attendee must have a valid profile and access to the conference. Then he can read the transcript of the speaker in the application.
-  
 *  **Normal Flow**. 
 	1. The attendee selects the conference.
 	2. The attendee reads the transcript with his phone.
 	3. If the user desires, he can save and read the transcript afterwards.
-
 *  **Alternative Flows and Exceptions**. 
 	1. The attendee selects the conference.
 	2. The attendee reads the transcript with his phone.
@@ -91,19 +86,18 @@ Briefly describe each use case mentioning the following:
 **Submit question:**
 * **Actor:** Attendee
 * **Description:** This use case exists so the atendee can submit questions to the speaker  
-* **Preconditions and Postconditions:** In order to submit a question the atendee must be logged in andnsigned in a specific talk  
+* **Preconditions and Postconditions:** In order to submit a question the atendee must be logged in and signed in a specific talk  
 * **Normal Flow:**
   1. The atendee writes the question to the speaker and presses the button.
-  2. The system stores the question on the server.  
+  2. The system stores the question on the server.
 * **Alternative Flows and Exceptions:**
   1. The atendee writes the question to the speaker and presses the button.
-  2. If the system can't connect to the server.
-  3. The system informs the atendee of the error
+  2. If the system can't connect to the server, a warning pops up system informs the atendee of the error
 
 #### Get question:
 *  **Actor**. Speaker.
 *  **Description**. This use case consists of receiving the question from a member of the audience in the database and converting it to speech (normally).
-*  **Preconditions and Postconditions**.  In order for this to happen, the speaker must be logged in talk's page. In the end, he can choose to simply read the question or have it be converted to speech.
+*  **Preconditions and Postconditions**. In order for this to happen, the speaker must be logged in talk's page. In the end, he can choose to simply read the question or have it be converted to speech.
 *  **Normal Flow**. 
 	1. The speaker is logged in.
 	2. He gets a question and chooses to synthesize it.
@@ -116,7 +110,7 @@ Briefly describe each use case mentioning the following:
 **Submit talk transcript:**
 * **Actor**. Speaker
 * **Description**. This use case exists so that the speaker's voice can be recorded, converted to text and the transcript uploaded to the database for the audience to read it.
-* **Preconditions and Postconditions**. To have his voice transcripted, the speaker must first join the talk's page, and have a working microphone. In the end, the speaker's voice transcript is added to the database.
+* **Preconditions and Postconditions**. To have his voice transcripted, the speaker must be logged in, be in the talk's page, and have a working microphone. In the end, the speaker's voice transcript is added to the database.
 * **Normal flow**.
     1. The speaker presses the button to start transcripting and uploading.
     2. The speaker gives the talk
