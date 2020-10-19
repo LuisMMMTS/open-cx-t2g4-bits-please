@@ -157,6 +157,66 @@ Scenario: Asking a question
 Value:  Must-Have  
 Effort: XL  
 
+#### Story X:
+As the speaker I want to manually refresh to see all available questions.
+
+**Acceptance tests**
+```gherkin
+Scenario: Automatic refresh
+  There are X unanswered questions
+  The speaker requests for a refresh to see if there are more or any questions
+  Then the unanswered questions are updated and shown if there are any
+```
+
+**Value and effort**
+Value: Must Have
+Effort: XL
+
+#### Story X:
+As the speaker I want the app to automatically refresh in an interval of time to check on any new questions.
+
+**Acceptance tests**
+```gherkin
+Scenario: Manual refresh
+  There are X unanswered questions
+  The app automatically checks for new questions after some time
+  Then the unanswered questions are updated and shown if there are any
+```
+
+**Value and effort**
+Value: Could Have
+Effort: M
+
+#### Story X:
+As the speaker I want to select a specific question and have it synthesized
+
+**Acceptance tests**
+```gherkin
+Scenario: Synthesizing a question
+  There are X unanswered questions
+  The speaker chooses a question to synthesize
+  The question is indeed synthesized and audio is played
+```
+
+**Value and effort**
+Value: Must Have
+Effort: XL
+
+#### Story X:
+As the speaker I want to delete a question after it has been answered (or not)
+
+**Acceptance tests**
+```gherkin
+Scenario: Deleting a question
+  There is a question the speaker wants to delete for any reason
+  The speaker chooses to delete the question
+  The question is removed from the database
+```
+
+**Value and effort**
+Value: Must Have
+Effort: XL
+
 
 
 **INVEST in good user stories**. 
