@@ -69,7 +69,7 @@ Briefly describe each use case mentioning the following:
 * **Normal Flow**. Provide a detailed description of the user actions and system responses that will take place during execution of the use case under normal, expected conditions. This dialog sequence will ultimately lead to accomplishing the goal stated in the use case name and description. This is best done as a numbered list of actions performed by the actor, alternating with responses provided by the system. 
 * **Alternative Flows and Exceptions**. Document other, legitimate usage scenarios that can take place within this use case, stating any differences in the sequence of steps that take place. In addition, describe any anticipated error conditions that could occur during execution of the use case, and define how the system is to respond to those conditions. 
 
-**Get talk transcript:**
+#### Get talk transcript:
 *  **Actor**. Attendee
 *  **Description**. With this use case the attendee can follow and understand the speaker by reading the transcript of the talk.
 *  **Preconditions and Postconditions**.  The attendee must have a valid profile and access to the conference. Then he can read the transcript of the speaker in the application.
@@ -83,7 +83,7 @@ Briefly describe each use case mentioning the following:
 	3. The transcript do not load properly a warning pops up.
 	4. The application is not able to transcript the audio a warning pops up.
 
-**Submit question:**
+#### Submit question:
 * **Actor:** Attendee
 * **Description:** This use case exists so the atendee can submit questions to the speaker  
 * **Preconditions and Postconditions:** In order to submit a question the atendee must be logged in and signed in a specific talk  
@@ -93,6 +93,24 @@ Briefly describe each use case mentioning the following:
 * **Alternative Flows and Exceptions:**
   1. The atendee writes the question to the speaker and presses the button.
   2. If the system can't connect to the server, a warning pops up system informs the atendee of the error
+
+#### Manage profile:
+* **Actor:** User
+* **Description:** This use case exists so the user can see and manage his/her profile settings.
+* **Preconditions and Postconditions:** In order to see his/her profile the user must be logged in.  
+* **Normal Flow:**
+  1. The user opens the profile settings.
+  2. The user sees the profile settings.
+  3. The user exits the profile settings.
+  * **OR**
+  1. The user opens the profile settings.
+  2. The user changes one of the settings.
+  3. The user saves the settings, sending them to the server.
+  4. The user exits the profile settings.
+* **Alternative Flows and Exceptions:**
+  1. The user opens the profile settings.
+  2. The user changes one of the settings.
+  3. The user saves the settings, but if the device has no Internet connection a warning pops up.
 
 #### Get question:
 *  **Actor**. Speaker.
@@ -107,7 +125,7 @@ Briefly describe each use case mentioning the following:
 	* **OR**
 	1. The speaker has some problem in his connection and a warning pops-up.
 	
-**Submit talk transcript:**
+#### Submit talk transcript:
 * **Actor**. Speaker
 * **Description**. This use case exists so that the speaker's voice can be recorded, converted to text and the transcript uploaded to the database for the audience to read it.
 * **Preconditions and Postconditions**. To have his voice transcripted, the speaker must be logged in, be in the talk's page, and have a working microphone. In the end, the speaker's voice transcript is added to the database.
