@@ -217,7 +217,25 @@ Scenario: Deleting a question
 Value: Must Have
 Effort: XL
 
+#### Story #?
 
+As an attendee in a conference, I want to be able to take notes and highlights of the speaker apresentation in my phone so that I can search than later.
+
+**User interface mockup**
+
+**Acceptance tests**
+
+```gherkin
+Scenario: Taking notes in the conference
+  When I write my note or highlighted part of the transcription
+  And I press the save button
+  The text is marked and I can consult it later
+
+```
+
+**Value and Effort**  
+Value:  Could have  
+Effort: S
 
 **INVEST in good user stories**. 
 You may add more details after, but the shorter and complete, the better. In order to decide if the user story is good, please follow the [INVEST guidelines](https://xp123.com/articles/invest-in-good-stories-and-smart-tasks/).
