@@ -157,7 +157,7 @@ Scenario: Asking a question
 	Then The server must put my question on the queue  
 ```
 	
-**Value and Effort**  
+##### Value and Effort
 Value:  Must-Have  
 Effort: XL  
 
@@ -172,8 +172,8 @@ Scenario: Automatic refresh
   Then the unanswered questions are updated and shown if there are any
 ```
 
-**Value and effort**
-Value: Must Have
+##### Value and effort
+Value: Must Have  
 Effort: XL
 
 #### Story X
@@ -187,7 +187,7 @@ Scenario: Manual refresh
   Then the unanswered questions are updated and shown if there are any
 ```
 
-**Value and effort**
+##### Value and effort
 Value: Could Have  
 Effort: M
 
@@ -225,10 +225,11 @@ Effort: XL
 
 As an attendee in a conference, I want to be able to take notes and highlights of the speaker apresentation in my phone so that I can search than later.
 
-**User interface mockup**
+##### User interface mockup
 
-**Acceptance tests**
+TODO
 
+##### Acceptance tests
 ```gherkin
 Scenario: Taking notes in the conference
   When I write my note or highlighted part of the transcription
@@ -237,21 +238,9 @@ Scenario: Taking notes in the conference
 
 ```
 
-**Value and Effort**  
+##### Value and Effort
 Value:  Could have  
 Effort: S
-
-**INVEST in good user stories**. 
-You may add more details after, but the shorter and complete, the better. In order to decide if the user story is good, please follow the [INVEST guidelines](https://xp123.com/articles/invest-in-good-stories-and-smart-tasks/).
-
-**User interface mockups**.
-After the user story text, you should add a draft of the corresponding user interfaces, a simple mockup or draft, if applicable.
-
-**Acceptance tests**.
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
-
-**Value and effort**.
-At the end, it is good to add a rough indication of the value of the user story to the customers (e.g. [MoSCoW](https://en.wikipedia.org/wiki/MoSCoW_method) method) and the team should add an estimation of the effort to implement it, for example, using t-shirt sizes (XS, S, M, L, XL).
 
 ### Domain model
 
