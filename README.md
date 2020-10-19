@@ -82,6 +82,9 @@ Briefly describe each use case mentioning the following:
 	2. The attendee reads the transcript with his phone.
 	3. The transcript do not load properly a warning pops up.
 	4. The application is not able to transcript the audio a warning pops up.
+    * **OR**
+    1. The attendee selects the conference.
+    2. If he does not have the access in this meeting, a warning pops up.
 
 #### Submit question:
 * **Actor:** Attendee
