@@ -89,20 +89,16 @@ Briefly describe each use case mentioning the following:
 	4. The application is not able to transcript the audio a warning pops up.
 
 **Submit question:**
-* **Actor:** Atendee
-
+* **Actor:** Attendee
 * **Description:** This use case exists so the atendee can submit questions to the speaker  
-
 * **Preconditions and Postconditions:** In order to submit a question the atendee must be logged in andnsigned in a specific talk  
-
 * **Normal Flow:**
   1. The atendee writes the question to the speaker and presses the button.
-  1. The system stores the question on the server.  
-  
+  2. The system stores the question on the server.  
 * **Alternative Flows and Exceptions:**
   1. The atendee writes the question to the speaker and presses the button.
-  1. If the system can't connect to the server.
-  1. The system informs the atendee of the error
+  2. If the system can't connect to the server.
+  3. The system informs the atendee of the error
 
 **Submit talk transcript:**
 * **Actor**. Speaker
