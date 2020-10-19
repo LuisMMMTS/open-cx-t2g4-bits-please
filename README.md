@@ -71,7 +71,7 @@ Briefly describe each use case mentioning the following:
 
 **Get talk transcript:**
 
-*  **Actor**. Conference attendee.
+*  **Actor**. Attendee
 
 *  **Description**. With this use case the attendee can follow and understand the speaker by reading the transcript of the talk.
 
