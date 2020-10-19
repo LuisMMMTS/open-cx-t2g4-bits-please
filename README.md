@@ -69,7 +69,20 @@ Briefly describe each use case mentioning the following:
 * **Normal Flow**. Provide a detailed description of the user actions and system responses that will take place during execution of the use case under normal, expected conditions. This dialog sequence will ultimately lead to accomplishing the goal stated in the use case name and description. This is best done as a numbered list of actions performed by the actor, alternating with responses provided by the system. 
 * **Alternative Flows and Exceptions**. Document other, legitimate usage scenarios that can take place within this use case, stating any differences in the sequence of steps that take place. In addition, describe any anticipated error conditions that could occur during execution of the use case, and define how the system is to respond to those conditions. 
 
-![Use Cases](images/use-cases.svg)
+**Submit talk transcript:**
+* **Actor**. Speaker
+* **Description**. This use case exists so that the speaker's voice can be recorded, converted to text and the transcript uploaded to the database for the audience to read it.
+* **Preconditions and Postconditions**. To have his voice transcripted, the speaker must first join the talk's page. In the end, the speaker's voice transcript is added to the database.
+* **Normal flow**.
+    1. The speaker presses the button to start transcripting and uploading.
+    2. The speaker gives the talk
+    3. The speaker presses the button again to stop transcripting and uploading.
+* **Alternative Flows and Exceptions**.
+    1. The speaker presses the button to start transcripting and uploading.
+    2. The speaker gives the talk.
+    3. If the speaker's voice is not being recorded, a warning pops up.
+    4. If the device is not connected to the Internet, a warning pops up.
+    5. The speaker presses the button again to stop transcripting and uploading.
 
 ### User stories
 This section will contain the requirements of the product described as **user stories**, organized in a global **[user story map](https://plan.io/blog/user-story-mapping/)** with **user roles** or **themes**.
