@@ -234,25 +234,6 @@ Scenario: Taking notes in the conference
 Value:  Could have  
 Effort: S
 
-#### Story #?
-
-As an attendee in a conference, I want to understand what is being said even if i dont speak the speakers language.
-
-##### User interface mockup
-
-TODO
-
-##### Acceptance tests
-```gherkin
-Scenario: Attending in a conference
-  When I can't speak the language spoken
-  And I select the language i want to be transcripted
-  Then I get the transcript with my language of choice
-```
-
-##### Value and Effort
-Value:  Could have  
-Effort: M
 
 
 ### Domain model
