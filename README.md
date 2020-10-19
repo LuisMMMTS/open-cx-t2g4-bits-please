@@ -235,6 +235,47 @@ Scenario: Taking notes in the conference
 Value:  Could have  
 Effort: S
 
+#### Story "change-display-name"
+
+As a user in a conference, I want to be able to change my Display Name so others can more easily recognize me or so I am showing my favorite name.
+
+##### User interface mockup
+
+TODO
+
+##### Acceptance tests
+```gherkin
+Scenario: Change display name
+  When I edit my display name
+  And  I press the save button
+  Then My display name is saved in my device
+  And  My display name is updated in the server
+```
+
+##### Value and Effort
+Value:  Could have  
+Effort: M
+
+#### Story "dark-mode"
+
+As a user in a conference, I want to be able to change the app theme to dark mode.
+
+##### User interface mockup
+
+TODO
+
+##### Acceptance tests
+```gherkin
+Scenario: Enable dark mode
+  When I enable dark mode
+  Then the app shows in dark mode
+  And  dark mode persists
+```
+
+##### Value and Effort
+Value:  Should have  
+Effort: M
+
 ### Domain model
 
 To better understand the context of the software system, it is very useful to have a simple UML class diagram with all the key concepts (names, attributes) and relationships involved of the problem domain addressed by your module.
