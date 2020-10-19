@@ -100,6 +100,18 @@ Briefly describe each use case mentioning the following:
   2. If the system can't connect to the server.
   3. The system informs the atendee of the error
 
+#### Get question:
+*  **Actor**. Speaker.
+*  **Description**. This use case consists of receiving the question from a member of the audience in the database and converting it to speech (normally).
+*  **Preconditions and Postconditions**.  In order for this to happen, the speaker must be logged in talk's page. In the end, he can choose to simply read the question or have it be converted to speech.
+*  **Normal Flow**. 
+	1. The speaker is logged in.
+	2. He gets a question and chooses to synthesize it.
+	3. The audio corresponding to the question will play.
+*  **Alternative Flows and Exceptions**. 
+	1. The speaker gets a question and chooses not to synthesize it.
+	2. The speaker has some problem in his connection and a warning pops-up.
+	
 **Submit talk transcript:**
 * **Actor**. Speaker
 * **Description**. This use case exists so that the speaker's voice can be recorded, converted to text and the transcript uploaded to the database for the audience to read it.
