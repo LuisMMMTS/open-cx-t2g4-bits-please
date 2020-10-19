@@ -69,6 +69,25 @@ Briefly describe each use case mentioning the following:
 * **Normal Flow**. Provide a detailed description of the user actions and system responses that will take place during execution of the use case under normal, expected conditions. This dialog sequence will ultimately lead to accomplishing the goal stated in the use case name and description. This is best done as a numbered list of actions performed by the actor, alternating with responses provided by the system. 
 * **Alternative Flows and Exceptions**. Document other, legitimate usage scenarios that can take place within this use case, stating any differences in the sequence of steps that take place. In addition, describe any anticipated error conditions that could occur during execution of the use case, and define how the system is to respond to those conditions. 
 
+**Get talk transcript:**
+
+*  **Actor**. Conference attendee.
+
+*  **Description**. With this use case the attendee can follow and understand the speaker by reading the transcript of the talk.
+
+*  **Preconditions and Postconditions**.  The attendee must have a valid profile and access to the conference. Then he can read the transcript of the speaker in the application.
+  
+*  **Normal Flow**. 
+	1. The attendee selects the conference.
+	2. The attendee reads the transcript with his phone.
+	3. If the user desires, he can save and read the transcript afterwards.
+
+*  **Alternative Flows and Exceptions**. 
+	1. The attendee selects the conference.
+	2. The attendee reads the transcript with his phone.
+	3. The transcript do not load properly a warning pops up.
+	4. The application is not able to transcript the audio a warning pops up.
+
 **Submit question:**
 * **Actor:** Atendee
 
