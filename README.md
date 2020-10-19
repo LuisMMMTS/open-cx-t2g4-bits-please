@@ -141,6 +141,23 @@ A user story is a description of desired functionality told from the perspective
 
 *As a < user role >, I want < goal > so that < reason >.*
 
+**Story #2**  
+
+As a conference attendee who can't speak, I want to be able to easily submit text questions to the speaker, so I can better understand the talk subjects
+
+**Acceptance Tests**  
+```Gherkin
+Scenario: Asking a question  
+	When I write the question  
+	And I press the submit button  
+	Then The server must put my question on the queue  
+```
+	
+**Value and Effort**  
+Value:  Must-Have  
+Effort: XL  
+
+
 
 **INVEST in good user stories**. 
 You may add more details after, but the shorter and complete, the better. In order to decide if the user story is good, please follow the [INVEST guidelines](https://xp123.com/articles/invest-in-good-stories-and-smart-tasks/).
