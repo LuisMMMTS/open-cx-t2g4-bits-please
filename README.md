@@ -195,7 +195,7 @@ As the speaker I want to select a specific question and have it synthesized
 Scenario: Synthesizing a question
   When there are X unanswered questions
   And the speaker chooses a question to synthesize
-  The question is indeed synthesized and audio is played
+  Then question is indeed synthesized and audio is played
 ```
 
 **Value and effort**
@@ -210,7 +210,7 @@ As the speaker I want to delete a question after it has been answered (or not)
 Scenario: Deleting a question
   When there is a question the speaker wants to delete for any reason
   And the speaker chooses to delete the question
-  The question is removed from the database
+  Then question is removed from the database
 ```
 
 **Value and effort**
