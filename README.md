@@ -110,7 +110,8 @@ Briefly describe each use case mentioning the following:
 	3. The audio corresponding to the question will play.
 *  **Alternative Flows and Exceptions**. 
 	1. The speaker gets a question and chooses not to synthesize it.
-	2. The speaker has some problem in his connection and a warning pops-up.
+	* **OR**
+	1. The speaker has some problem in his connection and a warning pops-up.
 	
 **Submit talk transcript:**
 * **Actor**. Speaker
