@@ -107,17 +107,19 @@ Briefly describe each use case mentioning the following:
 **Submit talk transcript:**
 * **Actor**. Speaker
 * **Description**. This use case exists so that the speaker's voice can be recorded, converted to text and the transcript uploaded to the database for the audience to read it.
-* **Preconditions and Postconditions**. To have his voice transcripted, the speaker must first join the talk's page. In the end, the speaker's voice transcript is added to the database.
+* **Preconditions and Postconditions**. To have his voice transcripted, the speaker must first join the talk's page, and have a working microphone. In the end, the speaker's voice transcript is added to the database.
 * **Normal flow**.
     1. The speaker presses the button to start transcripting and uploading.
     2. The speaker gives the talk
     3. The speaker presses the button again to stop transcripting and uploading.
 * **Alternative Flows and Exceptions**.
     1. The speaker presses the button to start transcripting and uploading.
-    2. The speaker gives the talk.
-    3. If the speaker's voice is not being recorded, a warning pops up.
-    4. If the device is not connected to the Internet, a warning pops up.
-    5. The speaker presses the button again to stop transcripting and uploading.
+    2. If the speaker has not spoken for some time, he is prompted to confirm he's still in a talk.
+    3. If the speaker does not answer, or cancels, recording is stopped.
+    4. If the speaker confirms, the recording continues as usual.
+    * **OR**
+    1. The speaker presses the button to start transcripting and uploading.
+    2. If there is no Internet connection, or the connection drops, a warning pops up.
 
 ### User stories
 This section will contain the requirements of the product described as **user stories**, organized in a global **[user story map](https://plan.io/blog/user-story-mapping/)** with **user roles** or **themes**.
