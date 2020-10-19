@@ -199,7 +199,7 @@ As the speaker I want to select a specific question and have it synthesized
 Scenario: Synthesizing a question
   When there are X unanswered questions
   And the speaker chooses a question to synthesize
-  The question is indeed synthesized and audio is played
+  Then question is indeed synthesized and audio is played
 ```
 
 ##### Value and effort
@@ -214,14 +214,32 @@ As the speaker I want to delete a question after it has been answered (or not)
 Scenario: Deleting a question
   When there is a question the speaker wants to delete for any reason
   And the speaker chooses to delete the question
-  The question is removed from the database
+  Then question is removed from the database
 ```
 
 **Value and effort**
 Value: Must Have
 Effort: XL
 
+#### Story #?
 
+As an attendee in a conference, I want to be able to take notes and highlights of the speaker apresentation in my phone so that I can search than later.
+
+**User interface mockup**
+
+**Acceptance tests**
+
+```gherkin
+Scenario: Taking notes in the conference
+  When I write my note or highlighted part of the transcription
+  And I press the save button
+  The text is marked and I can consult it later
+
+```
+
+**Value and Effort**  
+Value:  Could have  
+Effort: S
 
 **INVEST in good user stories**. 
 You may add more details after, but the shorter and complete, the better. In order to decide if the user story is good, please follow the [INVEST guidelines](https://xp123.com/articles/invest-in-good-stories-and-smart-tasks/).
