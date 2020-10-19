@@ -141,11 +141,15 @@ A user story is a description of desired functionality told from the perspective
 
 *As a < user role >, I want < goal > so that < reason >.*
 
-**Story #2**  
+#### Story #2
 
 As a conference attendee who can't speak, I want to be able to easily submit text questions to the speaker, so I can better understand the talk subjects
 
-**Acceptance Tests**  
+##### User interface mockup
+
+TODO
+
+##### Acceptance Tests
 ```Gherkin
 Scenario: Asking a question  
 	When I write the question  
@@ -157,10 +161,10 @@ Scenario: Asking a question
 Value:  Must-Have  
 Effort: XL  
 
-#### Story X:
+#### Story X
 As the speaker I want to manually refresh to see all available questions.
 
-**Acceptance tests**
+##### Acceptance tests
 ```gherkin
 Scenario: Automatic refresh
   When there are X unanswered questions
@@ -172,10 +176,10 @@ Scenario: Automatic refresh
 Value: Must Have
 Effort: XL
 
-#### Story X:
+#### Story X
 As the speaker I want the app to automatically refresh in an interval of time to check on any new questions.
 
-**Acceptance tests**
+##### Acceptance tests
 ```gherkin
 Scenario: Manual refresh
   When there are X unanswered questions
@@ -184,13 +188,13 @@ Scenario: Manual refresh
 ```
 
 **Value and effort**
-Value: Could Have
+Value: Could Have  
 Effort: M
 
 #### Story X:
 As the speaker I want to select a specific question and have it synthesized
 
-**Acceptance tests**
+##### Acceptance tests
 ```gherkin
 Scenario: Synthesizing a question
   When there are X unanswered questions
@@ -198,14 +202,14 @@ Scenario: Synthesizing a question
   The question is indeed synthesized and audio is played
 ```
 
-**Value and effort**
+##### Value and effort
 Value: Must Have
 Effort: XL
 
-#### Story X:
+#### Story X
 As the speaker I want to delete a question after it has been answered (or not)
 
-**Acceptance tests**
+##### Acceptance tests
 ```gherkin
 Scenario: Deleting a question
   When there is a question the speaker wants to delete for any reason
