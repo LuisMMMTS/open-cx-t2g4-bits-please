@@ -299,6 +299,26 @@ Scenario: Attending in a conference
 Value:  Could have  
 Effort: M
 
+#### Story "change-transcript-size"
+
+As a user of the application, I want to change the height of the trascript/questions sections so I can read all questions, or focus on the transcript.
+
+##### User interface mockup
+
+TODO
+
+##### Acceptance tests
+```gherkin
+Scenario: Attending in a conference
+  When I drag the transcript/separation up or down
+  Then The separation moves up and down
+  And  The sections are resized accordingly
+```
+
+##### Value and Effort
+Value:  Should have  
+Effort: S
+
 ### Domain model
 
 To better understand the context of the software system, it is very useful to have a simple UML class diagram with all the key concepts (names, attributes) and relationships involved of the problem domain addressed by your module.
