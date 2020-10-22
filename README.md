@@ -240,7 +240,7 @@ As a user in a conference, I want to be able to change my Display Name so others
 
 ##### User interface mockup
 
-TODO
+![](https://drive.google.com/uc?export=download&id=1zJwAo38W_hcDHD6PGkoAHu1or5_K3IGu)
 
 ##### Acceptance tests
 ```gherkin
