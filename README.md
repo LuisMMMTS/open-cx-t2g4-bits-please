@@ -198,7 +198,7 @@ As the speaker I want to manually refresh to see all available questions.
 
 ##### User interface mockup
 
-![manual-refresh-questions mockup](https://drive.google.com/uc?export=download&id=1H3KygFQK9zuraiiVW78Uco3jPZQ9KQBe)
+![manual-refresh-questions mockup](https://drive.google.com/uc?id=1HzQnVZQ_25992fS3oOcDE_BbaFtu7P8x)
 
 ##### Acceptance tests
 ```gherkin
@@ -216,7 +216,7 @@ Effort: XL
 As the speaker I want to select a specific question and have it synthesized
 
 ##### User interface mockup
-TODO
+![synthesize-question mockup](https://drive.google.com/uc?id=1h_kINEZhL4pEvR7Mrm3e_MiVTrl0BRfa)
 
 ##### Acceptance tests
 ```gherkin
@@ -249,7 +249,7 @@ Effort: M
 As the speaker I want to delete a question after it has been answered (or not)
 
 ##### User interface mockup
-TODO
+![delete-question mockup](https://drive.google.com/uc?id=1nhUYwJ_Q2BNLWo54VLI9i4Ofn4lpJqzo)
 
 ##### Acceptance tests
 ```gherkin
