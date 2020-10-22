@@ -134,18 +134,24 @@ Start by contextualizing your module, describing the main concepts, terms, roles
 
 ### User stories
 
+**Must have**:
 - [transcribe](#Story-"transcribe")
 - [submit-question](#Story-"submit-question")
 - [manual-refresh-questions](#Story-"manual-refresh-questions")
 - [synthesize-question](#Story-"synthesize-question")
+
+**Should have**:
 - [auto-refresh-questions](#Story-"auto-refresh-questions")
-- [change-auto-refresh-time](#Story-"change-auto-refresh-time")
 - [delete-question](#delete-question")
-- [notes](#Story-"notes")
-- [change-display-name](#Story-"change-display-name")
+
+**Could have**:
+- [resize-transcript](#Story-"resize-transcript")
 - [dark-mode](#Story-"dark-mode")
+- [change-auto-refresh-time](#Story-"change-auto-refresh-time")
+- [change-display-name](#Story-"change-display-name")
+- [notes](#Story-"notes")
 - [translate-transcript](#Story-"translate-transcript")
-- [change-display-name](#Story-"resize-transcript")
+
 
 #### Story "transcribe"
 
@@ -206,6 +212,24 @@ Scenario: Automatic refresh
 Value: Must Have  
 Effort: XL
 
+#### Story "synthesize-question"
+As the speaker I want to select a specific question and have it synthesized
+
+##### User interface mockup
+TODO
+
+##### Acceptance tests
+```gherkin
+Scenario: Synthesizing a question
+  When there are X unanswered questions
+  And the speaker chooses a question to synthesize
+  Then question is indeed synthesized and audio is played
+```
+
+##### Value and effort
+Value: Must Have
+Effort: XL
+
 #### Story "auto-refresh-questions"
 As the speaker I want the app to automatically refresh in an interval of time to check on any new questions.
 
@@ -218,7 +242,65 @@ Scenario: Manual refresh
 ```
 
 ##### Value and effort
-Value: Could Have  
+Value: Should Have  
+Effort: M
+
+#### Story "delete-question"
+As the speaker I want to delete a question after it has been answered (or not)
+
+##### User interface mockup
+TODO
+
+##### Acceptance tests
+```gherkin
+Scenario: Deleting a question
+  When there is a question the speaker wants to delete for any reason
+  And the speaker chooses to delete the question
+  Then question is removed from the database
+```
+
+**Value and effort**
+Value: Must Have
+Effort: XL
+
+#### Story "resize-transcript"
+
+As a user of the application, I want to change the height of the trascript/questions sections so I can read all questions, or focus on the transcript.
+
+##### User interface mockup
+
+![resize-transcript mockup](https://drive.google.com/uc?id=1pvOCQeHWYBiCXJxbWlEVTRa_s0J-SK7U)
+
+##### Acceptance tests
+```gherkin
+Scenario: Attending in a conference
+  When I drag the transcript/separation up or down
+  Then The separation moves up and down
+  And  The sections are resized accordingly
+```
+
+##### Value and Effort
+Value:  Should have  
+Effort: S
+
+#### Story "dark-mode"
+
+As a user in a conference, I want to be able to change the app theme to dark mode.
+
+##### User interface mockup
+
+![dark-mode mockup](https://drive.google.com/uc?id=17JEJ0TqoxT54AIzR2BD8lx0OMkC4QTSF)
+
+##### Acceptance tests
+```gherkin
+Scenario: Enable dark mode
+  When I enable dark mode
+  Then the app shows in dark mode
+  And  dark mode persists
+```
+
+##### Value and Effort
+Value:  Should have  
 Effort: M
 
 #### Story "change-auto-refresh-time"
@@ -245,62 +327,6 @@ Scenario: Manual refresh
 Value: Could Have  
 Effort: S
 
-#### Story "synthesize-question"
-As the speaker I want to select a specific question and have it synthesized
-
-##### User interface mockup
-TODO
-
-##### Acceptance tests
-```gherkin
-Scenario: Synthesizing a question
-  When there are X unanswered questions
-  And the speaker chooses a question to synthesize
-  Then question is indeed synthesized and audio is played
-```
-
-##### Value and effort
-Value: Must Have
-Effort: XL
-
-#### Story "delete-question"
-As the speaker I want to delete a question after it has been answered (or not)
-
-##### User interface mockup
-TODO
-
-##### Acceptance tests
-```gherkin
-Scenario: Deleting a question
-  When there is a question the speaker wants to delete for any reason
-  And the speaker chooses to delete the question
-  Then question is removed from the database
-```
-
-**Value and effort**
-Value: Must Have
-Effort: XL
-
-#### Story "notes"
-
-As an attendee in a conference, I want to be able to take notes and highlights of the speaker apresentation in my device so that I can search than later.
-
-##### User interface mockup
-
-TODO
-
-##### Acceptance tests
-```gherkin
-Scenario: Taking notes in the conference
-  When I write my note or highlighted part of the transcription
-  And I press the save button
-  Then The text is marked and I can consult it later
-```
-
-##### Value and Effort
-Value:  Could have  
-Effort: S
-
 #### Story "change-display-name"
 
 As a user in a conference, I want to be able to change my Display Name so others can more easily recognize me or so I am showing my favorite name.
@@ -322,25 +348,25 @@ Scenario: Change display name
 Value:  Could have  
 Effort: M
 
-#### Story "dark-mode"
+#### Story "notes"
 
-As a user in a conference, I want to be able to change the app theme to dark mode.
+As an attendee in a conference, I want to be able to take notes and highlights of the speaker apresentation in my device so that I can search than later.
 
 ##### User interface mockup
 
-![dark-mode mockup](https://drive.google.com/uc?id=17JEJ0TqoxT54AIzR2BD8lx0OMkC4QTSF)
+TODO
 
 ##### Acceptance tests
 ```gherkin
-Scenario: Enable dark mode
-  When I enable dark mode
-  Then the app shows in dark mode
-  And  dark mode persists
+Scenario: Taking notes in the conference
+  When I write my note or highlighted part of the transcription
+  And I press the save button
+  Then The text is marked and I can consult it later
 ```
 
 ##### Value and Effort
-Value:  Should have  
-Effort: M
+Value:  Could have  
+Effort: S
 
 #### Story "translate-transcript"
 
@@ -361,26 +387,6 @@ Scenario: Attending in a conference
 ##### Value and Effort
 Value:  Could have  
 Effort: M
-
-#### Story "resize-transcript"
-
-As a user of the application, I want to change the height of the trascript/questions sections so I can read all questions, or focus on the transcript.
-
-##### User interface mockup
-
-![resize-transcript mockup](https://drive.google.com/uc?id=1pvOCQeHWYBiCXJxbWlEVTRa_s0J-SK7U)
-
-##### Acceptance tests
-```gherkin
-Scenario: Attending in a conference
-  When I drag the transcript/separation up or down
-  Then The separation moves up and down
-  And  The sections are resized accordingly
-```
-
-##### Value and Effort
-Value:  Should have  
-Effort: S
 
 ### Domain model
 
