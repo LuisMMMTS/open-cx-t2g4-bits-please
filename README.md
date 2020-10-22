@@ -157,7 +157,7 @@ Effort: XL
 #### Story "manual-refresh-questions"
 As the speaker I want to manually refresh to see all available questions.
 
-#### User interface mockup
+##### User interface mockup
 
 ![manual-refresh-questions mockup](https://drive.google.com/uc?id=1NspzfuSgzM11Dpd9YTgjcLMDk-WAqOpR)
 
@@ -176,6 +176,9 @@ Effort: XL
 #### Story "auto-refresh-questions"
 As the speaker I want the app to automatically refresh in an interval of time to check on any new questions.
 
+##### User interface mockup
+TODO
+
 ##### Acceptance tests
 ```gherkin
 Scenario: Manual refresh
@@ -191,6 +194,9 @@ Effort: M
 #### Story "synthesize-question"
 As the speaker I want to select a specific question and have it synthesized
 
+##### User interface mockup
+TODO
+
 ##### Acceptance tests
 ```gherkin
 Scenario: Synthesizing a question
@@ -205,6 +211,9 @@ Effort: XL
 
 #### Story "delete-question"
 As the speaker I want to delete a question after it has been answered (or not)
+
+##### User interface mockup
+TODO
 
 ##### Acceptance tests
 ```gherkin
