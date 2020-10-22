@@ -240,7 +240,7 @@ As a user in a conference, I want to be able to change my Display Name so others
 
 ##### User interface mockup
 
-![](https://drive.google.com/uc?export=download&id=1zJwAo38W_hcDHD6PGkoAHu1or5_K3IGu)
+![](https://drive.google.com/uc?id=1xCKlhMU4hbQjAaXRUsNwl9kScepUU8LV)
 
 ##### Acceptance tests
 ```gherkin
@@ -261,7 +261,7 @@ As a user in a conference, I want to be able to change the app theme to dark mod
 
 ##### User interface mockup
 
-TODO
+![](https://drive.google.com/uc?id=18L_4OBaKMkSEerVli_-T_KwWhq9hyMlB)
 
 ##### Acceptance tests
 ```gherkin
