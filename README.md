@@ -308,13 +308,13 @@ Scenario: Attending in a conference
 Value:  Could have  
 Effort: M
 
-#### Story "change-transcript-size"
+#### Story "resize-transcript"
 
 As a user of the application, I want to change the height of the trascript/questions sections so I can read all questions, or focus on the transcript.
 
 ##### User interface mockup
 
-TODO
+![resize-transcript mockup](https://drive.google.com/uc?id=1hcOSoCQVxlsVcRhomIIfoSlT4yMeM_cZ)
 
 ##### Acceptance tests
 ```gherkin
