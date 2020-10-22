@@ -134,6 +134,26 @@ Start by contextualizing your module, describing the main concepts, terms, roles
 
 ### User stories
 
+#### Story "transcribe"
+
+As a speaker, I want my speech to be transcribed and sent to the attendees, so they can hear me
+
+##### User interface mockup
+
+![transcribe mockup](https://drive.google.com/uc?id=1p24QG7-869mVYTxRXu3otjUZ9B6n_1uY)
+
+##### Acceptance Tests
+```Gherkin
+Scenario: Asking a question  
+	When I write the question  
+	And I press the submit button  
+	Then The server must put my question on the queue  
+```
+	
+##### Value and Effort
+Value:  Must-Have  
+Effort: XL  
+
 #### Story "submit-question"
 
 As a conference attendee who can't speak, I want to be able to easily submit text questions to the speaker, so I can better understand the talk subjects
