@@ -134,7 +134,7 @@ Start by contextualizing your module, describing the main concepts, terms, roles
 
 ### User stories
 
-#### Story #2
+#### Story "submit-question"
 
 As a conference attendee who can't speak, I want to be able to easily submit text questions to the speaker, so I can better understand the talk subjects
 
@@ -154,7 +154,7 @@ Scenario: Asking a question
 Value:  Must-Have  
 Effort: XL  
 
-#### Story X
+#### Story "manual-refresh-questions"
 As the speaker I want to manually refresh to see all available questions.
 
 ##### Acceptance tests
@@ -169,7 +169,7 @@ Scenario: Automatic refresh
 Value: Must Have  
 Effort: XL
 
-#### Story X
+#### Story "auto-refresh-questions"
 As the speaker I want the app to automatically refresh in an interval of time to check on any new questions.
 
 ##### Acceptance tests
@@ -184,7 +184,7 @@ Scenario: Manual refresh
 Value: Could Have  
 Effort: M
 
-#### Story X:
+#### Story "synthesize-question"
 As the speaker I want to select a specific question and have it synthesized
 
 ##### Acceptance tests
@@ -199,7 +199,7 @@ Scenario: Synthesizing a question
 Value: Must Have
 Effort: XL
 
-#### Story X
+#### Story "delete-question"
 As the speaker I want to delete a question after it has been answered (or not)
 
 ##### Acceptance tests
@@ -214,7 +214,7 @@ Scenario: Deleting a question
 Value: Must Have
 Effort: XL
 
-#### Story #?
+#### Story "notes"
 
 As an attendee in a conference, I want to be able to take notes and highlights of the speaker apresentation in my phone so that I can search than later.
 
