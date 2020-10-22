@@ -140,7 +140,7 @@ As a conference attendee who can't speak, I want to be able to easily submit tex
 
 ##### User interface mockup
 
-![submit-question mockup](https://drive.google.com/uc?id=1iCzavdfUiWXlmBUqxWiOB5oqerYX2-Lr)
+![submit-question mockup](https://drive.google.com/uc?id=1CSig6DhVvpL8M3Xk3ZDL7KYVk9Gcfsea)
 
 ##### Acceptance Tests
 ```Gherkin
@@ -159,7 +159,7 @@ As the speaker I want to manually refresh to see all available questions.
 
 ##### User interface mockup
 
-![manual-refresh-questions mockup](https://drive.google.com/uc?id=1NspzfuSgzM11Dpd9YTgjcLMDk-WAqOpR)
+![manual-refresh-questions mockup](https://drive.google.com/uc?export=download&id=1H3KygFQK9zuraiiVW78Uco3jPZQ9KQBe)
 
 ##### Acceptance tests
 ```gherkin
@@ -176,9 +176,6 @@ Effort: XL
 #### Story "auto-refresh-questions"
 As the speaker I want the app to automatically refresh in an interval of time to check on any new questions.
 
-##### User interface mockup
-TODO
-
 ##### Acceptance tests
 ```gherkin
 Scenario: Manual refresh
@@ -190,6 +187,30 @@ Scenario: Manual refresh
 ##### Value and effort
 Value: Could Have  
 Effort: M
+
+#### Story "change-auto-refresh-time"
+As the speaker I want to set the automatic refresh rate of the app to check on any new questions.
+
+##### Details
+
+Can be inspired in [this post](https://medium.com/@maheshmnj/cupertinopicker-in-flutter-ec7ec7811bf6), namely on CupertinoTimerPicker.
+
+##### User interface mockup
+![change-auto-refresh-time](https://drive.google.com/uc?id=19PlLAWZoV-UhkoWJUBOUb3BRN7LwNg4_)
+
+##### Acceptance tests
+```gherkin
+Scenario: Manual refresh
+  When I am in settings
+  And  The automatic refresh rate is 30 seconds
+  And  I change the automatic refresh rate to 10 seconds
+  Then Settings show the refresh rate is 10 seconds
+  And  The app refreshes questions automatically every 10 seconds
+```
+
+##### Value and effort
+Value: Could Have  
+Effort: S
 
 #### Story "synthesize-question"
 As the speaker I want to select a specific question and have it synthesized
@@ -253,7 +274,7 @@ As a user in a conference, I want to be able to change my Display Name so others
 
 ##### User interface mockup
 
-![change-display-name mockup](https://drive.google.com/uc?id=1xCKlhMU4hbQjAaXRUsNwl9kScepUU8LV)
+![change-display-name mockup](https://drive.google.com/uc?id=16A8k2s2MnJg05RYD4GFSORa1E0g2mbKL)
 
 ##### Acceptance tests
 ```gherkin
@@ -274,7 +295,7 @@ As a user in a conference, I want to be able to change the app theme to dark mod
 
 ##### User interface mockup
 
-![dark-mode mockup](https://drive.google.com/uc?id=18L_4OBaKMkSEerVli_-T_KwWhq9hyMlB)
+![dark-mode mockup](https://drive.google.com/uc?id=17JEJ0TqoxT54AIzR2BD8lx0OMkC4QTSF)
 
 ##### Acceptance tests
 ```gherkin
@@ -314,7 +335,7 @@ As a user of the application, I want to change the height of the trascript/quest
 
 ##### User interface mockup
 
-![resize-transcript mockup](https://drive.google.com/uc?id=1hcOSoCQVxlsVcRhomIIfoSlT4yMeM_cZ)
+![resize-transcript mockup](https://drive.google.com/uc?id=1pvOCQeHWYBiCXJxbWlEVTRa_s0J-SK7U)
 
 ##### Acceptance tests
 ```gherkin
