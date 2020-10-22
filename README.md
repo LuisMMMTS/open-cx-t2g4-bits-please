@@ -165,7 +165,7 @@ As the speaker I want to manually refresh to see all available questions.
 ```gherkin
 Scenario: Automatic refresh
   When there are X unanswered questions
-  And the speaker requests for a refresh to see if there are more or any questions
+  And the speaker swipes down the screen
   Then the unanswered questions are updated and shown if there are any
 ```
 
@@ -220,7 +220,7 @@ Effort: XL
 
 #### Story "notes"
 
-As an attendee in a conference, I want to be able to take notes and highlights of the speaker apresentation in my phone so that I can search than later.
+As an attendee in a conference, I want to be able to take notes and highlights of the speaker apresentation in my device so that I can search than later.
 
 ##### User interface mockup
 
