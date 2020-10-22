@@ -134,6 +134,19 @@ Start by contextualizing your module, describing the main concepts, terms, roles
 
 ### User stories
 
+- [transcribe](#Story-"transcribe")
+- [submit-question](#Story-"submit-question")
+- [manual-refresh-questions](#Story-"manual-refresh-questions")
+- [synthesize-question](#Story-"synthesize-question")
+- [auto-refresh-questions](#Story-"auto-refresh-questions")
+- [change-auto-refresh-time](#Story-"change-auto-refresh-time")
+- [delete-question](#delete-question")
+- [notes](#Story-"notes")
+- [change-display-name](#Story-"change-display-name")
+- [dark-mode](#Story-"dark-mode")
+- [translate-transcript](#Story-"translate-transcript")
+- [change-display-name](#Story-"resize-transcript")
+
 #### Story "transcribe"
 
 As a speaker, I want my speech to be transcribed and sent to the attendees, so they can hear me
