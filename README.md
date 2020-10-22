@@ -140,7 +140,7 @@ As a conference attendee who can't speak, I want to be able to easily submit tex
 
 ##### User interface mockup
 
-TODO
+![submit-question mockup](https://drive.google.com/uc?id=1iCzavdfUiWXlmBUqxWiOB5oqerYX2-Lr)
 
 ##### Acceptance Tests
 ```Gherkin
@@ -156,6 +156,10 @@ Effort: XL
 
 #### Story "manual-refresh-questions"
 As the speaker I want to manually refresh to see all available questions.
+
+#### User interface mockup
+
+![manual-refresh-questions mockup](https://drive.google.com/uc?id=1NspzfuSgzM11Dpd9YTgjcLMDk-WAqOpR)
 
 ##### Acceptance tests
 ```gherkin
@@ -240,7 +244,7 @@ As a user in a conference, I want to be able to change my Display Name so others
 
 ##### User interface mockup
 
-![](https://drive.google.com/uc?id=1xCKlhMU4hbQjAaXRUsNwl9kScepUU8LV)
+![change-display-name mockup](https://drive.google.com/uc?id=1xCKlhMU4hbQjAaXRUsNwl9kScepUU8LV)
 
 ##### Acceptance tests
 ```gherkin
@@ -261,7 +265,7 @@ As a user in a conference, I want to be able to change the app theme to dark mod
 
 ##### User interface mockup
 
-![](https://drive.google.com/uc?id=18L_4OBaKMkSEerVli_-T_KwWhq9hyMlB)
+![dark-mode mockup](https://drive.google.com/uc?id=18L_4OBaKMkSEerVli_-T_KwWhq9hyMlB)
 
 ##### Acceptance tests
 ```gherkin
