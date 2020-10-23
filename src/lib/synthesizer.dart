@@ -19,18 +19,39 @@ class SynthesizerPage extends StatefulWidget {
 }
 
 class _SynthesizerPageState extends State<SynthesizerPage> {
+  List<int> top = [];
+  List<int> bottom = [0];
+
   void go_to_synthesizer_Windows(){
 
   }
   void go_to_transcriber_Windows(){
 
   }
+
   @override
   Widget build(BuildContext context) {
+    const Key centerKey = ValueKey('bottom-sliver-list');
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Press on the plus to add items above and below'),
+        leading: IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            setState(() {
+              top.add(-top.length - 1);
+              bottom.add(bottom.length);
+            });
+          },
+        ),
       ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverList(
+            
+          ),
+        ],
+      )
     );
   }
 
