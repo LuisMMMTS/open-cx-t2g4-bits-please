@@ -1,4 +1,6 @@
+import 'package:com_4_all/transcriber.dart';
 import 'package:flutter/material.dart';
+import 'synthesizer.dart';
 
 void main() {
   runApp(MyApp());
@@ -46,8 +48,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  void update() {
-    setState(() {});
+  void go_to_synthesizer_Windows(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SynthesizerPage(title: 'Synthesizer',)),
+    );
+  }
+  void go_to_transcriber_Windows(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TranscriberPage(title: 'Transcriber',)),
+    );
   }
 
   @override
@@ -60,20 +71,22 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton.icon(
-              textColor: Colors.white,
-              color: Color(0xFF6200EE),
-              icon: Icon(Icons.add, size: 18),
-              label: Text("synthesizer"),
+            FlatButton(
+              disabledTextColor: Colors.white,
+              disabledColor: Colors.white,
+              color: Colors.blue,
+              child: Text("Synthesizer"),
+              onPressed: go_to_synthesizer_Windows,
             ),
             SizedBox(
               height: 20,
             ),
-            RaisedButton.icon(
-              textColor: Colors.white,
-              color: Color(0xFF6200EE),
-              icon: Icon(Icons.add, size: 18),
-              label: Text("Transcriber"),
+            FlatButton(
+              color: Colors.blue,
+              disabledTextColor: Colors.white,
+              disabledColor: Colors.white,
+              child: Text("Trancriber"),
+              onPressed: go_to_transcriber_Windows,
             ),
           ],
         ),
