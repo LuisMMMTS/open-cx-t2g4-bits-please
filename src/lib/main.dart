@@ -60,13 +60,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            FloatingActionButton(
-              tooltip: 'Increment',
-              child: Icon(Icons.add),
+            RaisedButton.icon(
+              textColor: Colors.white,
+              color: Color(0xFF6200EE),
+              icon: Icon(Icons.add, size: 18),
+              label: Text("synthesizer"),
             ),
-            FloatingActionButton(
-              tooltip: 'Increment',
-              child: Icon(Icons.add),
+            SizedBox(
+              height: 20,
+            ),
+            RaisedButton.icon(
+              textColor: Colors.white,
+              color: Color(0xFF6200EE),
+              icon: Icon(Icons.add, size: 18),
+              label: Text("Transcriber"),
             ),
           ],
         ),
