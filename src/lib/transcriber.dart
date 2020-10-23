@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class TranscriberPage extends StatefulWidget {
   TranscriberPage({Key key, this.title}) : super(key: key);
