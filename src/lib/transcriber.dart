@@ -15,30 +15,17 @@ class TranscriberPage extends StatefulWidget {
 
 class _TranscriberPageState extends State<TranscriberPage> {
   bool _hasSpeech = false;
-  double level = 0.0;
-  double minSoundLevel = 50000;
-  double maxSoundLevel = -50000;
-  String allWords = "";
-  String lastWords = "";
-  String lastError = "";
-  String lastStatus = "";
-  String _currentLocaleId = "";
-  List<LocaleName> _localeNames = [];
-  SpeechToText speech = SpeechToText();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<void> initSpeechState() async {
+  SpeechToText transcriber = SpeechToText();
+  Future<void> TranscriberCtor() async {
     if(!_hasSpeech) {
-      bool hasSpeech = await speech.initialize(
-          onError: errorListener, onStatus: statusListener);
+      bool hasSpeech = await transcriber.initialize(
+          onError: errorListener,
+          onStatus: statusListener
+      );
       if (hasSpeech) {
-        _localeNames = await speech.locales();
+        _localeNames = await transcriber.locales();
 
-        var systemLocale = await speech.systemLocale();
+        var systemLocale = await transcriber.systemLocale();
         _currentLocaleId = systemLocale.localeId;
       }
 
@@ -50,6 +37,22 @@ class _TranscriberPageState extends State<TranscriberPage> {
     }
   }
 
+  
+  
+
+  double level = 0.0;
+  String allWords = "";
+  String lastWords = "";
+  String lastError = "";
+  String lastStatus = "";
+  String _currentLocaleId = "";
+  List<LocaleName> _localeNames = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Container getMicrophoneButton(){
     return Container(
       width: 40,
@@ -57,17 +60,17 @@ class _TranscriberPageState extends State<TranscriberPage> {
         shadows: [
           BoxShadow(
             blurRadius: .1,
-            spreadRadius: (speech.isListening ? level : 0) * 1.0,
+            spreadRadius: (transcriber.isListening ? level : 0) * 1.0,
             color: Colors.red.withOpacity(.50),
           ),
         ],
-        color: (!_hasSpeech ? Colors.grey : (!speech.isListening ? Colors.white : Colors.red)),
+        color: (!_hasSpeech ? Colors.grey : (!transcriber.isListening ? Colors.white : Colors.red)),
         shape: CircleBorder(),
       ),
       child: IconButton(
         icon: Icon(Icons.mic),
-        color: (!_hasSpeech ? Colors.grey : (!speech.isListening ? Colors.black : Colors.white)),
-        onPressed: (!_hasSpeech ? null : (!speech.isListening ? startListening : stopListening)),
+        color: (!_hasSpeech ? Colors.grey : (!transcriber.isListening ? Colors.black : Colors.white)),
+        onPressed: (!_hasSpeech ? null : (!transcriber.isListening ? startListening : stopListening)),
       ),
     );
   }
@@ -106,7 +109,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
 
   @override
   Widget build(BuildContext context) {
-    initSpeechState();
+    TranscriberCtor();
     return Scaffold(
       appBar: getAppBar(),
       body: Column(
@@ -139,7 +142,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
                           text: allWords,
                       ),
                       TextSpan(
-                        text: (speech.isListening ? " " + lastWords : null),
+                        text: (transcriber.isListening ? " " + lastWords : null),
                         style: TextStyle(
                             color: Colors.grey,
                         )
@@ -158,7 +161,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
   void startListening() {
     lastWords = "";
     lastError = "";
-    speech.listen(
+    transcriber.listen(
         onResult: resultListener,
         listenFor: Duration(seconds: 20),
         localeId: _currentLocaleId,
@@ -169,7 +172,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
   }
 
   void stopListening() {
-    speech.stop();
+    transcriber.stop();
     setState(() {
       level = 0.0;
     });
@@ -187,22 +190,20 @@ class _TranscriberPageState extends State<TranscriberPage> {
   }
 
   void soundLevelListener(double level) {
-    minSoundLevel = min(minSoundLevel, level);
-    maxSoundLevel = max(maxSoundLevel, level);
     setState(() {
       this.level = level;
     });
   }
 
   void errorListener(SpeechRecognitionError error) {
-    print("Received error status: $error, listening: ${speech.isListening}");
+    print("Received error status: $error, listening: ${transcriber.isListening}");
     setState(() {
       lastError = "${error.errorMsg} - ${error.permanent}";
     });
   }
 
   void statusListener(String status) {
-    print("Received listener status: $status, listening: ${speech.isListening}");
+    print("Received listener status: $status, listening: ${transcriber.isListening}");
     setState(() {
       lastStatus = "$status";
     });
