@@ -6,6 +6,58 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 
+class TranscriberSpeechToText {
+  bool _hasSpeech = false;
+  SpeechToText transcriber = SpeechToText();
+  TranscriberSpeechToText();
+
+  Future<bool> initialize({SpeechErrorListener onError, SpeechStatusListener onStatus}) async {
+    if(!_hasSpeech) {
+      _hasSpeech = await transcriber.initialize(
+          onError: onError,
+          onStatus: onStatus
+      );
+    }
+    return _hasSpeech;
+  }
+
+  Future<List<LocaleName>> locales() { return transcriber.locales(); }
+  
+  Future<LocaleName> systemLocale() { return transcriber.systemLocale(); }
+  
+  bool get isListening => transcriber.isListening;
+
+  Future<dynamic> listen({
+    SpeechResultListener onResult,
+    Duration listenFor,
+    Duration pauseFor,
+    String localeId,
+    SpeechSoundLevelChange onSoundLevelChange,
+    dynamic cancelOnError: false,
+    dynamic partialResults: true,
+    dynamic onDevice: false,
+    ListenMode listenMode: ListenMode.confirmation,
+    dynamic sampleRate: 0
+  }){
+    return transcriber.listen(
+      onResult: onResult,
+      listenFor: listenFor,
+      pauseFor: pauseFor,
+      localeId: localeId,
+      onSoundLevelChange: onSoundLevelChange,
+      cancelOnError: cancelOnError,
+      partialResults: partialResults,
+      onDevice: onDevice,
+      listenMode: listenMode,
+      sampleRate: sampleRate
+    );
+  }
+
+  Future<void> stop(){
+    return transcriber.stop();
+  }
+}
+
 class TranscriberPage extends StatefulWidget {
   final String title;
   TranscriberPage({Key key, this.title}) : super(key: key);
@@ -15,24 +67,25 @@ class TranscriberPage extends StatefulWidget {
 
 class _TranscriberPageState extends State<TranscriberPage> {
   bool _hasSpeech = false;
+  TranscriberSpeechToText transcriber = TranscriberSpeechToText();
   Future<void> initializeTranscriber() async {
-      bool hasSpeech = await transcriber.initialize(
-          onError: errorListener,
-          onStatus: statusListener
-      );
-      if (hasSpeech) {
-        _localeNames = await transcriber.locales();
+    bool hasSpeech = await transcriber.initialize(
+        onError: errorListener,
+        onStatus: statusListener
+    );
+    if (hasSpeech) {
+      _localeNames = await transcriber.locales();
 
-        var systemLocale = await transcriber.systemLocale();
-        _currentLocaleId = systemLocale.localeId;
-      }
-
-      if (!mounted) return;
-
-      setState(() {
-        _hasSpeech = hasSpeech;
-      });
+      var systemLocale = await transcriber.systemLocale();
+      _currentLocaleId = systemLocale.localeId;
     }
+
+    if (!mounted) return;
+
+    setState(() {
+      _hasSpeech = hasSpeech;
+    });
+  }
 
   
   
