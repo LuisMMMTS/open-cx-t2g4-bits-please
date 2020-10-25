@@ -80,6 +80,30 @@ class _TranscriberPageState extends State<TranscriberPage> {
     );
   }
 
+  Column getComments(){
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.account_circle_rounded ),
+            Expanded(
+              child: Text('John Doe', textAlign: TextAlign.left),
+            ),
+            const Icon(Icons.volume_mute),
+            const Icon(Icons.cancel),
+          ]
+        ),
+        Row(
+            children: [
+              Expanded(
+                child: Text('Hello, I have a question regarding voice transcription. What languages are available?', textAlign: TextAlign.center),
+              ),
+            ]
+        ),
+      ],
+    );
+  }
+
   AppBar getAppBar(){
     return AppBar(
       title: Column(
@@ -157,7 +181,9 @@ class _TranscriberPageState extends State<TranscriberPage> {
               ),
             ),
           ),
+          getComments(),
         ],
+
       ),
     );
   }
