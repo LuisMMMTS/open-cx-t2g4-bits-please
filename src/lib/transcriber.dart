@@ -15,9 +15,7 @@ class TranscriberPage extends StatefulWidget {
 
 class _TranscriberPageState extends State<TranscriberPage> {
   bool _hasSpeech = false;
-  SpeechToText transcriber = SpeechToText();
-  Future<void> TranscriberCtor() async {
-    if(!_hasSpeech) {
+  Future<void> initializeTranscriber() async {
       bool hasSpeech = await transcriber.initialize(
           onError: errorListener,
           onStatus: statusListener
@@ -35,7 +33,6 @@ class _TranscriberPageState extends State<TranscriberPage> {
         _hasSpeech = hasSpeech;
       });
     }
-  }
 
   
   
@@ -109,7 +106,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
 
   @override
   Widget build(BuildContext context) {
-    TranscriberCtor();
+    initializeTranscriber();
     return Scaffold(
       appBar: getAppBar(),
       body: Column(
