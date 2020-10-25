@@ -85,21 +85,53 @@ class _TranscriberPageState extends State<TranscriberPage> {
       children: [
         Row(
           children: [
-            const Icon(Icons.account_circle_rounded ),
+            SizedBox(
+              width: 50,
+              height: 50,
+              child:
+                const Icon(Icons.account_circle_rounded)
+            ),
             Expanded(
               child: Text('John Doe', textAlign: TextAlign.left),
             ),
-            const Icon(Icons.volume_mute),
-            const Icon(Icons.cancel),
+            SizedBox(
+              child: IconButton(
+                iconSize: 30,
+                color: Colors.black,
+                icon: Icon(Icons.volume_mute),
+                //onPressed: ,
+              ),
+            ),
+            SizedBox(
+              child: IconButton(
+                iconSize: 30,
+                color: Colors.black,
+                icon: Icon(Icons.cancel),
+                //onPressed: ,
+              ),
+            ),
           ]
         ),
-        Row(
-            children: [
+        Container(
+          margin: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+          padding: EdgeInsets.all(16.0),
+          decoration: new BoxDecoration(
+              color:  Colors.black12,
+              borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(30.0),
+                  topRight: const Radius.circular(30.0),
+                  bottomLeft: const Radius.circular(30.0),
+                  bottomRight: const Radius.circular(30.0))),
+        child: Row(
+            children:[
               Expanded(
-                child: Text('Hello, I have a question regarding voice transcription. What languages are available?', textAlign: TextAlign.center),
+                child: Text(
+                  'Hello, I have a question regarding voice transcription. What languages are available?',
+                  textAlign: TextAlign.center),
               ),
             ]
         ),
+        )
       ],
     );
   }
