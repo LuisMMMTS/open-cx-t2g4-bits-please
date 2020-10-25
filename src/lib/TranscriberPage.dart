@@ -24,10 +24,13 @@ class _TranscriberPageState extends State<TranscriberPage> {
         onStatus: statusListener
     );
     if (hasSpeech) {
+      print("Initialized voice recognition\n");
       _localeNames = await transcriber.locales();
 
       var systemLocale = await transcriber.systemLocale();
       _currentLocaleId = systemLocale.localeId;
+    }else{
+      print("Failed to initialize voice recognition\n");
     }
 
     if (!mounted) return;
@@ -37,8 +40,8 @@ class _TranscriberPageState extends State<TranscriberPage> {
     });
   }
 
-  
-  
+
+
 
   double level = 0.0;
   String allWords = "";
@@ -51,6 +54,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
   @override
   void initState() {
     super.initState();
+    initializeTranscriber();
   }
 
   Container getMicrophoneButton(){
