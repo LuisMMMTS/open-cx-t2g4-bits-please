@@ -6,7 +6,27 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 
-class TranscriberSpeechToText {
+abstract class Transcriber {
+  Future<List<LocaleName>> locales();
+  Future<LocaleName> systemLocale();
+  Future<bool> initialize({SpeechErrorListener onError, SpeechStatusListener onStatus});
+  bool isListening;
+  Future<dynamic> listen({
+    SpeechResultListener onResult,
+    Duration listenFor,
+    Duration pauseFor,
+    String localeId,
+    SpeechSoundLevelChange onSoundLevelChange,
+    dynamic cancelOnError: false,
+    dynamic partialResults: true,
+    dynamic onDevice: false,
+    ListenMode listenMode: ListenMode.confirmation,
+    dynamic sampleRate: 0
+  });
+  Future<void> stop();
+}
+
+class TranscriberSpeechToText extends Transcriber{
   bool _hasSpeech = false;
   SpeechToText transcriber = SpeechToText();
   TranscriberSpeechToText();
@@ -67,7 +87,7 @@ class TranscriberPage extends StatefulWidget {
 
 class _TranscriberPageState extends State<TranscriberPage> {
   bool _hasSpeech = false;
-  TranscriberSpeechToText transcriber = TranscriberSpeechToText();
+  Transcriber transcriber = TranscriberSpeechToText();
   Future<void> initializeTranscriber() async {
     bool hasSpeech = await transcriber.initialize(
         onError: errorListener,
