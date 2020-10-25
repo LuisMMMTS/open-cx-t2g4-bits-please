@@ -181,10 +181,10 @@ class _TranscriberPageState extends State<TranscriberPage> {
   void resultListener(SpeechRecognitionResult result) {
     setState(() {
       lastWords = result.recognizedWords;
+      if(allWords == "") lastWords = "${lastWords[0].toUpperCase()}${lastWords.substring(1)}";
       if(result.finalResult && lastWords != "") {
         if(allWords != "") allWords += " ";
         allWords += lastWords;
-        allWords = "${allWords[0].toUpperCase()}${allWords.substring(1)}";
       }
     });
   }
