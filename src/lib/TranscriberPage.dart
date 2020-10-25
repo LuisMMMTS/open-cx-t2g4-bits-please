@@ -114,7 +114,6 @@ class _TranscriberPageState extends State<TranscriberPage> {
 
   @override
   Widget build(BuildContext context) {
-    initializeTranscriber();
     return Scaffold(
       appBar: getAppBar(),
       body: Column(
