@@ -27,7 +27,8 @@ class _TranscriberPageState extends State<TranscriberPage> {
       _localeNames = await transcriber.locales();
 
       var systemLocale = await transcriber.systemLocale();
-      _currentLocaleId = systemLocale.localeId;
+      if(_currentLocaleId == "")
+        _currentLocaleId = systemLocale.localeId;
     }
 
     if (!mounted) return;
@@ -72,6 +73,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
         color: (!_hasSpeech ? Colors.grey : (!transcriber.isListening ? Colors.black : Colors.white)),
         onPressed: (!_hasSpeech ? null : (!transcriber.isListening ? startListening : stopListening)),
       ),
+
     );
   }
 
