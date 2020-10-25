@@ -76,6 +76,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
         color: (!_hasSpeech ? Colors.grey : (!transcriber.isListening ? Colors.black : Colors.white)),
         onPressed: (!_hasSpeech ? null : (!transcriber.isListening ? startListening : stopListening)),
       ),
+
     );
   }
 
