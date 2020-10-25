@@ -201,9 +201,27 @@ class _TranscriberPageState extends State<TranscriberPage> {
 
   void errorListener(SpeechRecognitionError error) {
     print("Received error status: $error, listening: ${transcriber.isListening}");
+    if(error.errorMsg == "error_permission") showPermissionDialog();
     setState(() {
       lastError = "${error.errorMsg} - ${error.permanent}";
     });
+  }
+
+  void showPermissionDialog(){
+    showDialog(
+      context: context,
+      builder: (_) => new AlertDialog(
+        title: new Text("Insufficient permissions"),
+        content: new Text(
+            "You have insufficient permissions, please check you have provided all necessary permissions.\n"
+            "You might also have trouble recognizing voice because "
+            "you have not granted Google Speech Recognizer (part of Google Assistant) "
+            "permission to record audio. "
+            "If you have never started Google Assistant, starting it for the first time and granting "
+            "permission to record audio should be enough."
+        ),
+      ),
+    );
   }
 
   void statusListener(String status) {
