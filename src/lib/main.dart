@@ -1,4 +1,4 @@
-import 'package:com_4_all/transcriber.dart';
+import 'package:com_4_all/TranscriberPage.dart';
 import 'package:flutter/material.dart';
 import 'synthesizer.dart';
 
