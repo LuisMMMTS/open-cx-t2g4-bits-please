@@ -2,7 +2,7 @@ name: test
 
 on:
   push:
-    branches: [ master , dev ]
+    branches: [ master , dev, dev-action ]
   pull_request:
     branches: [ master ]
 
@@ -22,6 +22,7 @@ jobs:
     - name: Run flutter pub get
       run: |
         cd src
+        ls -la
         flutter pub get
     - name: Assemble debug with Gradle
       run: |
