@@ -17,6 +17,8 @@ jobs:
     #   uses: actions/setup-java@v1
     #   with:
     #     java-version: 1.11
+    - name: Install flutter
+      run: sudo snap install flutter --classic
     - name: Run flutter pub get
       run: |
         cd src
