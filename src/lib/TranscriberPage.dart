@@ -17,17 +17,23 @@ class TranscriberPage extends StatefulWidget {
 
 class _TranscriberPageState extends State<TranscriberPage> {
   bool _hasSpeech = false;
-  Transcriber transcriber = TranscriberSpeechToText();
+  Transcriber transcriber;
+
+
   Future<void> initializeTranscriber() async {
-    bool hasSpeech = await transcriber.initialize(
-        onError: errorListener,
-        onStatus: statusListener
+    transcriber = TranscriberSpeechToText(
+      onBegin: beginListener,
+      onResult: resultListener,
+      onSoundLevel: soundLevelListener,
+      onEnd: endListener,
+      onError: errorListener,
     );
+    bool hasSpeech = await transcriber.initSpeech();
     if (hasSpeech) {
       print("Initialized voice recognition\n");
-      _localeNames = await transcriber.locales();
+      _localeNames = await transcriber.getLocales();
 
-      var systemLocale = await transcriber.systemLocale();
+      var systemLocale = await transcriber.getSystemLocale();
       _currentLocaleId = systemLocale.localeId;
     }else{
       print("Failed to initialize voice recognition\n");
@@ -215,7 +221,6 @@ class _TranscriberPageState extends State<TranscriberPage> {
           ),
           getComments(),
         ],
-
       ),
     );
   }
@@ -223,30 +228,31 @@ class _TranscriberPageState extends State<TranscriberPage> {
   void startListening() {
     lastWords = "";
     lastError = "";
-    transcriber.listen(
-        onResult: resultListener,
-        listenFor: Duration(seconds: 20),
-        localeId: _currentLocaleId,
-        onSoundLevelChange: soundLevelListener,
-        cancelOnError: true,
-        listenMode: ListenMode.confirmation);
+    transcriber.startListening();
     setState(() {});
   }
 
   void stopListening() {
-    transcriber.stop();
+    transcriber.stopListening();
     setState(() {
       level = 0.0;
     });
   }
 
+  void beginListener(String status) {
+    print("beginListener: $status");
+    setState(() {});
+  }
+
   void resultListener(SpeechRecognitionResult result) {
+    print("resultListener: $result");
     setState(() {
       lastWords = result.recognizedWords;
-      if(allWords == "") lastWords = "${lastWords[0].toUpperCase()}${lastWords.substring(1)}";
+      if(allWords == "" && lastWords != "") lastWords = "${lastWords[0].toUpperCase()}${lastWords.substring(1)}";
       if(result.finalResult && lastWords != "") {
         if(allWords != "") allWords += " ";
         allWords += lastWords;
+        lastWords = "";
       }
     });
   }
@@ -257,8 +263,13 @@ class _TranscriberPageState extends State<TranscriberPage> {
     });
   }
 
+  void endListener(String status) {
+    print("endListener: $status");
+    setState(() {});
+  }
+
   void errorListener(SpeechRecognitionError error) {
-    print("Received error status: $error, listening: ${transcriber.isListening}");
+    print("errorListener: $error");
     if(error.errorMsg == "error_permission") showPermissionDialog();
     setState(() {
       lastError = "${error.errorMsg} - ${error.permanent}";
@@ -282,17 +293,11 @@ class _TranscriberPageState extends State<TranscriberPage> {
     );
   }
 
-  void statusListener(String status) {
-    print("Received listener status: $status, listening: ${transcriber.isListening}");
-    setState(() {
-      lastStatus = "$status";
-    });
-  }
-
   _switchLang(selectedVal) {
     setState(() {
       _currentLocaleId = selectedVal;
     });
+    transcriber.setLocale(_currentLocaleId);
     print(selectedVal);
   }
 }
