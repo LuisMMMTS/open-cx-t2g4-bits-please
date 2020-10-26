@@ -24,7 +24,6 @@ jobs:
     - name: Run flutter pub get
       run: |
         cd src
-        ls -la
         flutter pub get
     - name: Assemble debug with Gradle
       run: |
