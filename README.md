@@ -1,5 +1,7 @@
 # open-cx-t2g4 Com4All
 
+![test](https://github.com/FEUP-ESOF-2020-21/open-cx-t2g4-bits-please/workflows/test/badge.svg)
+
 Welcome to the documentation pages of the *Com4All* of **openCX**!
 
 You can find here detailed about the (sub)product, hereby mentioned as module, from a high-level vision to low-level implementation decisions, a kind of Software Development Report (see [template](https://github.com/softeng-feup/open-cx/blob/master/docs/templates/Development-Report.md)), organized by discipline (as of RUP): 
