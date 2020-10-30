@@ -11,6 +11,7 @@ src/build
 .buildlog/
 .history
 .svn/
+src/.gradle
 
 # IntelliJ related
 *.iml
