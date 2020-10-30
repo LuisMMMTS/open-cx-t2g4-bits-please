@@ -356,7 +356,7 @@ As an attendee in a conference, I want to be able to take notes and highlights o
 
 ##### User interface mockup
 
-TODO
+![notes mockup](https://drive.google.com/uc?id=1wkRdit9D9B2Zl08_HB_ktNJzS5ekVTbL)
 
 ##### Acceptance tests
 ```gherkin
