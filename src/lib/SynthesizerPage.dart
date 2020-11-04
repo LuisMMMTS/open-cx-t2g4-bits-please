@@ -26,12 +26,16 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   List<dynamic> languagesDynamic;
   List<DropdownMenuItem<dynamic>> languages = new List();
   String language = null;
+  String stringToSynthesize = "";
+  Widget textForm;
+  var _textFormController = TextEditingController();
 
   Future _speak() async{
     await flutterTts.setVolume(1.0);
     await flutterTts.setSpeechRate(0.7);
     await flutterTts.setPitch(1.0);
-    var result = await flutterTts.speak("Hello World");
+    var result = await flutterTts.speak(_textFormController.text);
+    _textFormController.clear();
     if (result == 1) setState(() => ttsState = TtsState.playing);
   }
 
@@ -55,18 +59,18 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
 
   void onSelectedLanguageChanged(dynamic){
     language = dynamic;
-    setState(() {
-
-    });
+    flutterTts.setLanguage(language);
+    setState(() {});
   }
 
   Future _setLang() async {
-      if(await flutterTts.isLanguageAvailable("en-US")){
-        language = "en-US";
-      }
-      else if(await flutterTts.isLanguageAvailable("pt-PT")){
-        language = "pt-PT";
-      }
+    if(await flutterTts.isLanguageAvailable("pt-PT")){
+      language = "pt-PT";
+    }
+    else if(await flutterTts.isLanguageAvailable("en-US")){
+      language = "en-US";
+    }
+    flutterTts.setLanguage(language);
   }
 
   Container Speaker(){
@@ -119,34 +123,60 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     });
     _getLanguages();
     _setLang();
-
+    textForm = TextField(
+      controller: _textFormController,
+      decoration: InputDecoration(
+        hintText: "Enter a message",
+      ),
+      expands: true,
+      maxLines: null,
+      minLines: null,
+    );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Text(widget.title),
-            Speaker(),
-          ],
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        )
+          title: Row(
+            children: [
+              Text(widget.title),
+              Speaker(),
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          )
 
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Center(
-            child:
+      body:
+      Container(
+        padding: EdgeInsets.all(16.0),
+        child:
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Center(
+              child:
               DropdownButton<dynamic>(
                 items: languages,
                 onChanged: onSelectedLanguageChanged,
                 value: language,
               ),
-          )
-        ],
+            ),
+
+            Expanded(
+              flex: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                ),
+                padding: EdgeInsets.all(16.0),
+                child: textForm
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
