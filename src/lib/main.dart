@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void goToSynthesizerPage(){
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SynthesizerPage(title: 'Synthesizer',)),
+      MaterialPageRoute(builder: (context) => SynthesizerPage(title: 'Synthesizer.dart',)),
     );
   }
   void goToTranscriberPage(){
@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
               disabledTextColor: Colors.white,
               disabledColor: Colors.white,
               color: Colors.blue,
-              child: Text("Synthesizer"),
+              child: Text("Synthesizer.dart"),
               onPressed: goToSynthesizerPage,
             ),
             SizedBox(

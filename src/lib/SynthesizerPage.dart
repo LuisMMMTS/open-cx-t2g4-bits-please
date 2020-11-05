@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'SynthesizerTextToSpeech.dart';
+import 'Synthesizer.dart';
 
 void main() => runApp(SynthesizerPage());
 
@@ -16,74 +15,24 @@ class SynthesizerPage extends StatefulWidget {
   _SynthesizerPageState createState() => _SynthesizerPageState();
 }
 
-enum TtsState { playing, stopped, paused, continued }
-
-
-
 class _SynthesizerPageState extends State<SynthesizerPage> {
-  FlutterTts flutterTts = FlutterTts();
-  TtsState ttsState = TtsState.stopped;
-  List<dynamic> languagesDynamic;
-  List<DropdownMenuItem<dynamic>> languages = new List();
-  String language = null;
-  String stringToSynthesize = "";
-  Widget textForm;
-  var _textFormController = TextEditingController();
+  TextField textForm;
+  var textFormController = new TextEditingController();
+  Synthesizer synthesizer;
+  List<DropdownMenuItem> languagesDropDownList = new List();
 
-  Future _speak() async{
-    await flutterTts.setVolume(1.0);
-    await flutterTts.setSpeechRate(0.7);
-    await flutterTts.setPitch(1.0);
-    var result = await flutterTts.speak(_textFormController.text);
-    _textFormController.clear();
-    if (result == 1) setState(() => ttsState = TtsState.playing);
-  }
-
-  Future _stop() async{
-    var result = await flutterTts.stop();
-    if (result == 1) setState(() => ttsState = TtsState.stopped);
-  }
-
-  Future _getLanguages() async {
-    languagesDynamic = await flutterTts.getLanguages;
-    for(var language in languagesDynamic){
-      languages.add(new DropdownMenuItem(
-        value: language,
-        child: Text(language),
-      ));
-    }
-    language = languagesDynamic.first;
-    languages.sort((a, b) => a.value.compareTo(b.value));
-    if (languagesDynamic != null) setState(() => languagesDynamic);
-  }
-
-  void onSelectedLanguageChanged(dynamic){
-    language = dynamic;
-    flutterTts.setLanguage(language);
-    setState(() {});
-  }
-
-  Future _setLang() async {
-    if(await flutterTts.isLanguageAvailable("pt-PT")){
-      language = "pt-PT";
-    }
-    else if(await flutterTts.isLanguageAvailable("en-US")){
-      language = "en-US";
-    }
-    flutterTts.setLanguage(language);
-  }
 
   Container Speaker(){
     return new Container(
       decoration: ShapeDecoration(
-          color: (ttsState==TtsState.playing ? Colors.white : Colors.red ),
+          color: (synthesizer.isPlaying() ? Colors.white : Colors.red ),
           shape: CircleBorder()
       ),
       child: IconButton(
-        color: (ttsState==TtsState.playing ? Colors.black : Colors.white ),
-        splashColor: (ttsState==TtsState.playing ? Colors.black : Colors.white ),
+        color: (synthesizer.isPlaying() ? Colors.black : Colors.white ),
+        splashColor: (synthesizer.isPlaying() ? Colors.black : Colors.white ),
         icon: Icon(Icons.speaker_phone),
-        onPressed: (ttsState==TtsState.playing ? _stop : _speak),
+        onPressed: (synthesizer.isPlaying() ? synthesizer.stopSynthesizer : startPlaying),
       ),
     );
   }
@@ -92,49 +41,20 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   void initState() {
     super.initState();
 
-    flutterTts.setStartHandler(() {
-      setState(() {
-        ttsState = TtsState.playing;
-      });
-    });
+    synthesizer = new SynthesizerTextToSpeech(stopPlaying);
 
-    flutterTts.setCompletionHandler(() {
-      setState(() {
-        ttsState = TtsState.stopped;
-      });
-    });
-
-    flutterTts.setErrorHandler((msg) {
-      setState(() {
-        ttsState = TtsState.stopped;
-      });
-    });
-
-    flutterTts.setCancelHandler(() {
-      setState(() {
-        ttsState = TtsState.stopped;
-      });
-    });
-
-    flutterTts.setContinueHandler(() {
-      setState(() {
-        ttsState = TtsState.continued;
-      });
-    });
-    _getLanguages();
-    _setLang();
     textForm = TextField(
-      controller: _textFormController,
+      controller: textFormController,
       decoration: InputDecoration(
-        hintText: "Enter a message",
+        hintText: "Enter a message to synthesize",
       ),
       expands: true,
       maxLines: null,
       minLines: null,
     );
+    setupLanguagesDropdown();
+
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -159,9 +79,9 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
             Center(
               child:
               DropdownButton<dynamic>(
-                items: languages,
+                items: languagesDropDownList,
                 onChanged: onSelectedLanguageChanged,
-                value: language,
+                value: synthesizer.getLanguage(),
               ),
             ),
 
@@ -179,5 +99,36 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
         ),
       ),
     );
+  }
+
+  void stopPlaying(){
+    setState(() {
+    });
+  }
+  void startPlaying(){
+    synthesizer.startSynthesizer(textFormController.text);
+    textFormController.clear();
+    print(synthesizer.isPlaying());
+    setState(() {
+
+    });
+  }
+
+  void onSelectedLanguageChanged(dynamic language){
+    synthesizer.setLanguage(language.toString());
+  }
+
+  Future setupLanguagesDropdown() async{
+    for(var l in await synthesizer.getLanguages()){
+      languagesDropDownList.add(
+          new DropdownMenuItem(
+            value: l.toString(),
+            child:
+            Text(l.toString()),
+          )
+      );
+    }
+    setState(() {
+    });
   }
 }
