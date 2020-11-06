@@ -109,13 +109,12 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     synthesizer.startSynthesizer(textFormController.text);
     textFormController.clear();
     print(synthesizer.isPlaying());
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   void onSelectedLanguageChanged(dynamic language){
     synthesizer.setLanguage(language.toString());
+    setState(() {});
   }
 
   Future setupLanguagesDropdown() async{

@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void goToSynthesizerPage(){
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SynthesizerPage(title: 'Synthesizer.dart',)),
+      MaterialPageRoute(builder: (context) => SynthesizerPage(title: 'Synthesizer',)),
     );
   }
   void goToTranscriberPage(){
