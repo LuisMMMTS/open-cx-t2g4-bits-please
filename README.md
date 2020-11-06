@@ -1,5 +1,7 @@
 # open-cx-t2g4 Com4All
 
+![test](https://github.com/FEUP-ESOF-2020-21/open-cx-t2g4-bits-please/workflows/test/badge.svg)
+
 Welcome to the documentation pages of the *Com4All* of **openCX**!
 
 You can find here detailed about the (sub)product, hereby mentioned as module, from a high-level vision to low-level implementation decisions, a kind of Software Development Report (see [template](https://github.com/softeng-feup/open-cx/blob/master/docs/templates/Development-Report.md)), organized by discipline (as of RUP): 
@@ -54,42 +56,339 @@ Start by contextualizing your module, describing the main concepts, terms, roles
 
 ### Use case diagram 
 
-Create a use-case diagram in UML with all high-level use cases possibly addressed by your module.
-
-Give each use case a concise, results-oriented name. Use cases should reflect the tasks the user needs to be able to accomplish using the system. Include an action verb and a noun. 
-
-Briefly describe each use case mentioning the following:
-
-* **Actor**. Name only the actor that will be initiating this use case, i.e. a person or other entity external to the software system being specified who interacts with the system and performs use cases to accomplish tasks. 
-* **Description**. Provide a brief description of the reason for and outcome of this use case, or a high-level description of the sequence of actions and the outcome of executing the use case. 
-* **Preconditions and Postconditions**. Include any activities that must take place, or any conditions that must be true, before the use case can be started (preconditions). Describe also the state of the system at the conclusion of the use case execution (postconditions). 
-
-* **Normal Flow**. Provide a detailed description of the user actions and system responses that will take place during execution of the use case under normal, expected conditions. This dialog sequence will ultimately lead to accomplishing the goal stated in the use case name and description. This is best done as a numbered list of actions performed by the actor, alternating with responses provided by the system. 
-* **Alternative Flows and Exceptions**. Document other, legitimate usage scenarios that can take place within this use case, stating any differences in the sequence of steps that take place. In addition, describe any anticipated error conditions that could occur during execution of the use case, and define how the system is to respond to those conditions. 
-
 ![Use Cases](images/use-cases.svg)
 
+#### Get talk transcript:
+*  **Actor**. Attendee
+*  **Description**. With this use case the attendee can follow and understand the speaker by reading the transcript of the talk.
+*  **Preconditions and Postconditions**.  The attendee must have a valid profile and access to the conference. Then he can read the transcript of the speaker in the application.
+*  **Normal Flow**. 
+	1. The attendee selects the conference.
+	2. The attendee reads the transcript with his phone.
+	3. If the user desires, he can save and read the transcript afterwards.
+*  **Alternative Flows and Exceptions**. 
+	1. The attendee selects the conference.
+	2. The attendee reads the transcript with his phone.
+	3. The transcript do not load properly a warning pops up.
+	4. The application is not able to transcript the audio a warning pops up.
+    * **OR**
+    1. The attendee selects the conference.
+    2. If he does not have the access in this meeting, a warning pops up.
+
+#### Submit question:
+* **Actor:** Attendee
+* **Description:** This use case exists so the atendee can submit questions to the speaker  
+* **Preconditions and Postconditions:** In order to submit a question the atendee must be logged in and signed in a specific talk  
+* **Normal Flow:**
+  1. The atendee writes the question to the speaker and presses the button.
+  2. The system stores the question on the server.
+* **Alternative Flows and Exceptions:**
+  1. The atendee writes the question to the speaker and presses the button.
+  2. If the system can't connect to the server, a warning pops up system informs the atendee of the error
+
+#### Manage profile:
+* **Actor:** User
+* **Description:** This use case exists so the user can see and manage his/her profile settings.
+* **Preconditions and Postconditions:** In order to see his/her profile the user must be logged in.  
+* **Normal Flow:**
+  1. The user opens the profile settings.
+  2. The user sees the profile settings.
+  3. The user exits the profile settings.
+  * **OR**
+  1. The user opens the profile settings.
+  2. The user changes one of the settings.
+  3. The user saves the settings, sending them to the server.
+  4. The user exits the profile settings.
+* **Alternative Flows and Exceptions:**
+  1. The user opens the profile settings.
+  2. The user changes one of the settings.
+  3. The user saves the settings, but if the device has no Internet connection a warning pops up.
+
+#### Get question:
+*  **Actor**. Speaker.
+*  **Description**. This use case consists of receiving the question from a member of the audience in the database and converting it to speech (normally).
+*  **Preconditions and Postconditions**. In order for this to happen, the speaker must be logged in talk's page. In the end, he can choose to simply read the question or have it be converted to speech.
+*  **Normal Flow**. 
+	1. The speaker is logged in.
+	2. He gets a question and chooses to synthesize it.
+	3. The audio corresponding to the question will play.
+*  **Alternative Flows and Exceptions**. 
+	1. The speaker gets a question and chooses not to synthesize it.
+	* **OR**
+	1. The speaker has some problem in his connection and a warning pops-up.
+	
+#### Submit talk transcript:
+* **Actor**. Speaker
+* **Description**. This use case exists so that the speaker's voice can be recorded, converted to text and the transcript uploaded to the database for the audience to read it.
+* **Preconditions and Postconditions**. To have his voice transcripted, the speaker must be logged in, be in the talk's page, and have a working microphone. In the end, the speaker's voice transcript is added to the database.
+* **Normal flow**.
+    1. The speaker presses the button to start transcripting and uploading.
+    2. The speaker gives the talk
+    3. The speaker presses the button again to stop transcripting and uploading.
+* **Alternative Flows and Exceptions**.
+    1. The speaker presses the button to start transcripting and uploading.
+    2. If the speaker has not spoken for some time, he is prompted to confirm he's still in a talk.
+    3. If the speaker does not answer, or cancels, recording is stopped.
+    4. If the speaker confirms, the recording continues as usual.
+    * **OR**
+    1. The speaker presses the button to start transcripting and uploading.
+    2. If there is no Internet connection, or the connection drops, a warning pops up.
+
 ### User stories
-This section will contain the requirements of the product described as **user stories**, organized in a global **[user story map](https://plan.io/blog/user-story-mapping/)** with **user roles** or **themes**.
 
-For each theme, or role, you may add a small description. User stories should be detailed in the tool you decided to use for project management (e.g. trello or github projects).
+**Must have**:
+- [transcribe](#Story-"transcribe")
+- [submit-question](#Story-"submit-question")
+- [manual-refresh-questions](#Story-"manual-refresh-questions")
+- [synthesize-question](#Story-"synthesize-question")
 
-A user story is a description of desired functionality told from the perspective of the user or customer. A starting template for the description of a user story is 
+**Should have**:
+- [auto-refresh-questions](#Story-"auto-refresh-questions")
+- [delete-question](#delete-question")
 
-*As a < user role >, I want < goal > so that < reason >.*
+**Could have**:
+- [resize-transcript](#Story-"resize-transcript")
+- [dark-mode](#Story-"dark-mode")
+- [change-auto-refresh-time](#Story-"change-auto-refresh-time")
+- [change-display-name](#Story-"change-display-name")
+- [notes](#Story-"notes")
+- [translate-transcript](#Story-"translate-transcript")
 
 
-**INVEST in good user stories**. 
-You may add more details after, but the shorter and complete, the better. In order to decide if the user story is good, please follow the [INVEST guidelines](https://xp123.com/articles/invest-in-good-stories-and-smart-tasks/).
+#### Story "transcribe"
 
-**User interface mockups**.
-After the user story text, you should add a draft of the corresponding user interfaces, a simple mockup or draft, if applicable.
+As a speaker, I want my speech to be transcribed and sent to the attendees, so they can hear me
 
-**Acceptance tests**.
-For each user story you should write also the acceptance tests (textually in Gherkin), i.e., a description of scenarios (situations) that will help to confirm that the system satisfies the requirements addressed by the user story.
+##### User interface mockup
 
-**Value and effort**.
-At the end, it is good to add a rough indication of the value of the user story to the customers (e.g. [MoSCoW](https://en.wikipedia.org/wiki/MoSCoW_method) method) and the team should add an estimation of the effort to implement it, for example, using t-shirt sizes (XS, S, M, L, XL).
+![transcribe mockup](https://drive.google.com/uc?id=1p24QG7-869mVYTxRXu3otjUZ9B6n_1uY)
+
+##### Acceptance Tests
+```Gherkin
+Scenario: Asking a question  
+	When I write the question  
+	And I press the submit button  
+	Then The server must put my question on the queue  
+```
+	
+##### Value and Effort
+Value:  Must-Have  
+Effort: XL  
+
+#### Story "submit-question"
+
+As a conference attendee who can't speak, I want to be able to easily submit text questions to the speaker, so I can better understand the talk subjects
+
+##### User interface mockup
+
+![submit-question mockup](https://drive.google.com/uc?id=1CSig6DhVvpL8M3Xk3ZDL7KYVk9Gcfsea)
+
+##### Acceptance Tests
+```Gherkin
+Scenario: Asking a question  
+	When I write the question  
+	And I press the submit button  
+	Then The server must put my question on the queue  
+```
+	
+##### Value and Effort
+Value:  Must-Have  
+Effort: XL  
+
+#### Story "manual-refresh-questions"
+As the speaker I want to manually refresh to see all available questions.
+
+##### User interface mockup
+
+![manual-refresh-questions mockup](https://drive.google.com/uc?id=1HzQnVZQ_25992fS3oOcDE_BbaFtu7P8x)
+
+##### Acceptance tests
+```gherkin
+Scenario: Automatic refresh
+  When there are X unanswered questions
+  And the speaker swipes down the screen
+  Then the unanswered questions are updated and shown if there are any
+```
+
+##### Value and effort
+Value: Must Have  
+Effort: XL
+
+#### Story "synthesize-question"
+As the speaker I want to select a specific question and have it synthesized
+
+##### User interface mockup
+![synthesize-question mockup](https://drive.google.com/uc?id=1h_kINEZhL4pEvR7Mrm3e_MiVTrl0BRfa)
+
+##### Acceptance tests
+```gherkin
+Scenario: Synthesizing a question
+  When there are X unanswered questions
+  And the speaker chooses a question to synthesize
+  Then question is indeed synthesized and audio is played
+```
+
+##### Value and effort
+Value: Must Have
+Effort: XL
+
+#### Story "auto-refresh-questions"
+As the speaker I want the app to automatically refresh in an interval of time to check on any new questions.
+
+##### Acceptance tests
+```gherkin
+Scenario: Manual refresh
+  When there are X unanswered questions
+  And the app automatically checks for new questions after some time
+  Then the unanswered questions are updated and shown if there are any
+```
+
+##### Value and effort
+Value: Should Have  
+Effort: M
+
+#### Story "delete-question"
+As the speaker I want to delete a question after it has been answered (or not)
+
+##### User interface mockup
+![delete-question mockup](https://drive.google.com/uc?id=1nhUYwJ_Q2BNLWo54VLI9i4Ofn4lpJqzo)
+
+##### Acceptance tests
+```gherkin
+Scenario: Deleting a question
+  When there is a question the speaker wants to delete for any reason
+  And the speaker chooses to delete the question
+  Then question is removed from the database
+```
+
+**Value and effort**
+Value: Must Have
+Effort: XL
+
+#### Story "resize-transcript"
+
+As a user of the application, I want to change the height of the trascript/questions sections so I can read all questions, or focus on the transcript.
+
+##### User interface mockup
+
+![resize-transcript mockup](https://drive.google.com/uc?id=1pvOCQeHWYBiCXJxbWlEVTRa_s0J-SK7U)
+
+##### Acceptance tests
+```gherkin
+Scenario: Attending in a conference
+  When I drag the transcript/separation up or down
+  Then The separation moves up and down
+  And  The sections are resized accordingly
+```
+
+##### Value and Effort
+Value:  Should have  
+Effort: S
+
+#### Story "dark-mode"
+
+As a user in a conference, I want to be able to change the app theme to dark mode.
+
+##### User interface mockup
+
+![dark-mode mockup](https://drive.google.com/uc?id=17JEJ0TqoxT54AIzR2BD8lx0OMkC4QTSF)
+
+##### Acceptance tests
+```gherkin
+Scenario: Enable dark mode
+  When I enable dark mode
+  Then the app shows in dark mode
+  And  dark mode persists
+```
+
+##### Value and Effort
+Value:  Should have  
+Effort: M
+
+#### Story "change-auto-refresh-time"
+As the speaker I want to set the automatic refresh rate of the app to check on any new questions.
+
+##### Details
+
+Can be inspired in [this post](https://medium.com/@maheshmnj/cupertinopicker-in-flutter-ec7ec7811bf6), namely on CupertinoTimerPicker.
+
+##### User interface mockup
+![change-auto-refresh-time](https://drive.google.com/uc?id=19PlLAWZoV-UhkoWJUBOUb3BRN7LwNg4_)
+
+##### Acceptance tests
+```gherkin
+Scenario: Manual refresh
+  When I am in settings
+  And  The automatic refresh rate is 30 seconds
+  And  I change the automatic refresh rate to 10 seconds
+  Then Settings show the refresh rate is 10 seconds
+  And  The app refreshes questions automatically every 10 seconds
+```
+
+##### Value and effort
+Value: Could Have  
+Effort: S
+
+#### Story "change-display-name"
+
+As a user in a conference, I want to be able to change my Display Name so others can more easily recognize me or so I am showing my favorite name.
+
+##### User interface mockup
+
+![change-display-name mockup](https://drive.google.com/uc?id=16A8k2s2MnJg05RYD4GFSORa1E0g2mbKL)
+
+##### Acceptance tests
+```gherkin
+Scenario: Change display name
+  When I edit my display name
+  And  I press the save button
+  Then My display name is saved in my device
+  And  My display name is updated in the server
+```
+
+##### Value and Effort
+Value:  Could have  
+Effort: M
+
+#### Story "notes"
+
+As an attendee in a conference, I want to be able to take notes and highlights of the speaker apresentation in my device so that I can search than later.
+
+##### User interface mockup
+
+![notes mockup](https://drive.google.com/uc?id=1wkRdit9D9B2Zl08_HB_ktNJzS5ekVTbL)
+
+##### Acceptance tests
+```gherkin
+Scenario: Taking notes in the conference
+  When I write my note or highlighted part of the transcription
+  And I press the save button
+  Then The text is marked and I can consult it later
+```
+
+##### Value and Effort
+Value:  Could have  
+Effort: S
+
+#### Story "translate-transcript"
+
+As an attendee in a conference, I want to understand what is being said even if I don't know the speaker's language.
+
+##### User interface mockup
+
+TODO
+
+##### Acceptance tests
+```gherkin
+Scenario: Attending in a conference
+  When I can't speak the language spoken
+  And  I select the language I want to be transcripted
+  Then I get the transcript with my language of choice
+```
+
+##### Value and Effort
+Value:  Could have  
+Effort: M
 
 ### Domain model
 
