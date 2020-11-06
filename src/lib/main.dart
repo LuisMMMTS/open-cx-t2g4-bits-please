@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
               disabledTextColor: Colors.white,
               disabledColor: Colors.white,
               color: Colors.blue,
-              child: Text("Synthesizer.dart"),
+              child: Text("Synthesizer"),
               onPressed: goToSynthesizerPage,
             ),
             SizedBox(
