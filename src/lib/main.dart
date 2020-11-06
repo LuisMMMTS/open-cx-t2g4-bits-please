@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Com4All'),
     );
   }
 }
@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.blue,
               disabledTextColor: Colors.white,
               disabledColor: Colors.white,
-              child: Text("Trancriber"),
+              child: Text("Transcriber"),
               onPressed: goToTranscriberPage,
             ),
           ],
