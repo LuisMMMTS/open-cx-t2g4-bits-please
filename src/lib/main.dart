@@ -1,9 +1,52 @@
+import 'dart:io';
+
 import 'package:com_4_all/TranscriberPage.dart';
 import 'package:flutter/material.dart';
 import 'SynthesizerPage.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
-  runApp(MyApp());
+
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  final FirebaseApp app = await Firebase.initializeApp(
+    name: 'db',
+    options: FirebaseOptions(
+      appId: '1:1288171748:android:6cf94dac89814af44e7cf1',
+      apiKey: 'VC3lpiVM9cQb2opJNZKP70uc64iniz4JKiCmuNGo',
+      messagingSenderId: '297855924061',
+      projectId: 'com4all',
+      databaseURL: 'https://com4all-36c11.firebaseio.com/',
+    ),
+  );
+
+  runApp(App());
+}
+
+class App extends StatelessWidget {
+  // Create the initialization Future outside of `build`:
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      // Initialize FlutterFire:
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          //return SomethingWentWrong();
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MyApp();
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return LoadingApp();
+      },
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -88,6 +131,48 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text("Transcriber"),
               onPressed: goToTranscriberPage,
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class LoadingApp extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: LoadPage(title: 'Com4All'),
+    );
+  }
+}
+class LoadPage extends StatefulWidget {
+  LoadPage({Key key, this.title}) : super(key: key);
+  final String title;
+  @override
+  _LoadPageState createState() => _LoadPageState();
+}
+class _LoadPageState extends State<LoadPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              height: 20,
+            ),
+            Text("Loading")
           ],
         ),
       ),

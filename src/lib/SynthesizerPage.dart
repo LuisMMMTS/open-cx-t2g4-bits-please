@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'Messaging.dart';
 import 'SynthesizerTextToSpeech.dart';
 import 'Synthesizer.dart';
 
@@ -8,8 +9,6 @@ void main() => runApp(SynthesizerPage());
 
 class SynthesizerPage extends StatefulWidget {
   SynthesizerPage({Key key, this.title}) : super(key: key);
-
-
   final String title;
   @override
   _SynthesizerPageState createState() => _SynthesizerPageState();
@@ -20,7 +19,6 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   var textFormController = new TextEditingController();
   Synthesizer synthesizer;
   List<DropdownMenuItem> languagesDropDownList = new List();
-
 
   Container Speaker(){
     return new Container(
@@ -37,9 +35,14 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     );
   }
 
+  void getMessage(dynamic message){
+    textFormController.text = message.notification.body;
+  }
+
   @override
   void initState() {
     super.initState();
+    new Messaging(getMessage);
 
     synthesizer = new SynthesizerTextToSpeech(stopPlaying);
 
