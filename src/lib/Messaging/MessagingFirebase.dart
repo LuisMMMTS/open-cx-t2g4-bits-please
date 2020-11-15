@@ -34,13 +34,13 @@ Como usar:
 typedef void VoidCallback(String);
 
 class MessagingFirebase extends Messaging{
-  int subscribers = 0;
   VoidCallback callback;
   String token;
   String speakerName;
+  List<String> subscribersList = new List();
 
-  Future handleSubscriber(String token, String speaker) async{
-    http.post(
+  Future handleSubscriber(String token) async{
+    /*http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
         'Content-Type': 'application/json',
@@ -54,15 +54,15 @@ class MessagingFirebase extends Messaging{
             "registration_ids": [subscribers.toString()]
           }
       ),
-    );
+    );*/
+    subscribersList.add(token);
   }
 
   void processMessage(RemoteMessage remoteMessage){
     if(remoteMessage.data['type']=='subscribe'){
-      handleSubscriber(remoteMessage.data['token'], token);
+      handleSubscriber(remoteMessage.data['token']);
     }
     if(remoteMessage.from.isNotEmpty && remoteMessage.data['type']=='message'){
-      print(remoteMessage.from);
       callback(remoteMessage.data["message"]);
     }
   }
@@ -127,34 +127,35 @@ class MessagingFirebase extends Messaging{
     );
   }
   void sendMessageToSubscribers(String message){
-    http.post(
-      'https://fcm.googleapis.com/fcm/send',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'key=AAAAAEzH8OQ:APA91bGsGHOn9VJPXP2pj0jdtcHJ1O0475jjAC04wG6eQRkuwAd6v0auhxPMUSt_9kTt2XfCC70hcdh60tfKEIr-6UYqectCtEocmOkamk3D_hnSBeffuAd3nUtdHPcu58kgfhDJQQP9',
-      },
-      body: jsonEncode(
-        <String, dynamic>{
-          'notification': <String, dynamic>{
-            'body': '',
-            'title': ''
-          },
-          'priority': 'high',
-          'data': <String, dynamic>{
-            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-            'id': '1',
-            'status': 'done',
-            'type': 'message',
-            'message': message
-          },
-          'to': token,
+    for(String t in subscribersList) {
+      http.post(
+        'https://fcm.googleapis.com/fcm/send',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=AAAAAEzH8OQ:APA91bGsGHOn9VJPXP2pj0jdtcHJ1O0475jjAC04wG6eQRkuwAd6v0auhxPMUSt_9kTt2XfCC70hcdh60tfKEIr-6UYqectCtEocmOkamk3D_hnSBeffuAd3nUtdHPcu58kgfhDJQQP9',
         },
-      ),
-    );
+        body: jsonEncode(
+          <String, dynamic>{
+            'notification': <String, dynamic>{
+              'body': '',
+              'title': ''
+            },
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+              'id': '1',
+              'status': 'done',
+              'type': 'message',
+              'message': message
+            },
+            'to': t,
+          },
+        ),
+      );
+    }
   }
   Future<String> getToken() async{
     String out = await FirebaseMessaging.instance.getToken();
-    print(out);
     token = out;
     return out;
   }

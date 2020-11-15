@@ -9,10 +9,10 @@ class DatabaseFirebase extends Database{
     });
     ;
   }
-  String getToken(String speaker_name){
+  Future<String> getToken(String speaker_name) async{
     String out;
-    databaseReference.child(speaker_name).child("token").once().then((DataSnapshot snapshot) {
-      out = snapshot.value;
+    out = await databaseReference.child(speaker_name).child("token").once().then((DataSnapshot snapshot) {
+      return snapshot.value;
     });
     return out;
   }
