@@ -1,6 +1,7 @@
+import 'package:com_4_all/database/Database.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-class DataBase{
+class DatabaseFirebase extends Database{
   final databaseReference = FirebaseDatabase.instance.reference();
   void addToken(String speaker_name,String token){
     databaseReference.child(speaker_name).set({
@@ -14,5 +15,8 @@ class DataBase{
       out = snapshot.value;
     });
     return out;
+  }
+  void removeToken(String speaker_name){
+    databaseReference.child(speaker_name).remove();
   }
 }

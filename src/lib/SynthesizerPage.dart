@@ -16,6 +16,7 @@ class SynthesizerPage extends StatefulWidget {
 
 class _SynthesizerPageState extends State<SynthesizerPage> {
   TextField textForm;
+  Messaging messaging;
   var textFormController = new TextEditingController();
   Synthesizer synthesizer;
   List<DropdownMenuItem> languagesDropDownList = new List();
@@ -36,13 +37,13 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   }
 
   void getMessage(dynamic message){
-    textFormController.text = message.notification.body;
+    textFormController.text = message;
   }
 
   @override
   void initState() {
     super.initState();
-    new Messaging(getMessage);
+    messaging = new Messaging(getMessage);
 
     synthesizer = new SynthesizerTextToSpeech(stopPlaying);
 
@@ -108,8 +109,10 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     setState(() {
     });
   }
-  void startPlaying(){
+  Future startPlaying() async{
     synthesizer.startSynthesizer(textFormController.text);
+    String token = await messaging.getToken();
+    messaging.sendMessage(token,textFormController.text);
     textFormController.clear();
     print(synthesizer.isPlaying());
     setState(() {});
