@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'Messaging.dart';
 import 'SynthesizerTextToSpeech.dart';
 import 'Synthesizer.dart';
+import 'database/DatabaseFirebase.dart';
 
 void main() => runApp(SynthesizerPage());
 
@@ -33,6 +36,8 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
       ),
     );
   }
+
+  void get(RemoteMessage r){}
 
   @override
   void initState() {

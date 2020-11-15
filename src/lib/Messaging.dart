@@ -1,19 +1,36 @@
 import 'dart:convert';
 
+import 'package:com_4_all/database/DatabaseFirebase.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 
-
 /*
+Como usar:
+  Normal User
+    DatabaseFirebase database = new DatabaseFirebase();
+    Messaging messaging = new Messaging(<funcao que recebe o parametro data do tipo String>);
+    String speakertoken = database.getToken("<speaker_name>");
+
+    String localToken = await messaging.getToken();
+    messaging.subscribeSpeaker(speakertoken, localToken);
+
+    //para enviar mensagem
+    messaging.sendMessage(speakertoken, message);
 
 
+  Speaker:
+    DatabaseFirebase database = new DatabaseFirebase();
+    Messaging messaging = new Messaging(<funcao que recebe o parametro data do tipo String>);
 
+    String localToken = await messaging.getToken();
+    database.addToken(speakerName,localToken);
 
+    //para enviar mensagem
+    messaging.sendMessageToSubscribers(message);
  */
 
 
-
-typedef void VoidCallback(RemoteMessage);
+typedef void VoidCallback(String);
 
 class Messaging{
   int subscribers = 0;
@@ -50,7 +67,7 @@ class Messaging{
     }
   }
 
-  Messaging(void function(RemoteMessage)){
+  Messaging(void function(String)){
     this.callback = function;
     getToken();
     FirebaseMessaging.onMessage.listen(processMessage);
