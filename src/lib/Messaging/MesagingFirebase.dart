@@ -1,14 +1,15 @@
 import 'dart:convert';
 
-import 'package:com_4_all/database/DatabaseFirebase.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
+
+import 'Messaging.dart';
 
 /*
 Como usar:
   Normal User
     DatabaseFirebase database = new DatabaseFirebase();
-    Messaging messaging = new Messaging(<funcao que recebe o parametro data do tipo String>);
+    Messaging messaging = new MessagingFirebase(<funcao que recebe o parametro data do tipo String>);
     String speakertoken = database.getToken("<speaker_name>");
 
     String localToken = await messaging.getToken();
@@ -20,7 +21,7 @@ Como usar:
 
   Speaker:
     DatabaseFirebase database = new DatabaseFirebase();
-    Messaging messaging = new Messaging(<funcao que recebe o parametro data do tipo String>);
+    Messaging messaging = new MessagingFirebase(<funcao que recebe o parametro data do tipo String>);
 
     String localToken = await messaging.getToken();
     database.addToken(speakerName,localToken);
@@ -32,10 +33,11 @@ Como usar:
 
 typedef void VoidCallback(String);
 
-class Messaging{
+class MessagingFireBase extends Messaging{
   int subscribers = 0;
   VoidCallback callback;
   String token;
+  String speakerName;
 
   Future handleSubscriber(String token, String speaker) async{
     http.post(
@@ -53,8 +55,6 @@ class Messaging{
           }
       ),
     );
-
-
   }
 
   void processMessage(RemoteMessage remoteMessage){
@@ -67,13 +67,14 @@ class Messaging{
     }
   }
 
-  Messaging(void function(String)){
+  MessagingFireBase(void function(String),String speakerName){
     this.callback = function;
+    this.speakerName = speakerName;
     getToken();
     FirebaseMessaging.onMessage.listen(processMessage);
   }
 
-  Future sendMessage(String token,String message) async{
+  void sendMessage(String token,String message) async{
     http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{

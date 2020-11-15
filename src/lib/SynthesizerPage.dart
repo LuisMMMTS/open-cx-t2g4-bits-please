@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'Messaging.dart';
+import 'Messaging/Messaging.dart';
 import 'SynthesizerTextToSpeech.dart';
 import 'Synthesizer.dart';
 import 'database/DatabaseFirebase.dart';
