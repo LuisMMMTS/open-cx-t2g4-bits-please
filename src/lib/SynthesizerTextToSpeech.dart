@@ -1,4 +1,4 @@
-import 'package:com_4_all/Synthesizer.dart';
+import 'package:com_4_all/synthesizer/Synthesizer.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class SynthesizerTextToSpeech extends Synthesizer{

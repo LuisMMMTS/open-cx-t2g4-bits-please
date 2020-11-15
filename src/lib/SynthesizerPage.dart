@@ -7,10 +7,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'Messaging/Messaging.dart';
 import 'SynthesizerTextToSpeech.dart';
-import 'Synthesizer.dart';
+import 'synthesizer/Synthesizer.dart';
 import 'database/DatabaseFirebase.dart';
 
-void main() => runApp(SynthesizerPage());
+int index = 0;
 
 class SynthesizerPage extends StatefulWidget {
   SynthesizerPage({Key key, this.title}) : super(key: key);
@@ -20,10 +20,17 @@ class SynthesizerPage extends StatefulWidget {
 }
 
 class _SynthesizerPageState extends State<SynthesizerPage> {
-  TextField textForm;
-  var textFormController = new TextEditingController();
+  TextField questionMessage;
+  TextFormField sessionIDForm;
+  var questionMessageController = new TextEditingController();
+  var sessionIDController = new TextEditingController();
   Synthesizer synthesizer;
   List<DropdownMenuItem> languagesDropDownList = new List();
+
+  Database database = new DatabaseFirebase();
+  String sessionID = "";
+  String speakerToken = "";
+
   Container Speaker(){
     return new Container(
       decoration: ShapeDecoration(
@@ -40,7 +47,7 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   }
 
   void get(dynamic r){
-    textFormController.text = r.toString();
+    questionMessageController.text = r.toString();
     setState(() {
 
     });
@@ -50,8 +57,8 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   void initState() {
     super.initState();
     synthesizer = new SynthesizerTextToSpeech(stopPlaying);
-    textForm = TextField(
-      controller: textFormController,
+    questionMessage = TextField(
+      controller: questionMessageController,
       decoration: InputDecoration(
         hintText: "Enter a message to synthesize",
       ),
@@ -59,50 +66,126 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
       maxLines: null,
       minLines: null,
     );
+    sessionIDForm = TextFormField(
+      controller: sessionIDController,
+      decoration: InputDecoration(
+        labelText: "Enter the session ID",
+      ),
+      expands: false,
+      maxLines: 1,
+      minLines: 1,
+    );
     setupLanguagesDropdown();
+  }
+
+  Future checkSession() async{
+    speakerToken = await database.getToken(sessionIDController.text);
+    if(speakerToken!=null) {
+      index = 1;
+      sessionID = sessionIDController.text;
+    }
+    else{
+      sessionIDForm = TextFormField(
+        controller: sessionIDController,
+        decoration: InputDecoration(
+          alignLabelWithHint: true,
+          labelText: "Enter the session ID",
+          errorText: "Wrong Session ID"
+        ),
+        expands: false,
+        maxLines: 1,
+        minLines: 1,
+      );
+      sessionIDController.clear();
+    }
+    setState(() {
+
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Row(
-            children: [
-              Text(widget.title),
-              Speaker(),
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          )
-
-      ),
-      body:
-      Container(
-        padding: EdgeInsets.all(16.0),
-        child:
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Center(
+      body: new Stack(
+        children: <Widget>[
+          new Offstage(
+            offstage: index != 0,
+            child: new TickerMode(
+              enabled: index == 0,
               child:
-              DropdownButton<dynamic>(
-                items: languagesDropDownList,
-                onChanged: onSelectedLanguageChanged,
-                value: synthesizer.getLanguage(),
-              ),
-            ),
-
-            Expanded(
-              flex: 1,
-              child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(),
+              new Scaffold(
+                  appBar: AppBar(
+                    title: Text(widget.title),
                   ),
-                  padding: EdgeInsets.all(16.0),
-                  child: textForm
+                  body:   new Center(
+                    child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          child: sessionIDForm,
+                          width: 150,
+                        ),
+                        FlatButton(
+                          disabledTextColor: Colors.white,
+                          disabledColor: Colors.white,
+                          color: Colors.blue,
+                          child: Text("Enter the Session"),
+                          onPressed: checkSession,
+                        ),
+                      ],
+                    ),
+                  )
               ),
             ),
-          ],
-        ),
+          ),
+          new Offstage(
+            offstage: index != 1,
+            child: new TickerMode(
+              enabled: index == 1,
+              child: new Scaffold(
+                appBar: AppBar(
+                    title: Row(
+                      children: [
+                        Text(widget.title),
+                        Speaker(),
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    )
+
+                ),
+                body:
+                Container(
+                  padding: EdgeInsets.all(16.0),
+                  child:
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Center(
+                        child:
+                        DropdownButton<dynamic>(
+                          items: languagesDropDownList,
+                          onChanged: onSelectedLanguageChanged,
+                          value: synthesizer.getLanguage(),
+                        ),
+                      ),
+
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                            ),
+                            padding: EdgeInsets.all(16.0),
+                            child: questionMessage
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -112,8 +195,8 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     });
   }
   Future startPlaying() async{
-    synthesizer.startSynthesizer(textFormController.text);
-    textFormController.clear();
+    synthesizer.startSynthesizer(questionMessageController.text);
+    questionMessageController.clear();
     print(synthesizer.isPlaying());
     setState(() {});
   }
