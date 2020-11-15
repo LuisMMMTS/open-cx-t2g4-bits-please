@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 int index = 1;
 Future<FirebaseApp> _initialization = initiateFuture();
+
 Future<FirebaseApp> initiateFuture() async{
   var init;
   if (Firebase.apps.length == 0) {
@@ -33,12 +34,11 @@ Future<FirebaseApp> initiateFuture() async{
 }
 
 Future<void> main(){
-  runApp(App());
+  runApp(AppInitializer());
 }
 
-class App extends StatelessWidget {
+class AppInitializer extends StatelessWidget {
   // Create the initialization Future outside of `build`:
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -51,7 +51,7 @@ class App extends StatelessWidget {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          return MyApp();
+          return App();
         }
 
         return LoadingApp();
@@ -60,7 +60,7 @@ class App extends StatelessWidget {
   }
 }
 
-class MyApp extends StatelessWidget {
+class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -78,13 +78,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Com4All'),
+      home: HomePage(title: 'Com4All'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -98,10 +98,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   void goToSynthesizerPage(){
     index = 2;
     setState(() {
@@ -202,17 +202,17 @@ class LoadingApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoadPage(title: 'Com4All'),
+      home: LoadingPage(title: 'Com4All'),
     );
   }
 }
-class LoadPage extends StatefulWidget {
-  LoadPage({Key key, this.title}) : super(key: key);
+class LoadingPage extends StatefulWidget {
+  LoadingPage({Key key, this.title}) : super(key: key);
   final String title;
   @override
-  _LoadPageState createState() => _LoadPageState();
+  _LoadingPageState createState() => _LoadingPageState();
 }
-class _LoadPageState extends State<LoadPage> {
+class _LoadingPageState extends State<LoadingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

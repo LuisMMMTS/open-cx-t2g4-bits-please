@@ -33,7 +33,7 @@ Como usar:
 
 typedef void VoidCallback(String);
 
-class MessagingFireBase extends Messaging{
+class MessagingFirebase extends Messaging{
   int subscribers = 0;
   VoidCallback callback;
   String token;
@@ -67,7 +67,7 @@ class MessagingFireBase extends Messaging{
     }
   }
 
-  MessagingFireBase(void function(String),String speakerName){
+  MessagingFirebase(void function(String),String speakerName){
     this.callback = function;
     this.speakerName = speakerName;
     getToken();
