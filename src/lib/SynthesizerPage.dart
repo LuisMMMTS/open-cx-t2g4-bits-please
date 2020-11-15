@@ -42,9 +42,7 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   @override
   void initState() {
     super.initState();
-
     synthesizer = new SynthesizerTextToSpeech(stopPlaying);
-
     textForm = TextField(
       controller: textFormController,
       decoration: InputDecoration(
