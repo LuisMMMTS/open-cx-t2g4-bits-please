@@ -36,7 +36,6 @@ typedef void VoidCallback(String);
 class MessagingFirebase extends Messaging{
   VoidCallback callback;
   String token;
-  String speakerName;
   List<String> subscribersList = new List();
 
   Future handleSubscriber(String token) async{
@@ -67,9 +66,8 @@ class MessagingFirebase extends Messaging{
     }
   }
 
-  MessagingFirebase(void function(String),String speakerName){
+  MessagingFirebase(void function(String)){
     this.callback = function;
-    this.speakerName = speakerName;
     getToken();
     FirebaseMessaging.onMessage.listen(processMessage);
   }
