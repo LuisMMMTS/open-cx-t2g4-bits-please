@@ -27,9 +27,12 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   Synthesizer synthesizer;
   List<DropdownMenuItem> languagesDropDownList = new List();
 
+  Messaging messaging;
+
   Database database = new DatabaseFirebase();
   String sessionID = "";
   String speakerToken = "";
+  String localToken ;
 
   Container Speaker(){
     return new Container(
@@ -53,6 +56,12 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     });
   }
 
+  Future setupMessaging() async{
+    messaging = new MessagingFirebase(get);
+    localToken = await messaging.getToken();
+    messaging.subscribeSpeaker(speakerToken,localToken);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -60,11 +69,11 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     questionMessage = TextField(
       controller: questionMessageController,
       decoration: InputDecoration(
-        hintText: "Enter a message to synthesize",
+        hintText: "Enter a Question to ask",
       ),
-      expands: true,
-      maxLines: null,
-      minLines: null,
+      expands: false,
+      maxLines: 5,
+      minLines: 1,
     );
     sessionIDForm = TextFormField(
       controller: sessionIDController,
@@ -88,9 +97,9 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
       sessionIDForm = TextFormField(
         controller: sessionIDController,
         decoration: InputDecoration(
-          alignLabelWithHint: true,
-          labelText: "Enter the session ID",
-          errorText: "Wrong Session ID"
+            alignLabelWithHint: true,
+            labelText: "Enter the session ID",
+            errorText: "Wrong Session ID"
         ),
         expands: false,
         maxLines: 1,
@@ -155,7 +164,6 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
                 ),
                 body:
                 Container(
-                  padding: EdgeInsets.all(16.0),
                   child:
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -168,16 +176,12 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
                           value: synthesizer.getLanguage(),
                         ),
                       ),
-
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                            ),
-                            padding: EdgeInsets.all(16.0),
-                            child: questionMessage
+                      Container(
+                        padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
+                        decoration: new BoxDecoration(
+                          color:  Colors.black12,
                         ),
+                        child: questionMessage,
                       ),
                     ],
                   ),
