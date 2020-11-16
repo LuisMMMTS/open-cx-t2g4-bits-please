@@ -24,8 +24,9 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   TextFormField sessionIDForm;
   var questionMessageController = new TextEditingController();
   var sessionIDController = new TextEditingController();
-  Synthesizer synthesizer;
+  //Synthesizer synthesizer;
   List<DropdownMenuItem> languagesDropDownList = new List();
+  String receivedText = "";
 
   Messaging messaging;
 
@@ -33,8 +34,9 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   String sessionID = "";
   String speakerToken = "";
   String localToken ;
+  ScrollController scrollController = new ScrollController(initialScrollOffset: 50.0);
 
-  Container Speaker(){
+  /*Container Speaker(){
     return new Container(
       decoration: ShapeDecoration(
           color: (synthesizer.isPlaying() ? Colors.white : Colors.red ),
@@ -47,25 +49,41 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
         onPressed: (synthesizer.isPlaying() ? synthesizer.stopSynthesizer : startPlaying),
       ),
     );
+  }*/
+
+  Text receivedTextField(){
+    return Text(
+      receivedText,
+      textAlign: TextAlign.left,
+    );
   }
+  SingleChildScrollView scrollView = SingleChildScrollView(
+    scrollDirection: Axis.vertical,//.horizontal
+    child: Text(""),
+  );
 
-  void get(dynamic r){
-    questionMessageController.text = r.toString();
+  void getMessage(dynamic r){
+    receivedText += r.toString();
+    //questionMessageController.text = r.toString();
     setState(() {
-
     });
+    scrollController.animateTo(scrollController.position.maxScrollExtent.ceilToDouble()+receivedText.length,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.bounceIn
+    );
   }
 
   Future setupMessaging() async{
-    messaging = new MessagingFirebase(get);
+    messaging = new MessagingFirebase(getMessage);
     localToken = await messaging.getToken();
-    messaging.subscribeSpeaker(speakerToken,localToken);
   }
 
   @override
   void initState() {
     super.initState();
-    synthesizer = new SynthesizerTextToSpeech(stopPlaying);
+    //synthesizer = new SynthesizerTextToSpeech(stopPlaying);
+    setupMessaging();
+
     questionMessage = TextField(
       controller: questionMessageController,
       decoration: InputDecoration(
@@ -84,7 +102,7 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
       maxLines: 1,
       minLines: 1,
     );
-    setupLanguagesDropdown();
+    //setupLanguagesDropdown();
   }
 
   Future checkSession() async{
@@ -92,6 +110,8 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     if(speakerToken!=null) {
       index = 1;
       sessionID = sessionIDController.text;
+      messaging.subscribeSpeaker(speakerToken,localToken);
+      print(localToken);
     }
     else{
       sessionIDForm = TextFormField(
@@ -112,8 +132,21 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     });
   }
 
+  void sendMessage(){
+    messaging.sendMessage(speakerToken, questionMessageController.text);
+    print(speakerToken);
+    print(localToken);
+    questionMessageController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
+    scrollView = SingleChildScrollView(
+      controller: scrollController,
+      scrollDirection: Axis.vertical,//.horizontal
+      child: receivedTextField(),
+    );
+
     return Scaffold(
       body: new Stack(
         children: <Widget>[
@@ -156,7 +189,7 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
                     title: Row(
                       children: [
                         Text(widget.title),
-                        Speaker(),
+                        //Speaker(),
                       ],
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     )
@@ -168,20 +201,44 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Center(
+                      /*Center(
                         child:
                         DropdownButton<dynamic>(
                           items: languagesDropDownList,
                           onChanged: onSelectedLanguageChanged,
                           value: synthesizer.getLanguage(),
                         ),
+                      ),*/
+                      Expanded(
+                          child:
+                          /*Container(
+                          padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+                          child: receivedTextField(),
+                        ),*/
+                          Container(
+                            padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+                            child:  scrollView,
+                          )
                       ),
-                      Container(
-                        padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
-                        decoration: new BoxDecoration(
-                          color:  Colors.black12,
-                        ),
-                        child: questionMessage,
+                      Row(
+                          children: [
+                            Expanded(
+                              child:
+                              Container(
+                                padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
+                                decoration: new BoxDecoration(
+                                  color:  Colors.black12,
+                                ),
+                                child: questionMessage,
+                              ),
+                            ),
+                            IconButton(
+                              color: Colors.black,
+                              splashColor:  Colors.blue,
+                              icon: Icon(Icons.send),
+                              onPressed: sendMessage,
+                            ),
+                          ]
                       ),
                     ],
                   ),
@@ -194,6 +251,7 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     );
   }
 
+/*
   void stopPlaying(){
     setState(() {
     });
@@ -222,5 +280,5 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     }
     setState(() {
     });
-  }
+  }*/
 }
