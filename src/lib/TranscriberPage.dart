@@ -158,6 +158,51 @@ class _TranscriberPageState extends State<TranscriberPage> {
     );
   }
 
+  DropdownButton getLangDropdown() {
+    return DropdownButton(
+      onChanged: (selectedVal) => _switchLang(selectedVal),
+      value: _currentLocaleId,
+      items: _localeNames
+          .map(
+            (localeName) => DropdownMenuItem(
+              value: localeName.localeId,
+              child: Text(localeName.name),
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Expanded getTranscription() {
+    return Expanded(
+      flex: 1,
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: RichText(
+            textAlign: TextAlign.left,
+            text: TextSpan(
+              style: TextStyle(
+                color: Colors.black,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                  text: allWords,
+                ),
+                TextSpan(
+                    text: (transcriber.isListening ? " " + lastWords : null),
+                    style: TextStyle(
+                      color: Colors.grey,
+                    )),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Column getComments() {
     return Column(
       children: [
@@ -275,46 +320,13 @@ class _TranscriberPageState extends State<TranscriberPage> {
                 enabled: index == 1,
                 child: Column(
                   children: [
-                    DropdownButton(
-                      onChanged: (selectedVal) => _switchLang(selectedVal),
-                      value: _currentLocaleId,
-                      items: _localeNames
-                          .map(
-                            (localeName) => DropdownMenuItem(
-                              value: localeName.localeId,
-                              child: Text(localeName.name),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: RichText(
-                            textAlign: TextAlign.left,
-                            text: TextSpan(
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: allWords,
-                                ),
-                                TextSpan(
-                                    text: (transcriber.isListening
-                                        ? " " + lastWords
-                                        : null),
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                    )),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                    getLangDropdown(),
+                    getTranscription(),
+                    Divider(
+                        height: 20,
+                        thickness: 5,
+                        indent: 15,
+                        endIndent: 15
                     ),
                     getComments(),
                   ],
