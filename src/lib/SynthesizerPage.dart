@@ -7,10 +7,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'Messaging/Messaging.dart';
 import 'SynthesizerTextToSpeech.dart';
-import 'Synthesizer.dart';
+import 'synthesizer/Synthesizer.dart';
 import 'database/DatabaseFirebase.dart';
 
-void main() => runApp(SynthesizerPage());
+int index = 0;
 
 class SynthesizerPage extends StatefulWidget {
   SynthesizerPage({Key key, this.title}) : super(key: key);
@@ -20,120 +20,190 @@ class SynthesizerPage extends StatefulWidget {
 }
 
 class _SynthesizerPageState extends State<SynthesizerPage> {
-  TextField textForm;
-  var textFormController = new TextEditingController();
-  Synthesizer synthesizer;
+  TextField questionMessage;
+  TextFormField sessionIDForm;
+  var questionMessageController = new TextEditingController();
+  var sessionIDController = new TextEditingController();
   List<DropdownMenuItem> languagesDropDownList = new List();
-  Container Speaker(){
-    return new Container(
-      decoration: ShapeDecoration(
-          color: (synthesizer.isPlaying() ? Colors.white : Colors.red ),
-          shape: CircleBorder()
-      ),
-      child: IconButton(
-        color: (synthesizer.isPlaying() ? Colors.black : Colors.white ),
-        splashColor: (synthesizer.isPlaying() ? Colors.black : Colors.white ),
-        icon: Icon(Icons.speaker_phone),
-        onPressed: (synthesizer.isPlaying() ? synthesizer.stopSynthesizer : startPlaying),
-      ),
+  String receivedText = "";
+
+  Messaging messaging;
+
+  Database database = new DatabaseFirebase();
+  String sessionID = "";
+  String speakerToken = "";
+  String localToken;
+  ScrollController scrollController =
+      new ScrollController(initialScrollOffset: 50.0);
+
+  Text receivedTextField() {
+    return Text(
+      receivedText,
+      textAlign: TextAlign.left,
     );
   }
 
-  void get(dynamic r){
-    textFormController.text = r.toString();
-    setState(() {
+  SingleChildScrollView scrollView = SingleChildScrollView(
+    scrollDirection: Axis.vertical, //.horizontal
+    child: Text(""),
+  );
 
-    });
+  void getMessage(dynamic r) {
+    receivedText += r.toString();
+    setState(() {});
+    scrollController.animateTo(
+        scrollController.position.maxScrollExtent.ceilToDouble() +
+            receivedText.length,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.bounceIn);
+  }
+
+  Future setupMessaging() async {
+    messaging = new MessagingFirebase(getMessage);
+    localToken = await messaging.getToken();
   }
 
   @override
   void initState() {
     super.initState();
-    synthesizer = new SynthesizerTextToSpeech(stopPlaying);
-    textForm = TextField(
-      controller: textFormController,
+    setupMessaging();
+
+    questionMessage = TextField(
+      controller: questionMessageController,
       decoration: InputDecoration(
-        hintText: "Enter a message to synthesize",
+        hintText: "Enter a Question to ask",
       ),
-      expands: true,
-      maxLines: null,
-      minLines: null,
+      expands: false,
+      maxLines: 5,
+      minLines: 1,
     );
-    setupLanguagesDropdown();
+    sessionIDForm = TextFormField(
+      controller: sessionIDController,
+      decoration: InputDecoration(
+        labelText: "Enter the session ID",
+      ),
+      expands: false,
+      maxLines: 1,
+      minLines: 1,
+    );
+  }
+
+  Future checkSession() async {
+    speakerToken = await database.getToken(sessionIDController.text);
+    if (speakerToken != null) {
+      index = 1;
+      sessionID = sessionIDController.text;
+      messaging.subscribeSpeaker(speakerToken, localToken);
+      print(localToken);
+    } else {
+      sessionIDForm = TextFormField(
+        controller: sessionIDController,
+        decoration: InputDecoration(
+            alignLabelWithHint: true,
+            labelText: "Enter the session ID",
+            errorText: "Wrong Session ID"),
+        expands: false,
+        maxLines: 1,
+        minLines: 1,
+      );
+      sessionIDController.clear();
+    }
+    setState(() {});
+  }
+
+  void sendMessage() {
+    messaging.sendMessage(speakerToken, questionMessageController.text);
+    print(speakerToken);
+    print(localToken);
+    questionMessageController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
+    scrollView = SingleChildScrollView(
+      controller: scrollController,
+      scrollDirection: Axis.vertical, //.horizontal
+      child: receivedTextField(),
+    );
+
     return Scaffold(
-      appBar: AppBar(
-          title: Row(
-            children: [
-              Text(widget.title),
-              Speaker(),
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          )
-
-      ),
-      body:
-      Container(
-        padding: EdgeInsets.all(16.0),
-        child:
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Center(
-              child:
-              DropdownButton<dynamic>(
-                items: languagesDropDownList,
-                onChanged: onSelectedLanguageChanged,
-                value: synthesizer.getLanguage(),
-              ),
-            ),
-
-            Expanded(
-              flex: 1,
-              child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(),
+      body: new Stack(
+        children: <Widget>[
+          new Offstage(
+            offstage: index != 0,
+            child: new TickerMode(
+              enabled: index == 0,
+              child: new Scaffold(
+                  appBar: AppBar(
+                    title: Text(widget.title),
                   ),
-                  padding: EdgeInsets.all(16.0),
-                  child: textForm
+                  body: new Center(
+                    child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          child: sessionIDForm,
+                          width: 150,
+                        ),
+                        FlatButton(
+                          disabledTextColor: Colors.white,
+                          disabledColor: Colors.white,
+                          color: Colors.blue,
+                          child: Text("Enter the Session"),
+                          onPressed: checkSession,
+                        ),
+                      ],
+                    ),
+                  )),
+            ),
+          ),
+          new Offstage(
+            offstage: index != 1,
+            child: new TickerMode(
+              enabled: index == 1,
+              child: new Scaffold(
+                appBar: AppBar(
+                    title: Row(
+                  children: [
+                    Text(widget.title),
+                    //Speaker(),
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                )),
+                body: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          child: Container(
+                        padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+                        child: scrollView,
+                      )),
+                      Row(children: [
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
+                            decoration: new BoxDecoration(
+                              color: Colors.black12,
+                            ),
+                            child: questionMessage,
+                          ),
+                        ),
+                        IconButton(
+                          color: Colors.black,
+                          splashColor: Colors.blue,
+                          icon: Icon(Icons.send),
+                          onPressed: sendMessage,
+                        ),
+                      ]),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
-  }
-
-  void stopPlaying(){
-    setState(() {
-    });
-  }
-  Future startPlaying() async{
-    synthesizer.startSynthesizer(textFormController.text);
-    textFormController.clear();
-    print(synthesizer.isPlaying());
-    setState(() {});
-  }
-
-  void onSelectedLanguageChanged(dynamic language){
-    synthesizer.setLanguage(language.toString());
-    setState(() {});
-  }
-
-  Future setupLanguagesDropdown() async{
-    for(var l in await synthesizer.getLanguages()){
-      languagesDropDownList.add(
-          new DropdownMenuItem(
-            value: l.toString(),
-            child:
-            Text(l.toString()),
-          )
-      );
-    }
-    setState(() {
-    });
   }
 }

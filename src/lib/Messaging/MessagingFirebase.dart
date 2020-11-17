@@ -60,6 +60,8 @@ class MessagingFirebase extends Messaging {
   }
 
   void sendMessage(String token, String message) async {
+    print(subscribersList);
+
     http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
@@ -84,6 +86,7 @@ class MessagingFirebase extends Messaging {
   }
 
   void subscribeSpeaker(String speakerToken, String token) {
+    print("Subscribe: " + speakerToken);
     http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
