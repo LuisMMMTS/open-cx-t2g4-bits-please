@@ -14,7 +14,7 @@ import 'TranscriberSpeechToText.dart';
 import 'Messaging/Messaging.dart';
 import 'database/DatabaseFirebase.dart';
 
-int index=0;
+int index = 0;
 
 class TranscriberPage extends StatefulWidget {
   final String title;
@@ -34,12 +34,11 @@ class _TranscriberPageState extends State<TranscriberPage> {
   String localToken;
   String receivedText = "";
   ScrollController scrollController =
-  new ScrollController(initialScrollOffset: 50.0);
+      new ScrollController(initialScrollOffset: 50.0);
 
   Messaging messaging;
 
   Database database = new DatabaseFirebase();
-
 
   Future<void> initializeTranscriber() async {
     transcriber = TranscriberSpeechToText(
@@ -56,7 +55,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
 
       var systemLocale = await transcriber.getSystemLocale();
       _currentLocaleId = systemLocale.localeId;
-    }else{
+    } else {
       print("Failed to initialize voice recognition\n");
     }
 
@@ -131,7 +130,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
     setState(() {});
   }
 
-  Container getMicrophoneButton(){
+  Container getMicrophoneButton() {
     return Container(
       width: 40,
       decoration: ShapeDecoration(
@@ -142,187 +141,186 @@ class _TranscriberPageState extends State<TranscriberPage> {
             color: Colors.red.withOpacity(.50),
           ),
         ],
-        color: (!_hasSpeech ? Colors.grey : (!transcriber.isListening ? Colors.white : Colors.red)),
+        color: (!_hasSpeech
+            ? Colors.grey
+            : (!transcriber.isListening ? Colors.white : Colors.red)),
         shape: CircleBorder(),
       ),
       child: IconButton(
         icon: Icon(Icons.mic),
-        color: (!_hasSpeech ? Colors.grey : (!transcriber.isListening ? Colors.black : Colors.white)),
-        onPressed: (!_hasSpeech ? null : (!transcriber.isListening ? startListening : stopListening)),
+        color: (!_hasSpeech
+            ? Colors.grey
+            : (!transcriber.isListening ? Colors.black : Colors.white)),
+        onPressed: (!_hasSpeech
+            ? null
+            : (!transcriber.isListening ? startListening : stopListening)),
       ),
-
     );
   }
 
-  Column getComments(){
+  Column getComments() {
     return Column(
       children: [
-        Row(
-          children: [
-            SizedBox(
+        Row(children: [
+          SizedBox(
               width: 50,
               height: 50,
-              child:
-                const Icon(Icons.account_circle_rounded)
+              child: const Icon(Icons.account_circle_rounded)),
+          Expanded(
+            child: Text('John Doe', textAlign: TextAlign.left),
+          ),
+          SizedBox(
+            child: IconButton(
+              iconSize: 30,
+              color: Colors.black,
+              icon: Icon(Icons.volume_mute),
+              //onPressed: ,
             ),
-            Expanded(
-              child: Text('John Doe', textAlign: TextAlign.left),
+          ),
+          SizedBox(
+            child: IconButton(
+              iconSize: 30,
+              color: Colors.black,
+              icon: Icon(Icons.cancel),
+              //onPressed: ,
             ),
-            SizedBox(
-              child: IconButton(
-                iconSize: 30,
-                color: Colors.black,
-                icon: Icon(Icons.volume_mute),
-                //onPressed: ,
-              ),
-            ),
-            SizedBox(
-              child: IconButton(
-                iconSize: 30,
-                color: Colors.black,
-                icon: Icon(Icons.cancel),
-                //onPressed: ,
-              ),
-            ),
-          ]
-        ),
+          ),
+        ]),
         Container(
           margin: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
           padding: EdgeInsets.all(16.0),
           decoration: new BoxDecoration(
-              color:  Colors.black12,
+              color: Colors.black12,
               borderRadius: new BorderRadius.only(
                   topLeft: const Radius.circular(30.0),
                   topRight: const Radius.circular(30.0),
                   bottomLeft: const Radius.circular(30.0),
                   bottomRight: const Radius.circular(30.0))),
-        child: Row(
-            children:[
-              Expanded(
-                child: Text(
+          child: Row(children: [
+            Expanded(
+              child: Text(
                   'Hello, I have a question regarding voice transcription. What languages are available?',
                   textAlign: TextAlign.center),
-              ),
-            ]
-        ),
+            ),
+          ]),
         )
       ],
     );
   }
 
-  AppBar getAppBar(){
+  AppBar getAppBar() {
     return AppBar(
-      title: Column(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text("Chat",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 12,
+        title: Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Chat",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 12,
+                ),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text("Conferencing 101",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Conferencing 101",
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: 7, right: 7),
-          child: getMicrophoneButton(),
+          ],
         ),
-      ]
-    );
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 7, right: 7),
+            child: getMicrophoneButton(),
+          ),
+        ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(),
-        body: new Stack(
-              children: <Widget>[
-              new Offstage(
-                offstage: index != 0,
-                child: new TickerMode(
-                enabled: index == 0,
-                  child: new Scaffold(
-                    appBar: AppBar(
-                      title: Text(widget.title),
+        appBar: getAppBar(),
+        body: new Stack(children: <Widget>[
+          Offstage(
+            offstage: index != 0,
+            child: new TickerMode(
+              enabled: index == 0,
+              child: new Scaffold(
+                  body: new Center(
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: sessionIDForm,
+                      width: 150,
                     ),
-                    body: new Center(
-                      child: new Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            child: sessionIDForm,
-                            width: 150,
-                          ),
-                          FlatButton(
-                            disabledTextColor: Colors.white,
-                            disabledColor: Colors.white,
-                            color: Colors.blue,
-                            child: Text("Enter the Session"),
-                            onPressed: checkSession,
-                          ),
-                        ],
-                      ),
-                    )),
+                    FlatButton(
+                      disabledTextColor: Colors.white,
+                      disabledColor: Colors.white,
+                      color: Colors.blue,
+                      child: Text("Enter the Session"),
+                      onPressed: checkSession,
+                    ),
+                  ],
                 ),
-              ),
-              Column(
+              )),
+            ),
+          ),
+          Offstage(
+              offstage: index != 1,
+              child: new TickerMode(
+                enabled: index == 1,
+                child: Column(
                   children: [
                     DropdownButton(
                       onChanged: (selectedVal) => _switchLang(selectedVal),
                       value: _currentLocaleId,
                       items: _localeNames
-                      .map(
-                        (localeName) => DropdownMenuItem(
-                        value: localeName.localeId,
-                        child: Text(localeName.name),
-                        ),
-                      ).toList(),
-              ),
-               Expanded(
-                flex: 1,
-                 child: Padding(
-                   padding: EdgeInsets.all(16.0),
-                  child: Align(
-                  alignment: Alignment.topLeft,
-                    child: RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                          TextSpan(
-                          text: allWords,
-                          ),
-                          TextSpan(
-                          text: (transcriber.isListening ? " " + lastWords : null),
-                          style: TextStyle(
-                            color: Colors.grey,
-                          )
+                          .map(
+                            (localeName) => DropdownMenuItem(
+                              value: localeName.localeId,
+                              child: Text(localeName.name),
                             ),
-                          ],
+                          )
+                          .toList(),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: RichText(
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: allWords,
+                                ),
+                                TextSpan(
+                                    text: (transcriber.isListening
+                                        ? " " + lastWords
+                                        : null),
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    )),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    getComments(),
+                  ],
                 ),
-                getComments(),
-              ],
-            ),
-          ]
-        )
-    );
+              ))
+        ]));
   }
 
   void startListening() {
@@ -348,9 +346,10 @@ class _TranscriberPageState extends State<TranscriberPage> {
     print("resultListener: $result");
     setState(() {
       lastWords = result.recognizedWords;
-      if(allWords == "" && lastWords != "") lastWords = "${lastWords[0].toUpperCase()}${lastWords.substring(1)}";
-      if(result.finalResult && lastWords != "") {
-        if(allWords != "") allWords += " ";
+      if (allWords == "" && lastWords != "")
+        lastWords = "${lastWords[0].toUpperCase()}${lastWords.substring(1)}";
+      if (result.finalResult && lastWords != "") {
+        if (allWords != "") allWords += " ";
         allWords += lastWords;
         lastWords = "";
       }
@@ -370,13 +369,13 @@ class _TranscriberPageState extends State<TranscriberPage> {
 
   void errorListener(SpeechRecognitionError error) {
     print("errorListener: $error");
-    if(error.errorMsg == "error_permission") showPermissionDialog();
+    if (error.errorMsg == "error_permission") showPermissionDialog();
     setState(() {
       lastError = "${error.errorMsg} - ${error.permanent}";
     });
   }
 
-  void showPermissionDialog(){
+  void showPermissionDialog() {
     showDialog(
       context: context,
       builder: (_) => new AlertDialog(
@@ -387,8 +386,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
             "you have not granted Google Speech Recognizer (part of Google Assistant) "
             "permission to record audio. "
             "If you have never started Google Assistant, starting it for the first time and granting "
-            "permission to record audio should be enough."
-        ),
+            "permission to record audio should be enough."),
       ),
     );
   }
