@@ -5,8 +5,16 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 
+import 'package:com_4_all/database/Database.dart';
+
+import 'Messaging/MessagingFirebase.dart';
 import 'Transcriber.dart';
 import 'TranscriberSpeechToText.dart';
+
+import 'Messaging/Messaging.dart';
+import 'database/DatabaseFirebase.dart';
+
+int index=0;
 
 class TranscriberPage extends StatefulWidget {
   final String title;
@@ -18,6 +26,19 @@ class TranscriberPage extends StatefulWidget {
 class _TranscriberPageState extends State<TranscriberPage> {
   bool _hasSpeech = false;
   Transcriber transcriber;
+
+  TextFormField sessionIDForm;
+  var sessionIDController = new TextEditingController();
+  String sessionID = "";
+  String speakerToken = "";
+  String localToken;
+  String receivedText = "";
+  ScrollController scrollController =
+  new ScrollController(initialScrollOffset: 50.0);
+
+  Messaging messaging;
+
+  Database database = new DatabaseFirebase();
 
 
   Future<void> initializeTranscriber() async {
@@ -46,9 +67,6 @@ class _TranscriberPageState extends State<TranscriberPage> {
     });
   }
 
-
-
-
   double level = 0.0;
   String allWords = "";
   String lastWords = "";
@@ -61,6 +79,56 @@ class _TranscriberPageState extends State<TranscriberPage> {
   void initState() {
     super.initState();
     initializeTranscriber();
+    setupMessaging();
+
+    sessionIDForm = TextFormField(
+      controller: sessionIDController,
+      decoration: InputDecoration(
+        labelText: "Enter the session ID",
+      ),
+      expands: false,
+      maxLines: 1,
+      minLines: 1,
+    );
+  }
+
+  void getMessage(dynamic r) {
+    receivedText += r.toString();
+    setState(() {});
+    scrollController.animateTo(
+        scrollController.position.maxScrollExtent.ceilToDouble() +
+            receivedText.length,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.bounceIn);
+  }
+
+  Future setupMessaging() async {
+    messaging = new MessagingFirebase(getMessage);
+    localToken = await messaging.getToken();
+    database.addToken(speakerToken, localToken);
+  }
+
+  Future checkSession() async {
+    speakerToken = await database.getToken(sessionIDController.text);
+    if (speakerToken != null) {
+      index = 1;
+      sessionID = sessionIDController.text;
+      messaging.subscribeSpeaker(speakerToken, localToken);
+      print(localToken);
+    } else {
+      sessionIDForm = TextFormField(
+        controller: sessionIDController,
+        decoration: InputDecoration(
+            alignLabelWithHint: true,
+            labelText: "Enter the session ID",
+            errorText: "Wrong Session ID"),
+        expands: false,
+        maxLines: 1,
+        minLines: 1,
+      );
+      sessionIDController.clear();
+    }
+    setState(() {});
   }
 
   Container getMicrophoneButton(){
@@ -178,50 +246,82 @@ class _TranscriberPageState extends State<TranscriberPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: getAppBar(),
-      body: Column(
-        children: [
-          DropdownButton(
-            onChanged: (selectedVal) => _switchLang(selectedVal),
-            value: _currentLocaleId,
-            items: _localeNames
-              .map(
-                (localeName) => DropdownMenuItem(
-                  value: localeName.localeId,
-                  child: Text(localeName.name),
+        body: new Stack(
+              children: <Widget>[
+              new Offstage(
+                offstage: index != 0,
+                child: new TickerMode(
+                enabled: index == 0,
+                  child: new Scaffold(
+                    appBar: AppBar(
+                      title: Text(widget.title),
+                    ),
+                    body: new Center(
+                      child: new Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: sessionIDForm,
+                            width: 150,
+                          ),
+                          FlatButton(
+                            disabledTextColor: Colors.white,
+                            disabledColor: Colors.white,
+                            color: Colors.blue,
+                            child: Text("Enter the Session"),
+                            onPressed: checkSession,
+                          ),
+                        ],
+                      ),
+                    )),
                 ),
-              ).toList(),
-            ),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: RichText(
+              ),
+              Column(
+                  children: [
+                    DropdownButton(
+                      onChanged: (selectedVal) => _switchLang(selectedVal),
+                      value: _currentLocaleId,
+                      items: _localeNames
+                      .map(
+                        (localeName) => DropdownMenuItem(
+                        value: localeName.localeId,
+                        child: Text(localeName.name),
+                        ),
+                      ).toList(),
+              ),
+               Expanded(
+                flex: 1,
+                 child: Padding(
+                   padding: EdgeInsets.all(16.0),
+                  child: Align(
+                  alignment: Alignment.topLeft,
+                    child: RichText(
                   textAlign: TextAlign.left,
                   text: TextSpan(
                     style: TextStyle(
                       color: Colors.black,
                     ),
                     children: <TextSpan>[
-                      TextSpan(
+                          TextSpan(
                           text: allWords,
-                      ),
-                      TextSpan(
-                        text: (transcriber.isListening ? " " + lastWords : null),
-                        style: TextStyle(
+                          ),
+                          TextSpan(
+                          text: (transcriber.isListening ? " " + lastWords : null),
+                          style: TextStyle(
                             color: Colors.grey,
-                        )
+                          )
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+                getComments(),
+              ],
             ),
-          ),
-          getComments(),
-        ],
-      ),
+          ]
+        )
     );
   }
 
