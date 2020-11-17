@@ -24,7 +24,6 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   TextFormField sessionIDForm;
   var questionMessageController = new TextEditingController();
   var sessionIDController = new TextEditingController();
-  //Synthesizer synthesizer;
   List<DropdownMenuItem> languagesDropDownList = new List();
   String receivedText = "";
 
@@ -33,47 +32,33 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   Database database = new DatabaseFirebase();
   String sessionID = "";
   String speakerToken = "";
-  String localToken ;
-  ScrollController scrollController = new ScrollController(initialScrollOffset: 50.0);
+  String localToken;
+  ScrollController scrollController =
+      new ScrollController(initialScrollOffset: 50.0);
 
-  /*Container Speaker(){
-    return new Container(
-      decoration: ShapeDecoration(
-          color: (synthesizer.isPlaying() ? Colors.white : Colors.red ),
-          shape: CircleBorder()
-      ),
-      child: IconButton(
-        color: (synthesizer.isPlaying() ? Colors.black : Colors.white ),
-        splashColor: (synthesizer.isPlaying() ? Colors.black : Colors.white ),
-        icon: Icon(Icons.speaker_phone),
-        onPressed: (synthesizer.isPlaying() ? synthesizer.stopSynthesizer : startPlaying),
-      ),
-    );
-  }*/
-
-  Text receivedTextField(){
+  Text receivedTextField() {
     return Text(
       receivedText,
       textAlign: TextAlign.left,
     );
   }
+
   SingleChildScrollView scrollView = SingleChildScrollView(
-    scrollDirection: Axis.vertical,//.horizontal
+    scrollDirection: Axis.vertical, //.horizontal
     child: Text(""),
   );
 
-  void getMessage(dynamic r){
+  void getMessage(dynamic r) {
     receivedText += r.toString();
-    //questionMessageController.text = r.toString();
-    setState(() {
-    });
-    scrollController.animateTo(scrollController.position.maxScrollExtent.ceilToDouble()+receivedText.length,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.bounceIn
-    );
+    setState(() {});
+    scrollController.animateTo(
+        scrollController.position.maxScrollExtent.ceilToDouble() +
+            receivedText.length,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.bounceIn);
   }
 
-  Future setupMessaging() async{
+  Future setupMessaging() async {
     messaging = new MessagingFirebase(getMessage);
     localToken = await messaging.getToken();
   }
@@ -81,7 +66,6 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   @override
   void initState() {
     super.initState();
-    //synthesizer = new SynthesizerTextToSpeech(stopPlaying);
     setupMessaging();
 
     questionMessage = TextField(
@@ -102,37 +86,32 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
       maxLines: 1,
       minLines: 1,
     );
-    //setupLanguagesDropdown();
   }
 
-  Future checkSession() async{
+  Future checkSession() async {
     speakerToken = await database.getToken(sessionIDController.text);
-    if(speakerToken!=null) {
+    if (speakerToken != null) {
       index = 1;
       sessionID = sessionIDController.text;
-      messaging.subscribeSpeaker(speakerToken,localToken);
+      messaging.subscribeSpeaker(speakerToken, localToken);
       print(localToken);
-    }
-    else{
+    } else {
       sessionIDForm = TextFormField(
         controller: sessionIDController,
         decoration: InputDecoration(
             alignLabelWithHint: true,
             labelText: "Enter the session ID",
-            errorText: "Wrong Session ID"
-        ),
+            errorText: "Wrong Session ID"),
         expands: false,
         maxLines: 1,
         minLines: 1,
       );
       sessionIDController.clear();
     }
-    setState(() {
-
-    });
+    setState(() {});
   }
 
-  void sendMessage(){
+  void sendMessage() {
     messaging.sendMessage(speakerToken, questionMessageController.text);
     print(speakerToken);
     print(localToken);
@@ -143,7 +122,7 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   Widget build(BuildContext context) {
     scrollView = SingleChildScrollView(
       controller: scrollController,
-      scrollDirection: Axis.vertical,//.horizontal
+      scrollDirection: Axis.vertical, //.horizontal
       child: receivedTextField(),
     );
 
@@ -154,12 +133,11 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
             offstage: index != 0,
             child: new TickerMode(
               enabled: index == 0,
-              child:
-              new Scaffold(
+              child: new Scaffold(
                   appBar: AppBar(
                     title: Text(widget.title),
                   ),
-                  body:   new Center(
+                  body: new Center(
                     child: new Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -176,8 +154,7 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
                         ),
                       ],
                     ),
-                  )
-              ),
+                  )),
             ),
           ),
           new Offstage(
@@ -187,59 +164,38 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
               child: new Scaffold(
                 appBar: AppBar(
                     title: Row(
-                      children: [
-                        Text(widget.title),
-                        //Speaker(),
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    )
-
-                ),
-                body:
-                Container(
-                  child:
-                  Column(
+                  children: [
+                    Text(widget.title),
+                    //Speaker(),
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                )),
+                body: Container(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      /*Center(
-                        child:
-                        DropdownButton<dynamic>(
-                          items: languagesDropDownList,
-                          onChanged: onSelectedLanguageChanged,
-                          value: synthesizer.getLanguage(),
-                        ),
-                      ),*/
                       Expanded(
-                          child:
-                          /*Container(
-                          padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                          child: receivedTextField(),
-                        ),*/
-                          Container(
-                            padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                            child:  scrollView,
-                          )
-                      ),
-                      Row(
-                          children: [
-                            Expanded(
-                              child:
-                              Container(
-                                padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
-                                decoration: new BoxDecoration(
-                                  color:  Colors.black12,
-                                ),
-                                child: questionMessage,
-                              ),
+                          child: Container(
+                        padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+                        child: scrollView,
+                      )),
+                      Row(children: [
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
+                            decoration: new BoxDecoration(
+                              color: Colors.black12,
                             ),
-                            IconButton(
-                              color: Colors.black,
-                              splashColor:  Colors.blue,
-                              icon: Icon(Icons.send),
-                              onPressed: sendMessage,
-                            ),
-                          ]
-                      ),
+                            child: questionMessage,
+                          ),
+                        ),
+                        IconButton(
+                          color: Colors.black,
+                          splashColor: Colors.blue,
+                          icon: Icon(Icons.send),
+                          onPressed: sendMessage,
+                        ),
+                      ]),
                     ],
                   ),
                 ),
@@ -250,35 +206,4 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
       ),
     );
   }
-
-/*
-  void stopPlaying(){
-    setState(() {
-    });
-  }
-  Future startPlaying() async{
-    synthesizer.startSynthesizer(questionMessageController.text);
-    questionMessageController.clear();
-    print(synthesizer.isPlaying());
-    setState(() {});
-  }
-
-  void onSelectedLanguageChanged(dynamic language){
-    synthesizer.setLanguage(language.toString());
-    setState(() {});
-  }
-
-  Future setupLanguagesDropdown() async{
-    for(var l in await synthesizer.getLanguages()){
-      languagesDropDownList.add(
-          new DropdownMenuItem(
-            value: l.toString(),
-            child:
-            Text(l.toString()),
-          )
-      );
-    }
-    setState(() {
-    });
-  }*/
 }
