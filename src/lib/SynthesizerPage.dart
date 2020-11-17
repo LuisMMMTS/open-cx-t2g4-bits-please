@@ -1,15 +1,19 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:com_4_all/Messaging/MessagingFirebase.dart';
+import 'package:com_4_all/database/Database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'Messaging/Messaging.dart';
 import 'SynthesizerTextToSpeech.dart';
 import 'Synthesizer.dart';
+import 'database/DatabaseFirebase.dart';
 
 void main() => runApp(SynthesizerPage());
 
 class SynthesizerPage extends StatefulWidget {
   SynthesizerPage({Key key, this.title}) : super(key: key);
-
-
   final String title;
   @override
   _SynthesizerPageState createState() => _SynthesizerPageState();
@@ -20,8 +24,6 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   var textFormController = new TextEditingController();
   Synthesizer synthesizer;
   List<DropdownMenuItem> languagesDropDownList = new List();
-
-
   Container Speaker(){
     return new Container(
       decoration: ShapeDecoration(
@@ -37,12 +39,17 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     );
   }
 
+  void get(dynamic r){
+    textFormController.text = r.toString();
+    setState(() {
+
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-
     synthesizer = new SynthesizerTextToSpeech(stopPlaying);
-
     textForm = TextField(
       controller: textFormController,
       decoration: InputDecoration(
@@ -53,7 +60,6 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
       minLines: null,
     );
     setupLanguagesDropdown();
-
   }
 
   @override
@@ -88,11 +94,11 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
             Expanded(
               flex: 1,
               child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                ),
-                padding: EdgeInsets.all(16.0),
-                child: textForm
+                  decoration: BoxDecoration(
+                    border: Border.all(),
+                  ),
+                  padding: EdgeInsets.all(16.0),
+                  child: textForm
               ),
             ),
           ],
@@ -105,7 +111,7 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     setState(() {
     });
   }
-  void startPlaying(){
+  Future startPlaying() async{
     synthesizer.startSynthesizer(textFormController.text);
     textFormController.clear();
     print(synthesizer.isPlaying());
