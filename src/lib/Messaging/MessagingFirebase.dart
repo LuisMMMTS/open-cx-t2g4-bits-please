@@ -30,64 +30,47 @@ Como usar:
     messaging.sendMessageToSubscribers(message);
  */
 
-
 typedef void VoidCallback(String);
 
-class MessagingFirebase extends Messaging{
+class MessagingFirebase extends Messaging {
   VoidCallback callback;
   String token;
   List<String> subscribersList = new List();
+  String authorization =
+      'key=AAAAAEzH8OQ:APA91bGsGHOn9VJPXP2pj0jdtcHJ1O0475jjAC04wG6eQRkuwAd6v0auhxPMUSt_9kTt2XfCC70hcdh60tfKEIr-6UYqectCtEocmOkamk3D_hnSBeffuAd3nUtdHPcu58kgfhDJQQP9';
 
-  Future handleSubscriber(String token) async{
-    /*http.post(
-      'https://fcm.googleapis.com/fcm/send',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'key=AAAAAEzH8OQ:APA91bGsGHOn9VJPXP2pj0jdtcHJ1O0475jjAC04wG6eQRkuwAd6v0auhxPMUSt_9kTt2XfCC70hcdh60tfKEIr-6UYqectCtEocmOkamk3D_hnSBeffuAd3nUtdHPcu58kgfhDJQQP9',
-      },
-      body: jsonEncode(
-          {
-            "operation": "add",
-            "notification_key_name": speaker,
-            "notification_key": token.substring(20,30),
-            "registration_ids": [subscribers.toString()]
-          }
-      ),
-    );*/
+  Future handleSubscriber(String token) async {
     subscribersList.add(token);
   }
 
-  void processMessage(RemoteMessage remoteMessage){
-    if(remoteMessage.data['type']=='subscribe'){
-      print("Subscribing: "+remoteMessage.data['token']);
+  void processMessage(RemoteMessage remoteMessage) {
+    if (remoteMessage.data['type'] == 'subscribe') {
       handleSubscriber(remoteMessage.data['token']);
     }
-    if(remoteMessage.from.isNotEmpty && remoteMessage.data['type']=='message'){
+    if (remoteMessage.from.isNotEmpty &&
+        remoteMessage.data['type'] == 'message') {
       callback(remoteMessage.data["message"]);
     }
   }
 
-  MessagingFirebase(void function(String)){
+  MessagingFirebase(void function(String)) {
     this.callback = function;
     getToken();
     FirebaseMessaging.onMessage.listen(processMessage);
   }
 
-  void sendMessage(String token,String message) async{
+  void sendMessage(String token, String message) async {
     print(subscribersList);
 
     http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
         'Content-Type': 'application/json',
-        'Authorization': 'key=AAAAAEzH8OQ:APA91bGsGHOn9VJPXP2pj0jdtcHJ1O0475jjAC04wG6eQRkuwAd6v0auhxPMUSt_9kTt2XfCC70hcdh60tfKEIr-6UYqectCtEocmOkamk3D_hnSBeffuAd3nUtdHPcu58kgfhDJQQP9',
+        'Authorization': authorization,
       },
       body: jsonEncode(
         <String, dynamic>{
-          'notification': <String, dynamic>{
-            'body': '',
-            'title': ''
-          },
+          'notification': <String, dynamic>{'body': '', 'title': ''},
           'priority': 'high',
           'data': <String, dynamic>{
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
@@ -101,20 +84,18 @@ class MessagingFirebase extends Messaging{
       ),
     );
   }
-  void subscribeSpeaker(String speakerToken,String token){
-    print("Subscribe: "+speakerToken);
+
+  void subscribeSpeaker(String speakerToken, String token) {
+    print("Subscribe: " + speakerToken);
     http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
         'Content-Type': 'application/json',
-        'Authorization': 'key=AAAAAEzH8OQ:APA91bGsGHOn9VJPXP2pj0jdtcHJ1O0475jjAC04wG6eQRkuwAd6v0auhxPMUSt_9kTt2XfCC70hcdh60tfKEIr-6UYqectCtEocmOkamk3D_hnSBeffuAd3nUtdHPcu58kgfhDJQQP9',
+        'Authorization': authorization
       },
       body: jsonEncode(
         <String, dynamic>{
-          'notification': <String, dynamic>{
-            'body': '',
-            'title': ''
-          },
+          'notification': <String, dynamic>{'body': '', 'title': ''},
           'priority': 'high',
           'data': <String, dynamic>{
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
@@ -128,35 +109,14 @@ class MessagingFirebase extends Messaging{
       ),
     );
   }
-  void sendMessageToSubscribers(String message){
-    for(String t in subscribersList) {
-      http.post(
-        'https://fcm.googleapis.com/fcm/send',
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'key=AAAAAEzH8OQ:APA91bGsGHOn9VJPXP2pj0jdtcHJ1O0475jjAC04wG6eQRkuwAd6v0auhxPMUSt_9kTt2XfCC70hcdh60tfKEIr-6UYqectCtEocmOkamk3D_hnSBeffuAd3nUtdHPcu58kgfhDJQQP9',
-        },
-        body: jsonEncode(
-          <String, dynamic>{
-            'notification': <String, dynamic>{
-              'body': '',
-              'title': ''
-            },
-            'priority': 'high',
-            'data': <String, dynamic>{
-              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-              'id': '1',
-              'status': 'done',
-              'type': 'message',
-              'message': message
-            },
-            'to': t,
-          },
-        ),
-      );
+
+  void sendMessageToSubscribers(String message) {
+    for (String t in subscribersList) {
+      sendMessage(t, message);
     }
   }
-  Future<String> getToken() async{
+
+  Future<String> getToken() async {
     String out = await FirebaseMessaging.instance.getToken();
     token = out;
     return out;
