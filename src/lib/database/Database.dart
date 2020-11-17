@@ -14,11 +14,11 @@ abstract class Database {
   * @param speaker_name name of speaker
   * @return returns the token of the speaker as a String
   */
-  Future<String> getToken(String speaker_name);
+  Future<String> getToken(String talk_name);
 
   /*
   * Deletes the token of a speaker with name speaker_name
   * @param speaker_name name of the speaker
   */
-  void removeToken(String speaker_name);
+  void removeToken(String talk_name);
 }
