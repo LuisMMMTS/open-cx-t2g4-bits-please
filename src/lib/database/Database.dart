@@ -3,11 +3,11 @@
 */
 abstract class Database {
   /*
-  * Function that adds the token of an atendee as a child of the speaker token of name speaker_name
-  * @param speaker_name name of the speaker
+  * Function that adds the token of an atendee as a child of the speaker token of name talk_name
+  * @param talk_name name of the speaker
   * @param token atendee token
   */
-  void addToken(String speaker_name, String token);
+  void addToken(String talk_name, String token);
 
   /*
   * Function that returns the token of speaker with speaker_name

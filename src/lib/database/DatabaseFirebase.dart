@@ -3,7 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class DatabaseFirebase extends Database{
   final databaseReference = FirebaseDatabase.instance.reference();
-  void addToken(String speaker_name,String token){
+  void addToken(String talk_name,String token){
     databaseReference.child(speaker_name).set({
       'token': token
     });
