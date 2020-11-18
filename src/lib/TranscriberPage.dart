@@ -352,6 +352,9 @@ class _TranscriberPageState extends State<TranscriberPage> {
 
   void resultListener(TranscriberResult result) {
     print("resultListener: $result");
+    if(result.isFinal()){
+      messaging.sendMessageToSubscribers(result.getValue());
+    }
     setState(() {
       lastWords = result.getValue();
       if (allWords == "" && lastWords != "")
