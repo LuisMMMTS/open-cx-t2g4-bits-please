@@ -5,7 +5,6 @@ class DatabaseFirebase extends Database {
   final databaseReference = FirebaseDatabase.instance.reference();
   void addToken(String talk_name, String token) {
     databaseReference.child(talk_name).set({'token': token});
-    ;
   }
 
   Future<String> getToken(String talk_name) async {
