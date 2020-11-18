@@ -312,24 +312,27 @@ class _TranscriberPageState extends State<TranscriberPage> {
             ),
           ),
           Offstage(
-              offstage: index != 1,
-              child: new TickerMode(
-                enabled: index == 1,
-                child: Column(
-                  children: [
-                    getLangDropdown(),
-                    getTranscription(),
-                    Divider(
-                        height: 20,
-                        thickness: 5,
-                        indent: 15,
-                        endIndent: 15
-                    ),
-                    getComments(),
-                  ],
-                ),
-              ))
-        ]));
+            offstage: index != 1,
+            child: new TickerMode(
+              enabled: index == 1,
+              child: Column(
+                children: [
+                  getLangDropdown(),
+                  getTranscription(),
+                  Divider(
+                    height: 20,
+                    thickness: 5,
+                    indent: 15,
+                    endIndent: 15
+                  ),
+                  getComments(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void startListening() {
