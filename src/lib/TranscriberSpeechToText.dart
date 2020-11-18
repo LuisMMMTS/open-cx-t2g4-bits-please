@@ -1,3 +1,4 @@
+import 'package:com_4_all/TranscriberResult.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -7,11 +8,11 @@ import 'Transcriber.dart';
 class TranscriberSpeechToText extends Transcriber{
   /// Variables
   SpeechToText speech = SpeechToText();
-  SpeechStatusListener onBegin;
-  SpeechResultListener onResult;
-  SpeechSoundLevelChange onSoundLevel;
-  SpeechStatusListener onEnd;
-  SpeechErrorListener onError;
+  TranscriberBeginListener onBegin;
+  TranscriberResultListener onResult;
+  TranscriberSoundLevelListener onSoundLevel;
+  TranscriberEndListener onEnd;
+  TranscriberErrorListener onError;
   String locale;
   bool isListening = false;
   bool stoppedListening = false;
@@ -23,13 +24,16 @@ class TranscriberSpeechToText extends Transcriber{
   String getLocale(){ return this.locale; }
 
   /// Constructor
-  TranscriberSpeechToText({
-    SpeechStatusListener onBegin,
-    SpeechResultListener onResult,
-    SpeechSoundLevelChange onSoundLevel,
-    SpeechStatusListener onEnd,
-    SpeechErrorListener onError
+  TranscriberSpeechToText();
+
+  void initialize({
+    TranscriberBeginListener onBegin,
+    TranscriberResultListener onResult,
+    TranscriberSoundLevelListener onSoundLevel,
+    TranscriberEndListener onEnd,
+    TranscriberErrorListener onError
   }){
+    _log("initialize");
     this.onBegin = onBegin;
     this.onResult = onResult;
     this.onSoundLevel = onSoundLevel;
@@ -38,6 +42,7 @@ class TranscriberSpeechToText extends Transcriber{
   }
 
   Future<bool> initSpeech() async {
+    _log("initSpeech");
     bool hasSpeech = await speech.initialize(
       onError: errorListener,
       onStatus: statusListener
@@ -46,6 +51,7 @@ class TranscriberSpeechToText extends Transcriber{
   }
 
   void startListening(){
+    _log("startListening");
     speech.stop();
     isListening = true;
     speech.listen(
@@ -92,7 +98,7 @@ class TranscriberSpeechToText extends Transcriber{
       await Future.delayed(Duration(milliseconds: 50));
       startListening();
     }
-    onResult(result);
+    onResult(new TranscriberResult(result.recognizedWords, result.finalResult));
   }
 
   void statusListener(String status) async {
@@ -103,8 +109,8 @@ class TranscriberSpeechToText extends Transcriber{
       startListening();
       return;
     }
-    if(isListening      && status == "listening") onBegin(status);
-    if(stoppedListening && status == "notListening") onEnd(status);
+    if(isListening      && status == "listening") onBegin();
+    if(stoppedListening && status == "notListening") onEnd();
   }
 
   void _log(String message){

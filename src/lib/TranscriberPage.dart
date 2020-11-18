@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:com_4_all/TranscriberResult.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
 
 import 'package:com_4_all/database/Database.dart';
 
@@ -40,12 +40,13 @@ class _TranscriberPageState extends State<TranscriberPage> {
   Database database = new DatabaseFirebase();
 
   Future<void> initializeTranscriber() async {
-    transcriber = TranscriberSpeechToText(
+    transcriber = TranscriberSpeechToText();
+    transcriber.initialize(
       onBegin: beginListener,
       onResult: resultListener,
       onSoundLevel: soundLevelListener,
       onEnd: endListener,
-      onError: errorListener,
+      onError: errorListener
     );
     bool hasSpeech = await transcriber.initSpeech();
     if (hasSpeech) {
@@ -345,18 +346,17 @@ class _TranscriberPageState extends State<TranscriberPage> {
     });
   }
 
-  void beginListener(String status) {
-    print("beginListener: $status");
+  void beginListener() {
     setState(() {});
   }
 
-  void resultListener(SpeechRecognitionResult result) {
+  void resultListener(TranscriberResult result) {
     print("resultListener: $result");
     setState(() {
-      lastWords = result.recognizedWords;
+      lastWords = result.getValue();
       if (allWords == "" && lastWords != "")
         lastWords = "${lastWords[0].toUpperCase()}${lastWords.substring(1)}";
-      if (result.finalResult && lastWords != "") {
+      if (result.isFinal() && lastWords != "") {
         if (allWords != "") allWords += " ";
         allWords += lastWords;
         lastWords = "";
@@ -370,8 +370,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
     });
   }
 
-  void endListener(String status) {
-    print("endListener: $status");
+  void endListener() {
     setState(() {});
   }
 
