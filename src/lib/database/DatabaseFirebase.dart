@@ -3,9 +3,19 @@ import 'package:firebase_database/firebase_database.dart';
 
 class DatabaseFirebase extends Database {
   final databaseReference = FirebaseDatabase.instance.reference();
-  void addToken(String talk_name, String token) {
+  Future<bool> addToken(String talk_name, String token) async{
+    if(talk_name == null || talk_name.length == 0){
+      throw new DatabaseFirebaseIdNullError("talk_name pararmeter has a length of 0");
+    }
+    String localToken = "";
+    localToken = await getToken(talk_name);
+    print(localToken);
+    if(localToken != null){
+      return false;
+    }
     databaseReference.child(talk_name).set({'token': token});
-    ;
+
+    return true;
   }
 
   Future<String> getToken(String talk_name) async {
@@ -22,5 +32,13 @@ class DatabaseFirebase extends Database {
 
   void removeToken(String talk_name) {
     databaseReference.child(talk_name).remove();
+  }
+}
+
+class DatabaseFirebaseIdNullError{
+  String error;
+  DatabaseFirebaseIdNullError(this.error);
+  String getError(){
+    return error;
   }
 }
