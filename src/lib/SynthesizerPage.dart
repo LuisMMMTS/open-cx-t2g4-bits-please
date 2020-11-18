@@ -108,7 +108,6 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
       index = 1;
       sessionID = sessionIDController.text;
       messaging.subscribeSpeaker(speakerToken, localToken);
-      print(localToken);
     } else {
       sessionIDForm = TextFormField(
         controller: sessionIDController,
