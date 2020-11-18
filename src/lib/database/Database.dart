@@ -23,3 +23,7 @@ abstract class Database {
   */
   void removeToken(String talk_name);
 }
+
+abstract class DataBaseError{
+  String getError();
+}

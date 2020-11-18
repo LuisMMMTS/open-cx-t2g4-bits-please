@@ -35,7 +35,7 @@ class DatabaseFirebase extends Database {
   }
 }
 
-class DatabaseFirebaseIdNullError{
+class DatabaseFirebaseIdNullError extends DataBaseError{
   String error;
   DatabaseFirebaseIdNullError(this.error);
   String getError(){
