@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:com_4_all/Messaging/MessagingFirebase.dart';
 import 'package:com_4_all/database/Database.dart';
@@ -13,6 +14,7 @@ import 'database/DatabaseFirebase.dart';
 
 int index = 0;
 double splitWeight = 0.7;
+List<Widget> sentList = new List();
 
 class SynthesizerPage extends StatefulWidget {
   SynthesizerPage({Key key, this.title}) : super(key: key);
@@ -35,7 +37,9 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   String sessionID = "";
   String speakerToken = "";
   String localToken;
-  ScrollController scrollController =
+  ScrollController transcriptScrollController =
+  new ScrollController(initialScrollOffset: 50.0);
+  ScrollController messagesScrollController =
   new ScrollController(initialScrollOffset: 50.0);
 
   Text receivedTextField() {
@@ -59,11 +63,11 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
       message = "\n" + message;
     receivedText += message;
     setState(() {});
-    scrollController.animateTo(
-        scrollController.position.maxScrollExtent.ceilToDouble() +
+    transcriptScrollController.animateTo(
+        transcriptScrollController.position.maxScrollExtent.ceilToDouble() +
             receivedText.length,
         duration: Duration(milliseconds: 500),
-        curve: Curves.bounceIn);
+        curve: Curves.ease);
   }
 
   Future setupMessaging() async {
@@ -124,17 +128,51 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     setState(() {});
   }
 
+  Widget setMessageLayout(String messageText){
+    return Container(
+        margin: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 2.0),
+        padding: EdgeInsets.all(16.0),
+        decoration: new BoxDecoration(
+            color:  Colors.black12,
+            borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(30.0),
+                topRight: const Radius.circular(30.0),
+                bottomLeft: const Radius.circular(30.0),
+                bottomRight: const Radius.circular(30.0))),
+        child: IntrinsicWidth(
+          child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children:[
+                Expanded(
+                  child:
+                  Text(
+                      messageText,
+                      textAlign: TextAlign.center),
+                ),
+              ]
+          ),
+        )
+    );
+  }
+
   void sendMessage() {
     messaging.sendMessage(speakerToken, questionMessageController.text);
-    print(speakerToken);
-    print(localToken);
+    sentList.add(setMessageLayout(questionMessageController.text));
+    print(questionMessageController.text.length);
+    messagesScrollController.animateTo(
+        messagesScrollController.position.maxScrollExtent.ceilToDouble() +
+            questionMessageController.text.length*100,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease);
     questionMessageController.clear();
+    setState(() {
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     scrollView = SingleChildScrollView(
-      controller: scrollController,
+      controller: transcriptScrollController,
       scrollDirection: Axis.vertical, //.horizontal
       child: receivedTextField(),
     );
@@ -205,9 +243,21 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
                                     padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 20.0),
                                     child: scrollView,
                                   ),
-                                  view2: Text("a"),
+                                  view2: SingleChildScrollView(
+                                    scrollDirection: Axis.vertical, //.horiz
+                                    controller: messagesScrollController,// ontal
+                                    child: Container(
+                                      alignment: Alignment.topRight,
+                                      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0, 20.0),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: sentList,
+                                      ),
+                                    ),
+                                  ),
                                   viewMode: SplitViewMode.Vertical,
-                                  onWeightChanged: (w) => print(w),
+                                  onWeightChanged: (w) => splitWeight = w,
                                 ),
                               ),
                             ),
