@@ -5,8 +5,16 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 
+import 'package:com_4_all/database/Database.dart';
+
+import 'Messaging/MessagingFirebase.dart';
 import 'Transcriber.dart';
 import 'TranscriberSpeechToText.dart';
+
+import 'Messaging/Messaging.dart';
+import 'database/DatabaseFirebase.dart';
+
+int index = 0;
 
 class TranscriberPage extends StatefulWidget {
   final String title;
@@ -19,6 +27,17 @@ class _TranscriberPageState extends State<TranscriberPage> {
   bool _hasSpeech = false;
   Transcriber transcriber;
 
+  TextFormField sessionIDForm;
+  var sessionIDController = new TextEditingController();
+  String sessionID = "";
+  String speakerToken = "";
+  String receivedText = "";
+  ScrollController scrollController =
+      new ScrollController(initialScrollOffset: 50.0);
+
+  Messaging messaging;
+
+  Database database = new DatabaseFirebase();
 
   Future<void> initializeTranscriber() async {
     transcriber = TranscriberSpeechToText(
@@ -35,7 +54,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
 
       var systemLocale = await transcriber.getSystemLocale();
       _currentLocaleId = systemLocale.localeId;
-    }else{
+    } else {
       print("Failed to initialize voice recognition\n");
     }
 
@@ -45,9 +64,6 @@ class _TranscriberPageState extends State<TranscriberPage> {
       _hasSpeech = hasSpeech;
     });
   }
-
-
-
 
   double level = 0.0;
   String allWords = "";
@@ -61,9 +77,56 @@ class _TranscriberPageState extends State<TranscriberPage> {
   void initState() {
     super.initState();
     initializeTranscriber();
+    setupMessaging();
+
+    sessionIDForm = TextFormField(
+      controller: sessionIDController,
+      decoration: InputDecoration(
+        labelText: "Enter the session ID",
+      ),
+      expands: false,
+      maxLines: 1,
+      minLines: 1,
+    );
   }
 
-  Container getMicrophoneButton(){
+  void getMessage(dynamic r) {
+    receivedText += r.toString();
+    setState(() {});
+    scrollController.animateTo(
+        scrollController.position.maxScrollExtent.ceilToDouble() +
+            receivedText.length,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.bounceIn);
+  }
+
+  Future setupMessaging() async {
+    messaging = new MessagingFirebase(getMessage);
+    speakerToken = await messaging.getToken();
+  }
+
+  Future checkSession() async {
+    sessionID = sessionIDController.text;
+    if (sessionID != "") {
+      index = 1;
+      database.addToken(sessionID, speakerToken);
+    } else {
+      sessionIDForm = TextFormField(
+        controller: sessionIDController,
+        decoration: InputDecoration(
+            alignLabelWithHint: true,
+            labelText: "Enter the session ID",
+            errorText: "Not a valid session ID"),
+        expands: false,
+        maxLines: 1,
+        minLines: 1,
+      );
+      sessionIDController.clear();
+    }
+    setState(() {});
+  }
+
+  Container getMicrophoneButton() {
     return Container(
       width: 40,
       decoration: ShapeDecoration(
@@ -74,155 +137,198 @@ class _TranscriberPageState extends State<TranscriberPage> {
             color: Colors.red.withOpacity(.50),
           ),
         ],
-        color: (!_hasSpeech ? Colors.grey : (!transcriber.isListening ? Colors.white : Colors.red)),
+        color: (!_hasSpeech
+            ? Colors.grey
+            : (!transcriber.isListening ? Colors.white : Colors.red)),
         shape: CircleBorder(),
       ),
       child: IconButton(
         icon: Icon(Icons.mic),
-        color: (!_hasSpeech ? Colors.grey : (!transcriber.isListening ? Colors.black : Colors.white)),
-        onPressed: (!_hasSpeech ? null : (!transcriber.isListening ? startListening : stopListening)),
+        color: (!_hasSpeech
+            ? Colors.grey
+            : (!transcriber.isListening ? Colors.black : Colors.white)),
+        onPressed: (!_hasSpeech
+            ? null
+            : (!transcriber.isListening ? startListening : stopListening)),
       ),
-
     );
   }
 
-  Column getComments(){
+  DropdownButton getLangDropdown() {
+    return DropdownButton(
+      onChanged: (selectedVal) => _switchLang(selectedVal),
+      value: _currentLocaleId,
+      items: _localeNames
+          .map(
+            (localeName) => DropdownMenuItem(
+              value: localeName.localeId,
+              child: Text(localeName.name),
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Expanded getTranscription() {
+    return Expanded(
+      flex: 1,
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: RichText(
+            textAlign: TextAlign.left,
+            text: TextSpan(
+              style: TextStyle(
+                color: Colors.black,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                  text: allWords,
+                ),
+                TextSpan(
+                    text: (transcriber.isListening ? " " + lastWords : null),
+                    style: TextStyle(
+                      color: Colors.grey,
+                    )),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Column getComments() {
     return Column(
       children: [
-        Row(
-          children: [
-            SizedBox(
+        Row(children: [
+          SizedBox(
               width: 50,
               height: 50,
-              child:
-                const Icon(Icons.account_circle_rounded)
+              child: const Icon(Icons.account_circle_rounded)),
+          Expanded(
+            child: Text('John Doe', textAlign: TextAlign.left),
+          ),
+          SizedBox(
+            child: IconButton(
+              iconSize: 30,
+              color: Colors.black,
+              icon: Icon(Icons.volume_mute),
+              //onPressed: ,
             ),
-            Expanded(
-              child: Text('John Doe', textAlign: TextAlign.left),
+          ),
+          SizedBox(
+            child: IconButton(
+              iconSize: 30,
+              color: Colors.black,
+              icon: Icon(Icons.cancel),
+              //onPressed: ,
             ),
-            SizedBox(
-              child: IconButton(
-                iconSize: 30,
-                color: Colors.black,
-                icon: Icon(Icons.volume_mute),
-                //onPressed: ,
-              ),
-            ),
-            SizedBox(
-              child: IconButton(
-                iconSize: 30,
-                color: Colors.black,
-                icon: Icon(Icons.cancel),
-                //onPressed: ,
-              ),
-            ),
-          ]
-        ),
+          ),
+        ]),
         Container(
           margin: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
           padding: EdgeInsets.all(16.0),
           decoration: new BoxDecoration(
-              color:  Colors.black12,
+              color: Colors.black12,
               borderRadius: new BorderRadius.only(
                   topLeft: const Radius.circular(30.0),
                   topRight: const Radius.circular(30.0),
                   bottomLeft: const Radius.circular(30.0),
                   bottomRight: const Radius.circular(30.0))),
-        child: Row(
-            children:[
-              Expanded(
-                child: Text(
+          child: Row(children: [
+            Expanded(
+              child: Text(
                   'Hello, I have a question regarding voice transcription. What languages are available?',
                   textAlign: TextAlign.center),
-              ),
-            ]
-        ),
+            ),
+          ]),
         )
       ],
     );
   }
 
-  AppBar getAppBar(){
+  AppBar getAppBar() {
     return AppBar(
-      title: Column(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text("Chat",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 12,
+        title: Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Chat",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 12,
+                ),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text("Conferencing 101",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                sessionID,
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: 7, right: 7),
-          child: getMicrophoneButton(),
+          ],
         ),
-      ]
-    );
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 7, right: 7),
+            child: getMicrophoneButton(),
+          ),
+        ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(),
-      body: Column(
-        children: [
-          DropdownButton(
-            onChanged: (selectedVal) => _switchLang(selectedVal),
-            value: _currentLocaleId,
-            items: _localeNames
-              .map(
-                (localeName) => DropdownMenuItem(
-                  value: localeName.localeId,
-                  child: Text(localeName.name),
-                ),
-              ).toList(),
-            ),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: Colors.black,
+        appBar: getAppBar(),
+        body: new Stack(children: <Widget>[
+          Offstage(
+            offstage: index != 0,
+            child: new TickerMode(
+              enabled: index == 0,
+              child: new Scaffold(
+                  body: new Center(
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: sessionIDForm,
+                      width: 150,
                     ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: allWords,
-                      ),
-                      TextSpan(
-                        text: (transcriber.isListening ? " " + lastWords : null),
-                        style: TextStyle(
-                            color: Colors.grey,
-                        )
-                      ),
-                    ],
-                  ),
+                    FlatButton(
+                      disabledTextColor: Colors.white,
+                      disabledColor: Colors.white,
+                      color: Colors.blue,
+                      child: Text("Create Session"),
+                      onPressed: checkSession,
+                    ),
+                  ],
                 ),
-              ),
+              )),
             ),
           ),
-          getComments(),
-        ],
-      ),
-    );
+          Offstage(
+              offstage: index != 1,
+              child: new TickerMode(
+                enabled: index == 1,
+                child: Column(
+                  children: [
+                    getLangDropdown(),
+                    getTranscription(),
+                    Divider(
+                        height: 20,
+                        thickness: 5,
+                        indent: 15,
+                        endIndent: 15
+                    ),
+                    getComments(),
+                  ],
+                ),
+              ))
+        ]));
   }
 
   void startListening() {
@@ -248,9 +354,10 @@ class _TranscriberPageState extends State<TranscriberPage> {
     print("resultListener: $result");
     setState(() {
       lastWords = result.recognizedWords;
-      if(allWords == "" && lastWords != "") lastWords = "${lastWords[0].toUpperCase()}${lastWords.substring(1)}";
-      if(result.finalResult && lastWords != "") {
-        if(allWords != "") allWords += " ";
+      if (allWords == "" && lastWords != "")
+        lastWords = "${lastWords[0].toUpperCase()}${lastWords.substring(1)}";
+      if (result.finalResult && lastWords != "") {
+        if (allWords != "") allWords += " ";
         allWords += lastWords;
         lastWords = "";
       }
@@ -270,13 +377,13 @@ class _TranscriberPageState extends State<TranscriberPage> {
 
   void errorListener(SpeechRecognitionError error) {
     print("errorListener: $error");
-    if(error.errorMsg == "error_permission") showPermissionDialog();
+    if (error.errorMsg == "error_permission") showPermissionDialog();
     setState(() {
       lastError = "${error.errorMsg} - ${error.permanent}";
     });
   }
 
-  void showPermissionDialog(){
+  void showPermissionDialog() {
     showDialog(
       context: context,
       builder: (_) => new AlertDialog(
@@ -287,8 +394,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
             "you have not granted Google Speech Recognizer (part of Google Assistant) "
             "permission to record audio. "
             "If you have never started Google Assistant, starting it for the first time and granting "
-            "permission to record audio should be enough."
-        ),
+            "permission to record audio should be enough."),
       ),
     );
   }
