@@ -270,7 +270,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Conferencing 101",
+                sessionID,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
