@@ -31,7 +31,6 @@ class _TranscriberPageState extends State<TranscriberPage> {
   var sessionIDController = new TextEditingController();
   String sessionID = "";
   String speakerToken = "";
-  String localToken;
   String receivedText = "";
   ScrollController scrollController =
       new ScrollController(initialScrollOffset: 50.0);
@@ -103,24 +102,21 @@ class _TranscriberPageState extends State<TranscriberPage> {
 
   Future setupMessaging() async {
     messaging = new MessagingFirebase(getMessage);
-    localToken = await messaging.getToken();
-    database.addToken(speakerToken, localToken);
+    speakerToken = await messaging.getToken();
   }
 
   Future checkSession() async {
-    speakerToken = await database.getToken(sessionIDController.text);
-    if (speakerToken != null) {
+    sessionID = sessionIDController.text;
+    if (sessionID != "") {
       index = 1;
-      sessionID = sessionIDController.text;
-      messaging.subscribeSpeaker(speakerToken, localToken);
-      print(localToken);
+      database.addToken(sessionID, speakerToken);
     } else {
       sessionIDForm = TextFormField(
         controller: sessionIDController,
         decoration: InputDecoration(
             alignLabelWithHint: true,
             labelText: "Enter the session ID",
-            errorText: "Wrong Session ID"),
+            errorText: "Not a valid session ID"),
         expands: false,
         maxLines: 1,
         minLines: 1,
@@ -306,7 +302,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
                       disabledTextColor: Colors.white,
                       disabledColor: Colors.white,
                       color: Colors.blue,
-                      child: Text("Enter the Session"),
+                      child: Text("Create Session"),
                       onPressed: checkSession,
                     ),
                   ],
