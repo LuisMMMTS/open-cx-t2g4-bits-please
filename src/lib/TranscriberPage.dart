@@ -242,7 +242,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
                       Container(
                         margin: const EdgeInsets.only(
                             left: 10.0, right: 10.0, bottom: 5.0),
-                        padding: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 5.0),
+                        padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
                         decoration: new BoxDecoration(
                             color: Colors.black12,
                             borderRadius: new BorderRadius.only(
