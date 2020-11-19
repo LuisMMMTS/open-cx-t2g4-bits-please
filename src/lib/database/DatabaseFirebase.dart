@@ -18,6 +18,9 @@ class DatabaseFirebase extends Database {
   }
 
   Future<String> getToken(String talkId) async {
+    if(talkId.length <= 0){
+      throw FormatException("talkId can not be empty");
+    }
     String out;
     out = await databaseReference
         .child("talks")
