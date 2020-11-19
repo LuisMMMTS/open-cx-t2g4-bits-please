@@ -8,9 +8,6 @@ import 'package:com_4_all/database/DatabaseFirebase.dart';
 import 'package:com_4_all/messaging/Messaging.dart';
 import 'package:com_4_all/messaging/MessagingFirebase.dart';
 
-int index = 0;
-double splitWeight = 0.7;
-List<Widget> sentList = new List();
 
 class AttendeePage extends StatefulWidget {
   AttendeePage({Key key, this.title}) : super(key: key);
@@ -26,6 +23,9 @@ class _AttendeePageState extends State<AttendeePage> {
   var sessionIDController = new TextEditingController();
   List<DropdownMenuItem> languagesDropDownList = new List();
   String receivedText = "";
+  int index = 0;
+  double splitWeight = 0.7;
+  List<Widget> sentList = new List();
 
   Messaging messaging;
 
@@ -55,10 +55,10 @@ class _AttendeePageState extends State<AttendeePage> {
 
   void getMessage(dynamic r) {
     String message = r.toString();
-    if(receivedText.length>0)
-      message = "\n" + message;
-    receivedText += message;
-    setState(() {});
+    if (receivedText.length > 0) message = "\n" + message;
+    setState(() {
+      receivedText += message;
+    });
     transcriptScrollController.animateTo(
         transcriptScrollController.position.maxScrollExtent.ceilToDouble() +
             receivedText.length,
@@ -98,30 +98,40 @@ class _AttendeePageState extends State<AttendeePage> {
 
   Future checkSession() async {
     sessionID = sessionIDController.text;
-    String speakerToken = await database.getToken(sessionIDController.text);
-    if (speakerToken != null) {
-      setState(() {
-        index = 1;
-      });
-      database.subscribeTalk(sessionID, localToken);
-      talkTitle = await database.getTalkTitle(sessionID);
+    if (sessionID != "") {
+      database.subscribeTalk(sessionID, localToken).then((status) async {
+        String talkTitleTmp = await database.getTalkTitle(sessionID);
+        setState(() {
+          index = 1;
+          talkTitle = talkTitleTmp;
+        });
+      }).catchError((error) {
+        showDialog(
+          context: context,
+          builder: (_) => new AlertDialog(
+            title: new Text("No such talk ID"),
+            content: new Text("There is no registered talk with that ID."),
+          ),
+        );
+      }, test: (e) => e is NoSuchTalkException);
     } else {
-      sessionIDForm = TextFormField(
-        controller: sessionIDController,
-        decoration: InputDecoration(
-            alignLabelWithHint: true,
-            labelText: "Enter the session ID",
-            errorText: "Wrong Session ID"),
-        expands: false,
-        maxLines: 1,
-        minLines: 1,
-      );
-      sessionIDController.clear();
+      setState(() {
+        sessionIDController.clear();
+        sessionIDForm = TextFormField(
+          controller: sessionIDController,
+          decoration: InputDecoration(
+              alignLabelWithHint: true,
+              labelText: "Enter the session ID",
+              errorText: "Not a valid session ID"),
+          expands: false,
+          maxLines: 1,
+          minLines: 1,
+        );
+      });
     }
-    setState(() {});
   }
 
-  Widget setMessageLayout(String messageText){
+  Widget setMessageLayout(String messageText) {
     return Container(
       margin: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 2.0),
       padding: EdgeInsets.all(16.0),
@@ -149,18 +159,16 @@ class _AttendeePageState extends State<AttendeePage> {
 
   void sendMessage() async {
     messaging.sendMessage(
-      await database.getToken(sessionID),
-      questionMessageController.text
-    );
-    sentList.add(setMessageLayout(questionMessageController.text));
-    print(questionMessageController.text.length);
-    messagesScrollController.animateTo(
-        messagesScrollController.position.maxScrollExtent.ceilToDouble() +
-            questionMessageController.text.length * 100,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.ease);
-    questionMessageController.clear();
-    setState(() {});
+        await database.getToken(sessionID), questionMessageController.text);
+    setState(() {
+      sentList.add(setMessageLayout(questionMessageController.text));
+      messagesScrollController.animateTo(
+          messagesScrollController.position.maxScrollExtent.ceilToDouble() +
+              questionMessageController.text.length * 100,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.ease);
+      questionMessageController.clear();
+    });
   }
 
   AppBar getAppBar() {

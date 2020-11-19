@@ -23,12 +23,12 @@ abstract class Database {
   /// Subscribes an attendee to the talk indicated 
   /// @param talkID Talk ID
   /// @param token token of the attendee
-  void subscribeTalk(String talkID, String token);
+  Future<void> subscribeTalk(String talkID, String token);
 
   /// unsubscribes an attendee from a talk 
   /// @param talkID Talk ID
   /// @param token token of the attendee to be unsubscribed
-  void unsubscribeTalk(String talkID, String token);
+  Future<void> unsubscribeTalk(String talkID, String token);
 
   /// Get tokens of people that subscribed a talk.
   /// @param talkID Talk ID
@@ -38,4 +38,10 @@ abstract class Database {
 
 abstract class DataBaseError{
   String getError();
+}
+
+class NoSuchTalkException implements Exception {
+  final String msg;
+  const NoSuchTalkException([this.msg = ""]);
+  String toString() => 'NoSuchTalkException: $msg';
 }
