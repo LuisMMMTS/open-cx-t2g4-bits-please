@@ -41,9 +41,6 @@ class _AttendeePageState extends State<AttendeePage> {
   Text receivedTextField() {
     return Text(
       receivedText,
-      style: TextStyle(
-        fontSize: 20,
-      ),
       textAlign: TextAlign.left,
     );
   }
@@ -54,8 +51,12 @@ class _AttendeePageState extends State<AttendeePage> {
   );
 
   void getMessage(dynamic r) {
+    print("received: "+r.toString());
     String message = r.toString();
-    if (receivedText.length > 0) message = "\n" + message;
+    if (receivedText.length > 0) message = " " + message;
+    else{
+      message = "${message[0].toUpperCase()}${message.substring(1)}";
+    }
     setState(() {
       receivedText += message;
     });
@@ -271,7 +272,7 @@ class _AttendeePageState extends State<AttendeePage> {
                               initialWeight: splitWeight,
                               view1: Container(
                                 padding:
-                                    EdgeInsets.fromLTRB(20.0, 0, 20.0, 20.0),
+                                    EdgeInsets.all(16.0),
                                 child: scrollView,
                               ),
                               view2: SingleChildScrollView(
