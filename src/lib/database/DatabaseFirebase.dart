@@ -3,28 +3,28 @@ import 'package:firebase_database/firebase_database.dart';
 
 class DatabaseFirebase extends Database {
   final databaseReference = FirebaseDatabase.instance.reference();
-  Future<bool> addToken(String talkId, String token) async{
-    if(talkId == null || talkId.length == 0){
-      throw new DatabaseFirebaseIdNullError("talkId pararmeter has a length of 0");
+  Future<bool> addToken(String talkID, String token) async{
+    if(talkID == null || talkID.length == 0){
+      throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
     }
     String localToken = "";
-    localToken = await getToken(talkId);
+    localToken = await getToken(talkID);
     print(localToken);
     if(localToken != null){
       return false;
     }
-    databaseReference.child("talks").child(talkId).update({'token': token});
+    databaseReference.child("talks").child(talkID).update({'token': token});
     return true;
   }
 
-  Future<String> getToken(String talkId) async {
-    if(talkId.length <= 0){
-      throw FormatException("talkId can not be empty");
+  Future<String> getToken(String talkID) async {
+    if(talkID.length <= 0){
+      throw FormatException("talkID can not be empty");
     }
     String out;
     out = await databaseReference
         .child("talks")
-        .child(talkId)
+        .child(talkID)
         .child("token")
         .once()
         .then((DataSnapshot snapshot) {
@@ -33,19 +33,19 @@ class DatabaseFirebase extends Database {
     return out;
   }
 
-  void removeToken(String talkId) {
+  void removeToken(String talkID) {
     databaseReference
       .child("talks")
-      .child(talkId)
+      .child(talkID)
       .child("token")
       .remove();
   }
 
-  Future<String> getTalkTitle(String talkId) async {
+  Future<String> getTalkTitle(String talkID) async {
     String out;
     out = await databaseReference
       .child("talks")
-      .child(talkId)
+      .child(talkID)
       .child("title")
       .once()
       .then((DataSnapshot snapshot){

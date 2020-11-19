@@ -1,29 +1,25 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 
-import 'package:com_4_all/Messaging/MessagingFirebase.dart';
-import 'package:com_4_all/database/Database.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:split_view/split_view.dart';
-import 'Messaging/Messaging.dart';
-import 'SynthesizerTextToSpeech.dart';
-import 'synthesizer/Synthesizer.dart';
-import 'database/DatabaseFirebase.dart';
+import 'package:com_4_all/database/Database.dart';
+import 'package:com_4_all/database/DatabaseFirebase.dart';
+import 'package:com_4_all/messaging/Messaging.dart';
+import 'package:com_4_all/messaging/MessagingFirebase.dart';
 
 int index = 0;
 double splitWeight = 0.7;
 List<Widget> sentList = new List();
 
-class SynthesizerPage extends StatefulWidget {
-  SynthesizerPage({Key key, this.title}) : super(key: key);
+class AttendeePage extends StatefulWidget {
+  AttendeePage({Key key, this.title}) : super(key: key);
   final String title;
   @override
-  _SynthesizerPageState createState() => _SynthesizerPageState();
+  _AttendeePageState createState() => _AttendeePageState();
 }
 
-class _SynthesizerPageState extends State<SynthesizerPage> {
+class _AttendeePageState extends State<AttendeePage> {
   TextField questionMessage;
   TextFormField sessionIDForm;
   var questionMessageController = new TextEditingController();

@@ -1,7 +1,7 @@
-typedef void VoidCallback(String);
+typedef void MessageCallback(String string);
 
 /*
-* Class used to subscribe atendees and send messages in both directions
+* Class used to subscribe attendees and send messages in both directions
 */
 abstract class Messaging{
 

@@ -1,7 +1,7 @@
-import 'package:com_4_all/SpeakerPage.dart';
 import 'package:flutter/material.dart';
-import 'SynthesizerPage.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:com_4_all/SpeakerPage.dart';
+import 'package:com_4_all/AttendeePage.dart';
 
 int index = 1;
 Future<FirebaseApp> _initialization = initiateFuture();
@@ -31,7 +31,7 @@ Future<FirebaseApp> initiateFuture() async{
   return init;
 }
 
-Future<void> main(){
+void main(){
   runApp(AppInitializer());
 }
 
@@ -100,7 +100,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void goToSynthesizerPage(){
+  void goToAttendeePage(){
     index = 2;
     setState(() {
 
@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
             offstage: index != 2,
             child: new TickerMode(
               enabled: index == 2,
-              child: new SynthesizerPage(title: 'Synthesizer',),
+              child: new AttendeePage(title: 'Attendee',),
             ),
           ),
           new Offstage(
@@ -147,8 +147,8 @@ class _HomePageState extends State<HomePage> {
                             disabledTextColor: Colors.white,
                             disabledColor: Colors.white,
                             color: Colors.blue,
-                            child: Text("Synthesizer"),
-                            onPressed: goToSynthesizerPage,
+                            child: Text("Attendee"),
+                            onPressed: goToAttendeePage,
                           ),
                           SizedBox(
                             height: 20,
@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
           ),
           new BottomNavigationBarItem(
             icon: new Icon(Icons.speaker_phone),
-            label: "Synthesizer",
+            label: "Attendee",
           ),
         ],
       ),

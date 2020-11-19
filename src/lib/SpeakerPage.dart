@@ -1,18 +1,17 @@
 import 'dart:async';
 
-import 'package:com_4_all/transcriber/TranscriberResult.dart';
 import 'package:flutter/material.dart';
+
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 
 import 'package:com_4_all/database/Database.dart';
-
-import 'Messaging/MessagingFirebase.dart';
-import 'transcriber/Transcriber.dart';
-import 'transcriber/TranscriberSpeechToText.dart';
-
-import 'Messaging/Messaging.dart';
-import 'database/DatabaseFirebase.dart';
+import 'package:com_4_all/database/DatabaseFirebase.dart';
+import 'package:com_4_all/messaging/Messaging.dart';
+import 'package:com_4_all/messaging/MessagingFirebase.dart';
+import 'package:com_4_all/transcriber/Transcriber.dart';
+import 'package:com_4_all/transcriber/TranscriberResult.dart';
+import 'package:com_4_all/transcriber/TranscriberSpeechToText.dart';
 
 int index = 0;
 
@@ -229,7 +228,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                             iconSize: 30,
                             color: Colors.black,
                             icon: Icon(Icons.volume_mute),
-                            //onPressed: ,
+                            onPressed: (){},
                           ),
                         ),
                         SizedBox(
@@ -237,7 +236,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                             iconSize: 30,
                             color: Colors.black,
                             icon: Icon(Icons.cancel),
-                            //onPressed: ,
+                            onPressed: (){},
                           ),
                         ),
                       ]),

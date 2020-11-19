@@ -5,33 +5,8 @@ import 'package:http/http.dart' as http;
 
 import 'Messaging.dart';
 
-/*
-Como usar:
-  Normal User
-    DatabaseFirebase database = new DatabaseFirebase();
-    Messaging messaging = new MessagingFirebase(<funcao que recebe o parametro data do tipo String>);
-    String speakertoken = database.getToken("<speaker_name>");
-
-    String localToken = await messaging.getToken();
-    messaging.subscribeSpeaker(speakertoken, localToken);
-
-    //para enviar mensagem
-    messaging.sendMessage(speakertoken, message);
-
-
-  Speaker:
-    DatabaseFirebase database = new DatabaseFirebase();
-    Messaging messaging = new MessagingFirebase(<funcao que recebe o parametro data do tipo String>);
-
-    String localToken = await messaging.getToken();
-    database.addToken(speakerName,localToken);
-
-    //para enviar mensagem
-    messaging.sendMessageToSubscribers(message);
- */
-
 class MessagingFirebase extends Messaging {
-  VoidCallback callback;
+  MessageCallback callback;
   String token;
   List<String> subscribersList = new List();
   String authorization =
@@ -51,7 +26,7 @@ class MessagingFirebase extends Messaging {
     }
   }
 
-  MessagingFirebase(void function(String)) {
+  MessagingFirebase(MessageCallback function) {
     this.callback = function;
     getToken();
     FirebaseMessaging.onMessage.listen(processMessage);
