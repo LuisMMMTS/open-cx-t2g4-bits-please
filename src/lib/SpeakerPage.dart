@@ -13,8 +13,6 @@ import 'package:com_4_all/transcriber/Transcriber.dart';
 import 'package:com_4_all/transcriber/TranscriberResult.dart';
 import 'package:com_4_all/transcriber/TranscriberSpeechToText.dart';
 
-int index = 0;
-
 class SpeakerPage extends StatefulWidget {
   final String title;
   SpeakerPage({Key key, this.title}) : super(key: key);
@@ -31,6 +29,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
   String sessionID = "";
   String speakerToken = "";
   String talkTitle = "";
+  int index = 0;
   List<String> receivedMessages = new List<String>();
   ScrollController scrollController =
       new ScrollController(initialScrollOffset: 50.0);
@@ -92,14 +91,14 @@ class _SpeakerPageState extends State<SpeakerPage> {
   }
 
   void getMessage(dynamic r) {
-    print(r.toString());
-    receivedMessages.add(r.toString());
-    setState(() {});
-    scrollController.animateTo(
+    setState(() {
+      receivedMessages.add(r.toString());
+      scrollController.animateTo(
         scrollController.position.maxScrollExtent.ceilToDouble() +
             receivedMessages.last.length,
         duration: Duration(milliseconds: 500),
         curve: Curves.bounceIn);
+    });
   }
 
   Future setupMessaging() async {
@@ -110,23 +109,39 @@ class _SpeakerPageState extends State<SpeakerPage> {
   Future checkSession() async {
     sessionID = sessionIDController.text;
     if (sessionID != "") {
-      index = 1;
-      database.addToken(sessionID, speakerToken);
-      talkTitle = await database.getTalkTitle(sessionID);
+      database.addToken(sessionID, speakerToken)
+      .then((status) async {
+        String talkTitleTmp = await database.getTalkTitle(sessionID);
+        setState((){
+          index = 1;
+          talkTitle = talkTitleTmp;
+        });
+      })
+      .catchError((error){
+        showDialog(
+          context: context,
+          builder: (_) => new AlertDialog(
+            title: new Text("No such talk ID"),
+            content: new Text(
+                "There is no registered talk with that ID."),
+          ),
+        );
+      }, test: (e) => e is NoSuchTalkException);
     } else {
-      sessionIDForm = TextFormField(
-        controller: sessionIDController,
-        decoration: InputDecoration(
-            alignLabelWithHint: true,
-            labelText: "Enter the session ID",
-            errorText: "Not a valid session ID"),
-        expands: false,
-        maxLines: 1,
-        minLines: 1,
-      );
-      sessionIDController.clear();
+      setState(() {
+        sessionIDForm = TextFormField(
+          controller: sessionIDController,
+          decoration: InputDecoration(
+              alignLabelWithHint: true,
+              labelText: "Enter the session ID",
+              errorText: "Not a valid session ID"),
+          expands: false,
+          maxLines: 1,
+          minLines: 1,
+        );
+        sessionIDController.clear();
+      });
     }
-    setState(() {});
   }
 
   Container getMicrophoneButton() {
@@ -271,8 +286,11 @@ class _SpeakerPageState extends State<SpeakerPage> {
         leading: GestureDetector(
           onTap: () {
             database.removeToken(sessionID);
-            index = 0;
-            setState(() {});
+            setState(() {
+              index = 0;
+              sessionID = null;
+              talkTitle = null;
+            });
           },
           child: Icon(Icons.exit_to_app),
         ),
@@ -363,10 +381,11 @@ class _SpeakerPageState extends State<SpeakerPage> {
   }
 
   void startListening() {
-    lastWords = "";
-    lastError = "";
+    setState(() {
+      lastWords = "";
+      lastError = "";
+    });
     transcriber.startListening();
-    setState(() {});
   }
 
   void stopListening() {
@@ -381,7 +400,6 @@ class _SpeakerPageState extends State<SpeakerPage> {
   }
 
   void resultListener(TranscriberResult result) async {
-    print("resultListener: $result");
     if(result.isFinal()){
       List<String> subscribersTokens = await database.getSubscribersTokens(sessionID);
       messaging.sendMessageToList(subscribersTokens, result.getValue());

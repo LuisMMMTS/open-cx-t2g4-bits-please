@@ -3,13 +3,28 @@ import 'package:firebase_database/firebase_database.dart';
 
 class DatabaseFirebase extends Database {
   final databaseReference = FirebaseDatabase.instance.reference();
+
+  Future<bool> _existsTalkID(String talkID) async {
+    bool ret = await databaseReference
+      .child("talks")
+      .child(talkID)
+      .once()
+      .then((DataSnapshot snapshot) {
+        return (snapshot.value != null);
+      });
+      return ret;
+  }
+
   Future<bool> addToken(String talkID, String token) async{
     if(talkID == null || talkID.length == 0){
       throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
     }
+    bool talkIDExists = await _existsTalkID(talkID);
+    if(!talkIDExists){
+      throw new NoSuchTalkException("No such talk " + talkID);
+    }
     String localToken = "";
     localToken = await getToken(talkID);
-    print(localToken);
     if(localToken != null){
       return false;
     }
@@ -21,8 +36,7 @@ class DatabaseFirebase extends Database {
     if(talkID.length <= 0){
       throw FormatException("talkID can not be empty");
     }
-    String out;
-    out = await databaseReference
+    String out = await databaseReference
         .child("talks")
         .child(talkID)
         .child("token")
@@ -33,7 +47,14 @@ class DatabaseFirebase extends Database {
     return out;
   }
 
-  void removeToken(String talkID) {
+  Future<void> removeToken(String talkID) async {
+    if(talkID == null || talkID.length == 0){
+      throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
+    }
+    bool talkIDExists = await _existsTalkID(talkID);
+    if(!talkIDExists){
+      throw new NoSuchTalkException("No such talk " + talkID);
+    }
     databaseReference
       .child("talks")
       .child(talkID)
@@ -54,10 +75,13 @@ class DatabaseFirebase extends Database {
       return out;
   }
 
-  void subscribeTalk(String talkID, String token){
-    print("subscribeTalk, " + talkID);
+  Future<void> subscribeTalk(String talkID, String token) async{
     if(talkID == null || talkID.length == 0){
       throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
+    }
+    bool talkIDExists = await _existsTalkID(talkID);
+    if(!talkIDExists){
+      throw new NoSuchTalkException("No such talk " + talkID);
     }
     databaseReference
       .child("talks")
@@ -67,10 +91,13 @@ class DatabaseFirebase extends Database {
       .set(token);
   }
   
-  void unsubscribeTalk(String talkID, String token) async {
-    print("subscribeTalk, " + talkID);
+  Future<void> unsubscribeTalk(String talkID, String token) async {
     if(talkID == null || talkID.length == 0){
       throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
+    }
+    bool talkIDExists = await _existsTalkID(talkID);
+    if(!talkIDExists){
+      throw new NoSuchTalkException("No such talk " + talkID);
     }
     Map<dynamic, dynamic> subscribers = await databaseReference
       .child("talks")

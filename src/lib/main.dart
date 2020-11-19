@@ -101,15 +101,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   void goToAttendeePage(){
-    index = 2;
     setState(() {
-
+      index = 2;
     });
   }
   void goToSpeakerPage(){
-    index = 0;
     setState(() {
-
+      index = 0;
     });
   }
   @override
@@ -170,7 +168,11 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: new BottomNavigationBar(
         currentIndex: index,
-        onTap: (int i) { setState((){ index = i; }); },
+        onTap: (int i) {
+          setState((){
+            index = i;
+          });
+        },
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
             icon: new Icon(Icons.mic),
