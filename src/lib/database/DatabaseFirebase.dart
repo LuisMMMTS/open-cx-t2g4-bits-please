@@ -13,13 +13,14 @@ class DatabaseFirebase extends Database {
     if(localToken != null){
       return false;
     }
-    databaseReference.child(talk_name).set({'token': token});
+    databaseReference.child("talks").child(talk_name).update({'token': token});
     return true;
   }
 
   Future<String> getToken(String talk_name) async {
     String out;
     out = await databaseReference
+        .child("talks")
         .child(talk_name)
         .child("token")
         .once()
@@ -30,7 +31,7 @@ class DatabaseFirebase extends Database {
   }
 
   void removeToken(String talk_name) {
-    databaseReference.child(talk_name).remove();
+    databaseReference.child("talks").child(talk_name).child("token").remove();
   }
 }
 
