@@ -36,10 +36,11 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   Database database = new DatabaseFirebase();
   String sessionID = "";
   String localToken;
+  String talkTitle = "";
   ScrollController transcriptScrollController =
-  new ScrollController(initialScrollOffset: 50.0);
+      new ScrollController(initialScrollOffset: 50.0);
   ScrollController messagesScrollController =
-  new ScrollController(initialScrollOffset: 50.0);
+      new ScrollController(initialScrollOffset: 50.0);
 
   Text receivedTextField() {
     return Text(
@@ -102,9 +103,12 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   Future checkSession() async {
     sessionID = sessionIDController.text;
     String speakerToken = await database.getToken(sessionIDController.text);
-    if(speakerToken != null){
-      index = 1;
+    if (speakerToken != null) {
+      setState(() {
+        index = 1;
+      });
       database.subscribeTalk(sessionID, localToken);
+      talkTitle = await database.getTalkTitle(sessionID);
     } else {
       sessionIDForm = TextFormField(
         controller: sessionIDController,
@@ -123,43 +127,85 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
 
   Widget setMessageLayout(String messageText){
     return Container(
-        margin: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 2.0),
-        padding: EdgeInsets.all(16.0),
-        decoration: new BoxDecoration(
-            color:  Colors.black12,
-            borderRadius: new BorderRadius.only(
-                topLeft: const Radius.circular(30.0),
-                topRight: const Radius.circular(30.0),
-                bottomLeft: const Radius.circular(30.0),
-                bottomRight: const Radius.circular(30.0))),
-        child: IntrinsicWidth(
-          child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children:[
-                Expanded(
-                  child:
-                  Text(
-                      messageText,
-                      textAlign: TextAlign.center),
-                ),
-              ]
-          ),
-        )
+      margin: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 2.0),
+      padding: EdgeInsets.all(16.0),
+      decoration: new BoxDecoration(
+        color: Colors.black12,
+        borderRadius: new BorderRadius.only(
+          topLeft: const Radius.circular(30.0),
+          topRight: const Radius.circular(30.0),
+          bottomLeft: const Radius.circular(30.0),
+          bottomRight: const Radius.circular(30.0),
+        ),
+      ),
+      child: IntrinsicWidth(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: Text(messageText, textAlign: TextAlign.center),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   void sendMessage() async {
-    messaging.sendMessage(await database.getToken(sessionID), questionMessageController.text);
+    messaging.sendMessage(
+      await database.getToken(sessionID),
+      questionMessageController.text
+    );
     sentList.add(setMessageLayout(questionMessageController.text));
     print(questionMessageController.text.length);
     messagesScrollController.animateTo(
         messagesScrollController.position.maxScrollExtent.ceilToDouble() +
-            questionMessageController.text.length*100,
+            questionMessageController.text.length * 100,
         duration: Duration(milliseconds: 500),
         curve: Curves.ease);
     questionMessageController.clear();
-    setState(() {
-    });
+    setState(() {});
+  }
+
+  AppBar getAppBar() {
+    return AppBar(
+      leading: GestureDetector(
+        onTap: () {
+          database.unsubscribeTalk(sessionID, localToken);
+          setState(() {
+            index = 0;
+          });
+        },
+        child: Icon(Icons.exit_to_app),
+      ),
+      title: Column(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Chat",
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontSize: 12,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              talkTitle,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  AppBar getAppBarSession() {
+    return AppBar(
+      title: Text(widget.title),
+    );
   }
 
   @override
@@ -170,118 +216,107 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
       child: receivedTextField(),
     );
     return Scaffold(
-        body:
-        LayoutBuilder(
-          builder: (context,constraints){
-            return new Stack(
-              children: <Widget>[
-                new Offstage(
-                  offstage: index != 0,
-                  child: new TickerMode(
-                    enabled: index == 0,
-                    child: new Scaffold(
-                        appBar: AppBar(
-                          title: Text(widget.title),
+      appBar: (index != 0 ? getAppBar() : getAppBarSession()),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return new Stack(
+            children: <Widget>[
+              new Offstage(
+                offstage: index != 0,
+                child: new TickerMode(
+                  enabled: index == 0,
+                  child: new Scaffold(
+                      body: new Center(
+                    child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          child: sessionIDForm,
+                          width: 150,
                         ),
-                        body: new Center(
-                          child: new Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                child: sessionIDForm,
-                                width: 150,
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              FlatButton(
-                                minWidth: 150,
-                                disabledTextColor: Colors.white,
-                                disabledColor: Colors.white,
-                                color: Colors.blue,
-                                child: Text("Enter the Session"),
-                                onPressed: checkSession,
-                              ),
-                            ],
-                          ),
-                        )),
-                  ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        FlatButton(
+                          minWidth: 150,
+                          disabledTextColor: Colors.white,
+                          disabledColor: Colors.white,
+                          color: Colors.blue,
+                          child: Text("Enter the Session"),
+                          onPressed: checkSession,
+                        ),
+                      ],
+                    ),
+                  )),
                 ),
-                new Offstage(
-                  offstage: index != 1,
-                  child: new TickerMode(
-                    enabled: index == 1,
-                    child: new Scaffold(
-                        appBar: AppBar(
-                            title: Row(
-                              children: [
-                                Text(widget.title),
-                                //Speaker(),
-                              ],
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            )),
-                        body:
-                        Column(
+              ),
+              new Offstage(
+                offstage: index != 1,
+                child: new TickerMode(
+                  enabled: index == 1,
+                  child: new Scaffold(
+                    body: Column(
+                      children: [
+                        Expanded(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: constraints.maxHeight,
+                              maxWidth: constraints.maxWidth,
+                            ),
+                            child: SplitView(
+                              initialWeight: splitWeight,
+                              view1: Container(
+                                padding:
+                                    EdgeInsets.fromLTRB(20.0, 0, 20.0, 20.0),
+                                child: scrollView,
+                              ),
+                              view2: SingleChildScrollView(
+                                scrollDirection: Axis.vertical, //.horiz
+                                controller: messagesScrollController, // ontal
+                                child: Container(
+                                  alignment: Alignment.topRight,
+                                  padding:
+                                      EdgeInsets.fromLTRB(0.0, 20.0, 0, 20.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: sentList,
+                                  ),
+                                ),
+                              ),
+                              viewMode: SplitViewMode.Vertical,
+                              onWeightChanged: (w) => splitWeight = w,
+                            ),
+                          ),
+                        ),
+                        Row(
                           children: [
                             Expanded(
-                              child:
-                              ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxHeight: constraints.maxHeight,
-                                  maxWidth: constraints.maxWidth,
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
+                                decoration: new BoxDecoration(
+                                  color: Colors.black12,
                                 ),
-                                child: SplitView(
-                                  initialWeight: splitWeight,
-                                  view1:Container(
-                                    padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 20.0),
-                                    child: scrollView,
-                                  ),
-                                  view2: SingleChildScrollView(
-                                    scrollDirection: Axis.vertical, //.horiz
-                                    controller: messagesScrollController,// ontal
-                                    child: Container(
-                                      alignment: Alignment.topRight,
-                                      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0, 20.0),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: sentList,
-                                      ),
-                                    ),
-                                  ),
-                                  viewMode: SplitViewMode.Vertical,
-                                  onWeightChanged: (w) => splitWeight = w,
-                                ),
+                                child: questionMessage,
                               ),
                             ),
-                            Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
-                                      decoration: new BoxDecoration(
-                                        color: Colors.black12,
-                                      ),
-                                      child: questionMessage,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    color: Colors.black,
-                                    splashColor: Colors.blue,
-                                    icon: Icon(Icons.send),
-                                    onPressed: sendMessage,
-                                  ),
-                                ]
+                            IconButton(
+                              color: Colors.black,
+                              splashColor: Colors.blue,
+                              icon: Icon(Icons.send),
+                              onPressed: sendMessage,
                             ),
                           ],
-                        )
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            );
-          },
-        )
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

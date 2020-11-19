@@ -254,8 +254,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                 bottomRight: const Radius.circular(30.0))),
                         child: Row(children: [
                           Expanded(
-                            child: Text(
-                                receivedMessages[idx],
+                            child: Text(receivedMessages[idx],
                                 textAlign: TextAlign.left,
                                 style: DefaultTextStyle.of(context)
                                     .style
@@ -271,7 +270,11 @@ class _SpeakerPageState extends State<SpeakerPage> {
   AppBar getAppBar() {
     return AppBar(
         leading: GestureDetector(
-          onTap: () { database.removeToken(sessionID); index = 0; setState(() {}); },
+          onTap: () {
+            database.removeToken(sessionID);
+            index = 0;
+            setState(() {});
+          },
           child: Icon(Icons.exit_to_app),
         ),
         title: Column(
@@ -305,40 +308,40 @@ class _SpeakerPageState extends State<SpeakerPage> {
 
   AppBar getAppBarSession() {
     return AppBar(
-      title: const Text(
-        "Speaker",
-      ),
+      title: Text(widget.title),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: (index != 0 ? getAppBar() : getAppBarSession()),
-        body: new Stack(children: <Widget>[
+      appBar: (index != 0 ? getAppBar() : getAppBarSession()),
+      body: new Stack(
+        children: <Widget>[
           Offstage(
             offstage: index != 0,
             child: new TickerMode(
               enabled: index == 0,
               child: new Scaffold(
-                  body: new Center(
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: sessionIDForm,
-                      width: 150,
-                    ),
-                    FlatButton(
-                      disabledTextColor: Colors.white,
-                      disabledColor: Colors.white,
-                      color: Colors.blue,
-                      child: Text("Create Session"),
-                      onPressed: checkSession,
-                    ),
-                  ],
+                body: new Center(
+                  child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: sessionIDForm,
+                        width: 150,
+                      ),
+                      FlatButton(
+                        disabledTextColor: Colors.white,
+                        disabledColor: Colors.white,
+                        color: Colors.blue,
+                        child: Text("Create Session"),
+                        onPressed: checkSession,
+                      ),
+                    ],
+                  ),
                 ),
-              )),
+              ),
             ),
           ),
           Offstage(
@@ -349,12 +352,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                 children: [
                   getLangDropdown(),
                   getTranscription(),
-                  Divider(
-                    height: 20,
-                    thickness: 5,
-                    indent: 15,
-                    endIndent: 15
-                  ),
+                  Divider(height: 20, thickness: 5, indent: 15, endIndent: 15),
                   getComments(),
                 ],
               ),

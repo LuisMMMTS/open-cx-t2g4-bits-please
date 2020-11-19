@@ -34,7 +34,11 @@ class DatabaseFirebase extends Database {
   }
 
   void removeToken(String talkId) {
-    databaseReference.child("talks").child(talkId).child("token").remove();
+    databaseReference
+      .child("talks")
+      .child(talkId)
+      .child("token")
+      .remove();
   }
 
   Future<String> getTalkTitle(String talkId) async {
@@ -62,6 +66,31 @@ class DatabaseFirebase extends Database {
       .push()
       .set(token);
   }
+  
+  void unsubscribeTalk(String talkID, String token) async {
+    print("subscribeTalk, " + talkID);
+    if(talkID == null || talkID.length == 0){
+      throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
+    }
+    Map<dynamic, dynamic> subscribers = await databaseReference
+      .child("talks")
+      .child(talkID)
+      .child("subscribers")
+      .once()
+      .then((DataSnapshot snapshot) {
+        return snapshot.value;
+    });
+
+    String key = subscribers.keys.firstWhere((k) => subscribers[k] == token, orElse: () => null);
+    if(key != null){
+      databaseReference
+        .child("talks")
+        .child(talkID)
+        .child("subscribers")
+        .child(key)
+        .remove();
+    }
+  }
 
   Future<List<String>> getSubscribersTokens(String talkID) async{
     if(talkID == null || talkID.length == 0){
@@ -77,7 +106,6 @@ class DatabaseFirebase extends Database {
     });
     List<String> ret = List<String>.from(out.values);
     return ret;
-    // return [];
   }
 }
 

@@ -25,6 +25,11 @@ abstract class Database {
   /// @param token token of the atendee
   void subscribeTalk(String talkID, String token);
 
+  /// unsubscribes an atendee from a talk 
+  /// @param talkID Talk ID
+  /// @param token token of the atendee to be unsubscribed
+  void unsubscribeTalk(String talkID, String token);
+
   /// Get tokens of people that subscribed a talk.
   /// @param talkID Talk ID
   /// @return List of subscribers' tokensW
