@@ -33,6 +33,7 @@ class MessagingFirebase extends Messaging {
   }
 
   void sendMessage(String token, String message) async {
+    print(message);
     http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{

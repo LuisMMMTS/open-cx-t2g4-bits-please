@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:com_4_all/synthesizer/Synthesizer.dart';
+import 'package:com_4_all/synthesizer/SynthesizerTextToSpeech.dart';
 import 'package:flutter/material.dart';
 
 import 'package:speech_to_text/speech_to_text.dart';
@@ -24,6 +26,7 @@ class SpeakerPage extends StatefulWidget {
 class _SpeakerPageState extends State<SpeakerPage> {
   bool _hasSpeech = false;
   Transcriber transcriber;
+  Synthesizer synthesizer;
 
   TextFormField sessionIDForm;
   var sessionIDController = new TextEditingController();
@@ -33,7 +36,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
   int index = 0;
   List<String> receivedMessages = new List<String>();
   ScrollController scrollController =
-      new ScrollController(initialScrollOffset: 50.0);
+  new ScrollController(initialScrollOffset: 50.0);
 
   double splitWeight = 0.7;
 
@@ -79,6 +82,8 @@ class _SpeakerPageState extends State<SpeakerPage> {
   void initState() {
     super.initState();
     initializeTranscriber();
+    synthesizer = new SynthesizerTextToSpeech(stopPlayingSynthesizer);
+    synthesizer.setLanguage("pt-PT");
     setupMessaging();
 
     sessionIDForm = TextFormField(
@@ -90,6 +95,10 @@ class _SpeakerPageState extends State<SpeakerPage> {
       maxLines: 1,
       minLines: 1,
     );
+  }
+
+  void stopPlayingSynthesizer(){
+
   }
 
   void getMessage(dynamic r) {
@@ -178,10 +187,10 @@ class _SpeakerPageState extends State<SpeakerPage> {
       items: _localeNames
           .map(
             (localeName) => DropdownMenuItem(
-              value: localeName.localeId,
-              child: Text(localeName.name),
-            ),
-          )
+          value: localeName.localeId,
+          child: Text(localeName.name),
+        ),
+      )
           .toList(),
     );
   }
@@ -220,69 +229,71 @@ class _SpeakerPageState extends State<SpeakerPage> {
       return Container(
         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: Text("No Questions",
-        textAlign: TextAlign.center),
+            textAlign: TextAlign.center),
       );
 
     return Container(
         child: Column(children: [
-      Expanded(
-          child: SizedBox(
-              child: ListView.builder(
-                  controller: scrollController,
-                  itemCount: receivedMessages.length,
-                  itemBuilder: (BuildContext context, int idx) {
-                    return Column(
-                      children: [
-                        Row(children: [
-                          SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: const Icon(Icons.account_circle_rounded)),
-                          Expanded(
-                            child: Text('John Doe', textAlign: TextAlign.left),
-                          ),
-                          SizedBox(
-                            child: IconButton(
-                              iconSize: 30,
-                              color: Colors.black,
-                              icon: Icon(Icons.volume_mute),
-                              onPressed: () {},
-                            ),
-                          ),
-                          SizedBox(
-                            child: IconButton(
-                              iconSize: 30,
-                              color: Colors.black,
-                              icon: Icon(Icons.cancel),
-                              onPressed: () {},
-                            ),
-                          ),
-                        ]),
-                        Container(
-                          margin: const EdgeInsets.only(
-                              left: 10.0, right: 10.0, bottom: 5.0),
-                          padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
-                          decoration: new BoxDecoration(
-                              color: Colors.black12,
-                              borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(30.0),
-                                  topRight: const Radius.circular(30.0),
-                                  bottomLeft: const Radius.circular(30.0),
-                                  bottomRight: const Radius.circular(30.0))),
-                          child: Row(children: [
-                            Expanded(
-                              child: Text(receivedMessages[idx],
-                                  textAlign: TextAlign.left,
-                                  style: DefaultTextStyle.of(context)
-                                      .style
-                                      .apply(fontSizeFactor: 1.2)),
-                            ),
-                          ]),
-                        )
-                      ],
-                    );
-                  })))
-    ]));
+          Expanded(
+              child: SizedBox(
+                  child: ListView.builder(
+                      controller: scrollController,
+                      itemCount: receivedMessages.length,
+                      itemBuilder: (BuildContext context, int idx) {
+                        return Column(
+                          children: [
+                            Row(children: [
+                              SizedBox(
+                                  width: 50,
+                                  height: 50,
+                                  child: const Icon(Icons.account_circle_rounded)),
+                              Expanded(
+                                child: Text('John Doe', textAlign: TextAlign.left),
+                              ),
+                              SizedBox(
+                                child: IconButton(
+                                  iconSize: 30,
+                                  color: Colors.black,
+                                  icon: Icon(Icons.volume_mute),
+                                  onPressed: () {
+                                    synthesizer.startSynthesizer(receivedMessages[idx]);
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                child: IconButton(
+                                  iconSize: 30,
+                                  color: Colors.black,
+                                  icon: Icon(Icons.cancel),
+                                  onPressed: () {},
+                                ),
+                              ),
+                            ]),
+                            Container(
+                              margin: const EdgeInsets.only(
+                                  left: 10.0, right: 10.0, bottom: 5.0),
+                              padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
+                              decoration: new BoxDecoration(
+                                  color: Colors.black12,
+                                  borderRadius: new BorderRadius.only(
+                                      topLeft: const Radius.circular(30.0),
+                                      topRight: const Radius.circular(30.0),
+                                      bottomLeft: const Radius.circular(30.0),
+                                      bottomRight: const Radius.circular(30.0))),
+                              child: Row(children: [
+                                Expanded(
+                                  child: Text(receivedMessages[idx],
+                                      textAlign: TextAlign.left,
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .apply(fontSizeFactor: 1.2)),
+                                ),
+                              ]),
+                            )
+                          ],
+                        );
+                      })))
+        ]));
   }
 
   AppBar getAppBar() {
@@ -422,7 +433,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
   void resultListener(TranscriberResult result) async {
     if (result.isFinal()) {
       List<String> subscribersTokens =
-          await database.getSubscribersTokens(sessionID);
+      await database.getSubscribersTokens(sessionID);
       messaging.sendMessageToList(subscribersTokens, result.getValue());
     }
     setState(() {
@@ -462,11 +473,11 @@ class _SpeakerPageState extends State<SpeakerPage> {
         title: new Text("Insufficient permissions"),
         content: new Text(
             "You have insufficient permissions, please check you have provided all necessary permissions.\n"
-            "You might also have trouble recognizing voice because "
-            "you have not granted Google Speech Recognizer (part of Google Assistant) "
-            "permission to record audio. "
-            "If you have never started Google Assistant, starting it for the first time and granting "
-            "permission to record audio should be enough."),
+                "You might also have trouble recognizing voice because "
+                "you have not granted Google Speech Recognizer (part of Google Assistant) "
+                "permission to record audio. "
+                "If you have never started Google Assistant, starting it for the first time and granting "
+                "permission to record audio should be enough."),
       ),
     );
   }
