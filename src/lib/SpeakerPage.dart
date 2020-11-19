@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:com_4_all/TranscriberResult.dart';
+import 'package:com_4_all/transcriber/TranscriberResult.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
@@ -8,22 +8,22 @@ import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:com_4_all/database/Database.dart';
 
 import 'Messaging/MessagingFirebase.dart';
-import 'Transcriber.dart';
-import 'TranscriberSpeechToText.dart';
+import 'transcriber/Transcriber.dart';
+import 'transcriber/TranscriberSpeechToText.dart';
 
 import 'Messaging/Messaging.dart';
 import 'database/DatabaseFirebase.dart';
 
 int index = 0;
 
-class TranscriberPage extends StatefulWidget {
+class SpeakerPage extends StatefulWidget {
   final String title;
-  TranscriberPage({Key key, this.title}) : super(key: key);
+  SpeakerPage({Key key, this.title}) : super(key: key);
   @override
-  _TranscriberPageState createState() => _TranscriberPageState();
+  _SpeakerPageState createState() => _SpeakerPageState();
 }
 
-class _TranscriberPageState extends State<TranscriberPage> {
+class _SpeakerPageState extends State<SpeakerPage> {
   bool _hasSpeech = false;
   Transcriber transcriber;
 

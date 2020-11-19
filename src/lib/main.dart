@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'package:com_4_all/TranscriberPage.dart';
+import 'package:com_4_all/SpeakerPage.dart';
 import 'package:flutter/material.dart';
 import 'SynthesizerPage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -108,7 +106,7 @@ class _HomePageState extends State<HomePage> {
 
     });
   }
-  void goToTranscriberPage(){
+  void goToSpeakerPage(){
     index = 0;
     setState(() {
 
@@ -130,7 +128,7 @@ class _HomePageState extends State<HomePage> {
             offstage: index != 0,
             child: new TickerMode(
               enabled: index == 0,
-              child: new TranscriberPage(title: 'Transcriber',),
+              child: new SpeakerPage(title: 'Speaker',),
             ),
           ),
           new Offstage(
@@ -159,8 +157,8 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.blue,
                             disabledTextColor: Colors.white,
                             disabledColor: Colors.white,
-                            child: Text("Transcriber"),
-                            onPressed: goToTranscriberPage,
+                            child: Text("Speaker"),
+                            onPressed: goToSpeakerPage,
                           ),
                         ],
                       ),
@@ -176,7 +174,7 @@ class _HomePageState extends State<HomePage> {
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
             icon: new Icon(Icons.mic),
-            title: new Text("Transcriber"),
+            label: "Speaker",
           ),
           new BottomNavigationBarItem(
             icon: new Icon(Icons.home),
