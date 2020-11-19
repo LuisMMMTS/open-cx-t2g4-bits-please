@@ -35,7 +35,6 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
 
   Database database = new DatabaseFirebase();
   String sessionID = "";
-  String speakerToken = "";
   String localToken;
   ScrollController transcriptScrollController =
   new ScrollController(initialScrollOffset: 50.0);
@@ -101,17 +100,11 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
   }
 
   Future checkSession() async {
-    print(sessionIDController.text.length);
-    if(sessionIDController.text.length>0) {
-      speakerToken = await database.getToken(sessionIDController.text);
-    }
-    else {
-      speakerToken = null;
-    }
-    if (speakerToken != null) {
+    sessionID = sessionIDController.text;
+    String speakerToken = await database.getToken(sessionIDController.text);
+    if(speakerToken != null){
       index = 1;
-      sessionID = sessionIDController.text;
-      messaging.subscribeSpeaker(speakerToken, localToken);
+      database.subscribeTalk(sessionID, localToken);
     } else {
       sessionIDForm = TextFormField(
         controller: sessionIDController,
@@ -155,8 +148,8 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     );
   }
 
-  void sendMessage() {
-    messaging.sendMessage(speakerToken, questionMessageController.text);
+  void sendMessage() async {
+    messaging.sendMessage(await database.getToken(sessionID), questionMessageController.text);
     sentList.add(setMessageLayout(questionMessageController.text));
     print(questionMessageController.text.length);
     messagesScrollController.animateTo(

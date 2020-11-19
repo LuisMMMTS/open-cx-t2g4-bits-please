@@ -10,20 +10,16 @@ abstract class Messaging{
   * @param token token to send the message to
   * @param message string with the message
   */
-  void sendMessage(String token,String message);
+  void sendMessage(String token, String message);
 
   /*
-  * Subscribes an atendee to the speaker indicated 
-  * @param speakerToken token of the speaker
-  * @param token of the atendee
-  */
-  void subscribeSpeaker(String speakerToken,String token);
-
-  /*
-  * Sends a message to every atendee subscribed to the speaker
+  * Sends a message to each token of a list.
+  * @param token token to send the message to
   * @param message content of the message
   */
-  void sendMessageToSubscribers(String message); //aqui usar sendMessage para simplificar
+  void sendMessageToList(List<String> tokens, String message){
+    tokens.forEach((token) => this.sendMessage(token, message));
+  }
 
   /*
   * Receives the token current device

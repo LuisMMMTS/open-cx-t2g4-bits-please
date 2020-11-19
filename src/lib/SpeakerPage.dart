@@ -383,10 +383,11 @@ class _SpeakerPageState extends State<SpeakerPage> {
     setState(() {});
   }
 
-  void resultListener(TranscriberResult result) {
+  void resultListener(TranscriberResult result) async {
     print("resultListener: $result");
     if(result.isFinal()){
-      messaging.sendMessageToSubscribers(result.getValue());
+      List<String> subscribersTokens = await database.getSubscribersTokens(sessionID);
+      messaging.sendMessageToList(subscribersTokens, result.getValue());
     }
     setState(() {
       lastWords = result.getValue();

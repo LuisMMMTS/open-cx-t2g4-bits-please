@@ -18,6 +18,9 @@ class DatabaseFirebase extends Database {
   }
 
   Future<String> getToken(String talkId) async {
+    if(talkId.length <= 0){
+      throw FormatException("talkId can not be empty");
+    }
     String out;
     out = await databaseReference
         .child("talks")
@@ -45,6 +48,36 @@ class DatabaseFirebase extends Database {
         return snapshot.value;
       });
       return out;
+  }
+
+  void subscribeTalk(String talkID, String token){
+    print("subscribeTalk, " + talkID);
+    if(talkID == null || talkID.length == 0){
+      throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
+    }
+    databaseReference
+      .child("talks")
+      .child(talkID)
+      .child("subscribers")
+      .push()
+      .set(token);
+  }
+
+  Future<List<String>> getSubscribersTokens(String talkID) async{
+    if(talkID == null || talkID.length == 0){
+      throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
+    }
+    Map<dynamic, dynamic> out = await databaseReference
+      .child("talks")
+      .child(talkID)
+      .child("subscribers")
+      .once()
+      .then((DataSnapshot snapshot) {
+        return snapshot.value;
+    });
+    List<String> ret = List<String>.from(out.values);
+    return ret;
+    // return [];
   }
 }
 
