@@ -31,6 +31,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
   var sessionIDController = new TextEditingController();
   String sessionID = "";
   String speakerToken = "";
+  String talkTitle = "";
   List<String> receivedMessages = new List<String>();
   ScrollController scrollController =
       new ScrollController(initialScrollOffset: 50.0);
@@ -112,6 +113,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
     if (sessionID != "") {
       index = 1;
       database.addToken(sessionID, speakerToken);
+      talkTitle = await database.getTalkTitle(sessionID);
     } else {
       sessionIDForm = TextFormField(
         controller: sessionIDController,
@@ -287,7 +289,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                sessionID,
+                talkTitle,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
