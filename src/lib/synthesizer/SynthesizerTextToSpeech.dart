@@ -1,12 +1,13 @@
-import 'package:com_4_all/synthesizer/Synthesizer.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+
+import 'package:com_4_all/synthesizer/Synthesizer.dart';
 
 class SynthesizerTextToSpeech extends Synthesizer{
   Function stopPlaying;
   FlutterTts flutterTts = new FlutterTts();
   bool isPlayingBool = false;
   String language;
-  List<dynamic> languages = null;
+  List<dynamic> languages;
 
   SynthesizerTextToSpeech(Function stopPlaying){
     this.stopPlaying = stopPlaying;

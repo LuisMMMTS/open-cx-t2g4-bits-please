@@ -3,25 +3,42 @@ import 'package:firebase_database/firebase_database.dart';
 
 class DatabaseFirebase extends Database {
   final databaseReference = FirebaseDatabase.instance.reference();
-  Future<bool> addToken(String talk_name, String token) async{
-    if(talk_name == null || talk_name.length == 0){
-      throw new DatabaseFirebaseIdNullError("talk_name pararmeter has a length of 0");
+
+  Future<bool> _existsTalkID(String talkID) async {
+    bool ret = await databaseReference
+      .child("talks")
+      .child(talkID)
+      .once()
+      .then((DataSnapshot snapshot) {
+        return (snapshot.value != null);
+      });
+      return ret;
+  }
+
+  Future<bool> addToken(String talkID, String token) async{
+    if(talkID == null || talkID.length == 0){
+      throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
+    }
+    bool talkIDExists = await _existsTalkID(talkID);
+    if(!talkIDExists){
+      throw new NoSuchTalkException("No such talk " + talkID);
     }
     String localToken = "";
-    localToken = await getToken(talk_name);
-    print(localToken);
+    localToken = await getToken(talkID);
     if(localToken != null){
       return false;
     }
-    databaseReference.child("talks").child(talk_name).update({'token': token});
+    databaseReference.child("talks").child(talkID).update({'token': token});
     return true;
   }
 
-  Future<String> getToken(String talk_name) async {
-    String out;
-    out = await databaseReference
+  Future<String> getToken(String talkID) async {
+    if(talkID.length <= 0){
+      throw FormatException("talkID can not be empty");
+    }
+    String out = await databaseReference
         .child("talks")
-        .child(talk_name)
+        .child(talkID)
         .child("token")
         .once()
         .then((DataSnapshot snapshot) {
@@ -30,8 +47,92 @@ class DatabaseFirebase extends Database {
     return out;
   }
 
-  void removeToken(String talk_name) {
-    databaseReference.child("talks").child(talk_name).child("token").remove();
+  Future<void> removeToken(String talkID) async {
+    if(talkID == null || talkID.length == 0){
+      throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
+    }
+    bool talkIDExists = await _existsTalkID(talkID);
+    if(!talkIDExists){
+      throw new NoSuchTalkException("No such talk " + talkID);
+    }
+    databaseReference
+      .child("talks")
+      .child(talkID)
+      .child("token")
+      .remove();
+  }
+
+  Future<String> getTalkTitle(String talkID) async {
+    String out;
+    out = await databaseReference
+      .child("talks")
+      .child(talkID)
+      .child("title")
+      .once()
+      .then((DataSnapshot snapshot){
+        return snapshot.value;
+      });
+      return out;
+  }
+
+  Future<void> subscribeTalk(String talkID, String token) async{
+    if(talkID == null || talkID.length == 0){
+      throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
+    }
+    bool talkIDExists = await _existsTalkID(talkID);
+    if(!talkIDExists){
+      throw new NoSuchTalkException("No such talk " + talkID);
+    }
+    databaseReference
+      .child("talks")
+      .child(talkID)
+      .child("subscribers")
+      .push()
+      .set(token);
+  }
+  
+  Future<void> unsubscribeTalk(String talkID, String token) async {
+    if(talkID == null || talkID.length == 0){
+      throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
+    }
+    bool talkIDExists = await _existsTalkID(talkID);
+    if(!talkIDExists){
+      throw new NoSuchTalkException("No such talk " + talkID);
+    }
+    Map<dynamic, dynamic> subscribers = await databaseReference
+      .child("talks")
+      .child(talkID)
+      .child("subscribers")
+      .once()
+      .then((DataSnapshot snapshot) {
+        return snapshot.value;
+    });
+
+    String key = subscribers.keys.firstWhere((k) => subscribers[k] == token, orElse: () => null);
+    if(key != null){
+      databaseReference
+        .child("talks")
+        .child(talkID)
+        .child("subscribers")
+        .child(key)
+        .remove();
+    }
+  }
+
+  Future<List<String>> getSubscribersTokens(String talkID) async{
+    if(talkID == null || talkID.length == 0){
+      throw new DatabaseFirebaseIdNullError("talkID pararmeter has a length of 0");
+    }
+    Map<dynamic, dynamic> out = await databaseReference
+      .child("talks")
+      .child(talkID)
+      .child("subscribers")
+      .once()
+      .then((DataSnapshot snapshot) {
+        return snapshot.value;
+    });
+    List<String> ret = List<String>.from(out.values);
+    return ret;
   }
 }
 

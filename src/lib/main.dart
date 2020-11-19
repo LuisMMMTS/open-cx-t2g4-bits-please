@@ -1,9 +1,7 @@
-import 'dart:io';
-
-import 'package:com_4_all/TranscriberPage.dart';
 import 'package:flutter/material.dart';
-import 'SynthesizerPage.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:com_4_all/SpeakerPage.dart';
+import 'package:com_4_all/AttendeePage.dart';
 
 int index = 1;
 Future<FirebaseApp> _initialization = initiateFuture();
@@ -33,7 +31,7 @@ Future<FirebaseApp> initiateFuture() async{
   return init;
 }
 
-Future<void> main(){
+void main(){
   runApp(AppInitializer());
 }
 
@@ -102,16 +100,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void goToSynthesizerPage(){
-    index = 2;
+  void goToAttendeePage(){
     setState(() {
-
+      index = 2;
     });
   }
-  void goToTranscriberPage(){
-    index = 0;
+  void goToSpeakerPage(){
     setState(() {
-
+      index = 0;
     });
   }
   @override
@@ -123,14 +119,14 @@ class _HomePageState extends State<HomePage> {
             offstage: index != 2,
             child: new TickerMode(
               enabled: index == 2,
-              child: new SynthesizerPage(title: 'Synthesizer',),
+              child: new AttendeePage(title: 'Attendee',),
             ),
           ),
           new Offstage(
             offstage: index != 0,
             child: new TickerMode(
               enabled: index == 0,
-              child: new TranscriberPage(title: 'Transcriber',),
+              child: new SpeakerPage(title: 'Speaker',),
             ),
           ),
           new Offstage(
@@ -149,8 +145,8 @@ class _HomePageState extends State<HomePage> {
                             disabledTextColor: Colors.white,
                             disabledColor: Colors.white,
                             color: Colors.blue,
-                            child: Text("Synthesizer"),
-                            onPressed: goToSynthesizerPage,
+                            child: Text("Attendee"),
+                            onPressed: goToAttendeePage,
                           ),
                           SizedBox(
                             height: 20,
@@ -159,8 +155,8 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.blue,
                             disabledTextColor: Colors.white,
                             disabledColor: Colors.white,
-                            child: Text("Transcriber"),
-                            onPressed: goToTranscriberPage,
+                            child: Text("Speaker"),
+                            onPressed: goToSpeakerPage,
                           ),
                         ],
                       ),
@@ -172,19 +168,23 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: new BottomNavigationBar(
         currentIndex: index,
-        onTap: (int i) { setState((){ index = i; }); },
+        onTap: (int i) {
+          setState((){
+            index = i;
+          });
+        },
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
             icon: new Icon(Icons.mic),
-            title: new Text("Transcriber"),
+            label: "Speaker",
           ),
           new BottomNavigationBarItem(
             icon: new Icon(Icons.home),
-            title: new Text("Home"),
+            label: "Home",
           ),
           new BottomNavigationBarItem(
             icon: new Icon(Icons.speaker_phone),
-            title: new Text("Synthesizer"),
+            label: "Attendee",
           ),
         ],
       ),
