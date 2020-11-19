@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:com_4_all/AttendeePage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:speech_to_text/speech_to_text.dart';
@@ -12,6 +13,7 @@ import 'package:com_4_all/messaging/MessagingFirebase.dart';
 import 'package:com_4_all/transcriber/Transcriber.dart';
 import 'package:com_4_all/transcriber/TranscriberResult.dart';
 import 'package:com_4_all/transcriber/TranscriberSpeechToText.dart';
+import 'package:split_view/split_view.dart';
 
 int index = 0;
 
@@ -42,12 +44,11 @@ class _SpeakerPageState extends State<SpeakerPage> {
   Future<void> initializeTranscriber() async {
     transcriber = TranscriberSpeechToText();
     transcriber.initialize(
-      onBegin: beginListener,
-      onResult: resultListener,
-      onSoundLevel: soundLevelListener,
-      onEnd: endListener,
-      onError: errorListener
-    );
+        onBegin: beginListener,
+        onResult: resultListener,
+        onSoundLevel: soundLevelListener,
+        onEnd: endListener,
+        onError: errorListener);
     bool hasSpeech = await transcriber.initSpeech();
     if (hasSpeech) {
       print("Initialized voice recognition\n");
@@ -172,9 +173,8 @@ class _SpeakerPageState extends State<SpeakerPage> {
     );
   }
 
-  Expanded getTranscription() {
-    return Expanded(
-      flex: 1,
+  Container getTranscription() {
+    return Container(
       child: Padding(
         padding: EdgeInsets.all(16.0),
         child: Align(
@@ -202,14 +202,20 @@ class _SpeakerPageState extends State<SpeakerPage> {
     );
   }
 
-  Expanded getComments() {
+  Container getComments() {
+    /*
     if (receivedMessages.isEmpty)
-      return Expanded(
-        child: Text("No Questions"),
+      return Container(
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+        child: Text("No Questions",
+        textAlign: TextAlign.center),
       );
-    return Expanded(
+      */
+    return Container(
+      child: Column(
+      children: [
+        Expanded(
         child: SizedBox(
-            height: 100.0,
             child: ListView.builder(
                 itemCount: receivedMessages.length,
                 itemBuilder: (BuildContext context, int idx) {
@@ -228,7 +234,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                             iconSize: 30,
                             color: Colors.black,
                             icon: Icon(Icons.volume_mute),
-                            onPressed: (){},
+                            onPressed: () {},
                           ),
                         ),
                         SizedBox(
@@ -236,7 +242,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                             iconSize: 30,
                             color: Colors.black,
                             icon: Icon(Icons.cancel),
-                            onPressed: (){},
+                            onPressed: () {},
                           ),
                         ),
                       ]),
@@ -263,7 +269,12 @@ class _SpeakerPageState extends State<SpeakerPage> {
                       )
                     ],
                   );
-                })));
+                })
+              )
+          )
+        ]
+      )
+    );
   }
 
   AppBar getAppBar() {
@@ -314,52 +325,67 @@ class _SpeakerPageState extends State<SpeakerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: (index != 0 ? getAppBar() : getAppBarSession()),
-      body: new Stack(
-        children: <Widget>[
-          Offstage(
-            offstage: index != 0,
-            child: new TickerMode(
-              enabled: index == 0,
-              child: new Scaffold(
-                body: new Center(
-                  child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+        appBar: (index != 0 ? getAppBar() : getAppBarSession()),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+          return new Stack(
+            children: <Widget>[
+              Offstage(
+                offstage: index != 0,
+                child: new TickerMode(
+                  enabled: index == 0,
+                  child: new Scaffold(
+                    body: new Center(
+                      child: new Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: sessionIDForm,
+                            width: 150,
+                          ),
+                          FlatButton(
+                            disabledTextColor: Colors.white,
+                            disabledColor: Colors.white,
+                            color: Colors.blue,
+                            child: Text("Join session"),
+                            onPressed: checkSession,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Offstage(
+                offstage: index != 1,
+                child: new TickerMode(
+                  enabled: index == 1,
+                  child: Column(
                     children: [
-                      Container(
-                        child: sessionIDForm,
-                        width: 150,
+                      getLangDropdown(),
+                      Expanded(
+                      child:
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: constraints.maxHeight,
+                          maxWidth: constraints.maxWidth,
+                        ),
+                        child: SplitView(
+                          initialWeight: splitWeight,
+                          view1: getTranscription(),
+                          view2: getComments(),
+                          viewMode: SplitViewMode.Vertical,
+                          onWeightChanged: (w) => splitWeight = w,
+                        ),
                       ),
-                      FlatButton(
-                        disabledTextColor: Colors.white,
-                        disabledColor: Colors.white,
-                        color: Colors.blue,
-                        child: Text("Join session"),
-                        onPressed: checkSession,
-                      ),
+                      )
                     ],
                   ),
                 ),
               ),
-            ),
-          ),
-          Offstage(
-            offstage: index != 1,
-            child: new TickerMode(
-              enabled: index == 1,
-              child: Column(
-                children: [
-                  getLangDropdown(),
-                  getTranscription(),
-                  Divider(height: 20, thickness: 5, indent: 15, endIndent: 15),
-                  getComments(),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+            ],
+          );
+        }));
   }
 
   void startListening() {
@@ -382,8 +408,9 @@ class _SpeakerPageState extends State<SpeakerPage> {
 
   void resultListener(TranscriberResult result) async {
     print("resultListener: $result");
-    if(result.isFinal()){
-      List<String> subscribersTokens = await database.getSubscribersTokens(sessionID);
+    if (result.isFinal()) {
+      List<String> subscribersTokens =
+          await database.getSubscribersTokens(sessionID);
       messaging.sendMessageToList(subscribersTokens, result.getValue());
     }
     setState(() {
