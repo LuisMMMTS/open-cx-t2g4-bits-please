@@ -93,12 +93,12 @@ class _SpeakerPageState extends State<SpeakerPage> {
   void getMessage(dynamic r) {
     setState(() {
       receivedMessages.add(r.toString());
-      scrollController.animateTo(
-        scrollController.position.maxScrollExtent.ceilToDouble() +
-            receivedMessages.last.length,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.bounceIn);
     });
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent.ceilToDouble() +
+          receivedMessages.last.length,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.bounceIn);
   }
 
   Future setupMessaging() async {
