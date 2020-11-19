@@ -14,7 +14,6 @@ class DatabaseFirebase extends Database {
       return false;
     }
     databaseReference.child(talk_name).set({'token': token});
-
     return true;
   }
 

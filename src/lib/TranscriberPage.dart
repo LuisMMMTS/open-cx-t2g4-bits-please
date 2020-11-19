@@ -268,6 +268,10 @@ class _TranscriberPageState extends State<TranscriberPage> {
 
   AppBar getAppBar() {
     return AppBar(
+        leading: GestureDetector(
+          onTap: () { database.removeToken(sessionID); index = 0; setState(() {}); },
+          child: Icon(Icons.exit_to_app),
+        ),
         title: Column(
           children: <Widget>[
             Align(

@@ -50,10 +50,6 @@ This solution's main advantages are that it is free and open-source, in addictio
 ---
 ## Requirements
 
-In this section, you should describe all kinds of requirements for your module: functional and non-functional requirements.
-
-Start by contextualizing your module, describing the main concepts, terms, roles, scope and boundaries of the application domain addressed by the project.
-
 ### Use case diagram 
 
 ![Use Cases](images/use-cases.svg)
@@ -161,14 +157,18 @@ As a speaker, I want my speech to be transcribed and sent to the attendees, so t
 
 ##### User interface mockup
 
-![transcribe mockup](https://drive.google.com/uc?id=1p24QG7-869mVYTxRXu3otjUZ9B6n_1uY)
+![transcribe mockup](https://drive.google.com/uc?id=1j7mHZ7WRvmdQKRnBWeUk1Qw9THBV-aRh)
+
+##### Description
+- The speaker has to authenticate to a session (through its session ID) using his authentication code (which is a short string like 1234)
+- The speaker can leave the session chat by pressing the exit button on the top left.
 
 ##### Acceptance Tests
 ```Gherkin
-Scenario: Asking a question  
-	When I write the question  
-	And I press the submit button  
-	Then The server must put my question on the queue  
+Scenario: Transcribing speech  
+	When I press the record button
+  And I say "Hello world"
+	Then "Hello world" is sent to all atendees  
 ```
 	
 ##### Value and Effort
