@@ -334,7 +334,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                         disabledTextColor: Colors.white,
                         disabledColor: Colors.white,
                         color: Colors.blue,
-                        child: Text("Create Session"),
+                        child: Text("Join session"),
                         onPressed: checkSession,
                       ),
                     ],
