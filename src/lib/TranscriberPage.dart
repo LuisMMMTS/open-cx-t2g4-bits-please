@@ -31,7 +31,7 @@ class _TranscriberPageState extends State<TranscriberPage> {
   var sessionIDController = new TextEditingController();
   String sessionID = "";
   String speakerToken = "";
-  String receivedText = "";
+  List<String> receivedMessages = new List<String>();
   ScrollController scrollController =
       new ScrollController(initialScrollOffset: 50.0);
 
@@ -92,11 +92,12 @@ class _TranscriberPageState extends State<TranscriberPage> {
   }
 
   void getMessage(dynamic r) {
-    receivedText += r.toString();
+    print(r.toString());
+    receivedMessages.add(r.toString());
     setState(() {});
     scrollController.animateTo(
         scrollController.position.maxScrollExtent.ceilToDouble() +
-            receivedText.length,
+            receivedMessages.last.length,
         duration: Duration(milliseconds: 500),
         curve: Curves.bounceIn);
   }
@@ -200,54 +201,69 @@ class _TranscriberPageState extends State<TranscriberPage> {
     );
   }
 
-  Column getComments() {
-    return Column(
-      children: [
-        Row(children: [
-          SizedBox(
-              width: 50,
-              height: 50,
-              child: const Icon(Icons.account_circle_rounded)),
-          Expanded(
-            child: Text('John Doe', textAlign: TextAlign.left),
-          ),
-          SizedBox(
-            child: IconButton(
-              iconSize: 30,
-              color: Colors.black,
-              icon: Icon(Icons.volume_mute),
-              //onPressed: ,
-            ),
-          ),
-          SizedBox(
-            child: IconButton(
-              iconSize: 30,
-              color: Colors.black,
-              icon: Icon(Icons.cancel),
-              //onPressed: ,
-            ),
-          ),
-        ]),
-        Container(
-          margin: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
-          padding: EdgeInsets.all(16.0),
-          decoration: new BoxDecoration(
-              color: Colors.black12,
-              borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(30.0),
-                  topRight: const Radius.circular(30.0),
-                  bottomLeft: const Radius.circular(30.0),
-                  bottomRight: const Radius.circular(30.0))),
-          child: Row(children: [
-            Expanded(
-              child: Text(
-                  'Hello, I have a question regarding voice transcription. What languages are available?',
-                  textAlign: TextAlign.center),
-            ),
-          ]),
-        )
-      ],
-    );
+  Expanded getComments() {
+    if (receivedMessages.isEmpty)
+      return Expanded(
+        child: Text("No Questions"),
+      );
+    return Expanded(
+        child: SizedBox(
+            height: 100.0,
+            child: ListView.builder(
+                itemCount: receivedMessages.length,
+                itemBuilder: (BuildContext context, int idx) {
+                  return Column(
+                    children: [
+                      Row(children: [
+                        SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: const Icon(Icons.account_circle_rounded)),
+                        Expanded(
+                          child: Text('John Doe', textAlign: TextAlign.left),
+                        ),
+                        SizedBox(
+                          child: IconButton(
+                            iconSize: 30,
+                            color: Colors.black,
+                            icon: Icon(Icons.volume_mute),
+                            //onPressed: ,
+                          ),
+                        ),
+                        SizedBox(
+                          child: IconButton(
+                            iconSize: 30,
+                            color: Colors.black,
+                            icon: Icon(Icons.cancel),
+                            //onPressed: ,
+                          ),
+                        ),
+                      ]),
+                      Container(
+                        margin: const EdgeInsets.only(
+                            left: 10.0, right: 10.0, bottom: 5.0),
+                        padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
+                        decoration: new BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: new BorderRadius.only(
+                                topLeft: const Radius.circular(30.0),
+                                topRight: const Radius.circular(30.0),
+                                bottomLeft: const Radius.circular(30.0),
+                                bottomRight: const Radius.circular(30.0))),
+                        child: Row(children: [
+                          Expanded(
+                            child: Text(
+                                receivedMessages[idx],
+                                textAlign: TextAlign.left,
+                                style: DefaultTextStyle.of(context)
+                                    .style
+                                    .apply(fontSizeFactor: 1.2)),
+                          ),
+                        ]),
+                      )
+                    ],
+                  );
+                })));
   }
 
   AppBar getAppBar() {
