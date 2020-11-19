@@ -83,12 +83,6 @@ class MessagingFirebase extends Messaging {
     );
   }
 
-  void sendMessageToSubscribers(String message) {
-    for (String t in subscribersList) {
-      sendMessage(t, message);
-    }
-  }
-
   Future<String> getToken() async {
     String out = await FirebaseMessaging.instance.getToken();
     token = out;
