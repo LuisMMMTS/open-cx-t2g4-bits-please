@@ -96,9 +96,9 @@ class _SpeakerPageState extends State<SpeakerPage> {
     });
     scrollController.animateTo(
       scrollController.position.maxScrollExtent.ceilToDouble() +
-          receivedMessages.last.length,
+          receivedMessages.length*20,
       duration: Duration(milliseconds: 500),
-      curve: Curves.bounceIn);
+      curve: Curves.ease);
   }
 
   Future setupMessaging() async {
@@ -226,6 +226,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
         child: SizedBox(
             height: 100.0,
             child: ListView.builder(
+                controller: scrollController,
                 itemCount: receivedMessages.length,
                 itemBuilder: (BuildContext context, int idx) {
                   return Column(
