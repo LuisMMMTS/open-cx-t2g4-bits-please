@@ -83,31 +83,6 @@ class MessagingFirebase extends Messaging {
     );
   }
 
-  void subscribeSpeaker(String speakerToken, String token) {
-    print("Subscribe: " + speakerToken);
-    http.post(
-      'https://fcm.googleapis.com/fcm/send',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization
-      },
-      body: jsonEncode(
-        <String, dynamic>{
-          'notification': <String, dynamic>{'body': '', 'title': ''},
-          'priority': 'high',
-          'data': <String, dynamic>{
-            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-            'id': '1',
-            'status': 'done',
-            'type': 'subscribe',
-            'token': token
-          },
-          'to': speakerToken,
-        },
-      ),
-    );
-  }
-
   void sendMessageToSubscribers(String message) {
     for (String t in subscribersList) {
       sendMessage(t, message);

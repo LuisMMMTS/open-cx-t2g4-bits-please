@@ -104,7 +104,7 @@ class _SynthesizerPageState extends State<SynthesizerPage> {
     String speakerToken = await database.getToken(sessionIDController.text);
     if(speakerToken != null){
       index = 1;
-      messaging.subscribeSpeaker(speakerToken, localToken);
+      database.subscribeTalk(sessionID, localToken);
     } else {
       sessionIDForm = TextFormField(
         controller: sessionIDController,

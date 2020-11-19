@@ -19,6 +19,16 @@ abstract class Database {
   /// @param talk_id Talk ID
   /// @return Title of the talk
   Future<String> getTalkTitle(String talkId);
+
+  /// Subscribes an atendee to the talk indicated 
+  /// @param talkID Talk ID
+  /// @param token token of the atendee
+  void subscribeTalk(String talkID, String token);
+
+  /// Get tokens of people that subscribed a talk.
+  /// @param talkID Talk ID
+  /// @return List of subscribers' tokensW
+  Future<List<String>> getSubscribersTokens(String talkID);
 }
 
 abstract class DataBaseError{
