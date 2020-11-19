@@ -12,6 +12,7 @@ import 'package:com_4_all/messaging/MessagingFirebase.dart';
 import 'package:com_4_all/transcriber/Transcriber.dart';
 import 'package:com_4_all/transcriber/TranscriberResult.dart';
 import 'package:com_4_all/transcriber/TranscriberSpeechToText.dart';
+import 'package:split_view/split_view.dart';
 
 class SpeakerPage extends StatefulWidget {
   final String title;
@@ -34,6 +35,8 @@ class _SpeakerPageState extends State<SpeakerPage> {
   ScrollController scrollController =
       new ScrollController(initialScrollOffset: 50.0);
 
+  double splitWeight = 0.7;
+
   Messaging messaging;
 
   Database database = new DatabaseFirebase();
@@ -41,12 +44,11 @@ class _SpeakerPageState extends State<SpeakerPage> {
   Future<void> initializeTranscriber() async {
     transcriber = TranscriberSpeechToText();
     transcriber.initialize(
-      onBegin: beginListener,
-      onResult: resultListener,
-      onSoundLevel: soundLevelListener,
-      onEnd: endListener,
-      onError: errorListener
-    );
+        onBegin: beginListener,
+        onResult: resultListener,
+        onSoundLevel: soundLevelListener,
+        onEnd: endListener,
+        onError: errorListener);
     bool hasSpeech = await transcriber.initSpeech();
     if (hasSpeech) {
       print("Initialized voice recognition\n");
@@ -95,10 +97,10 @@ class _SpeakerPageState extends State<SpeakerPage> {
       receivedMessages.add(r.toString());
     });
     scrollController.animateTo(
-      scrollController.position.maxScrollExtent.ceilToDouble() +
-          receivedMessages.length*20,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.ease);
+        scrollController.position.maxScrollExtent.ceilToDouble() +
+            receivedMessages.length * 20,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease);
   }
 
   Future setupMessaging() async {
@@ -109,21 +111,18 @@ class _SpeakerPageState extends State<SpeakerPage> {
   Future checkSession() async {
     sessionID = sessionIDController.text;
     if (sessionID != "") {
-      database.addToken(sessionID, speakerToken)
-      .then((status) async {
+      database.addToken(sessionID, speakerToken).then((status) async {
         String talkTitleTmp = await database.getTalkTitle(sessionID);
-        setState((){
+        setState(() {
           index = 1;
           talkTitle = talkTitleTmp;
         });
-      })
-      .catchError((error){
+      }).catchError((error) {
         showDialog(
           context: context,
           builder: (_) => new AlertDialog(
             title: new Text("No such talk ID"),
-            content: new Text(
-                "There is no registered talk with that ID."),
+            content: new Text("There is no registered talk with that ID."),
           ),
         );
       }, test: (e) => e is NoSuchTalkException);
@@ -187,9 +186,8 @@ class _SpeakerPageState extends State<SpeakerPage> {
     );
   }
 
-  Expanded getTranscription() {
-    return Expanded(
-      flex: 1,
+  Container getTranscription() {
+    return Container(
       child: Padding(
         padding: EdgeInsets.all(16.0),
         child: Align(
@@ -217,69 +215,74 @@ class _SpeakerPageState extends State<SpeakerPage> {
     );
   }
 
-  Expanded getComments() {
+  Container getComments() {
     if (receivedMessages.isEmpty)
-      return Expanded(
-        child: Text("No Questions"),
+      return Container(
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+        child: Text("No Questions",
+        textAlign: TextAlign.center),
       );
-    return Expanded(
-        child: SizedBox(
-            height: 100.0,
-            child: ListView.builder(
-                controller: scrollController,
-                itemCount: receivedMessages.length,
-                itemBuilder: (BuildContext context, int idx) {
-                  return Column(
-                    children: [
-                      Row(children: [
-                        SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: const Icon(Icons.account_circle_rounded)),
-                        Expanded(
-                          child: Text('John Doe', textAlign: TextAlign.left),
-                        ),
-                        SizedBox(
-                          child: IconButton(
-                            iconSize: 30,
-                            color: Colors.black,
-                            icon: Icon(Icons.volume_mute),
-                            onPressed: (){},
-                          ),
-                        ),
-                        SizedBox(
-                          child: IconButton(
-                            iconSize: 30,
-                            color: Colors.black,
-                            icon: Icon(Icons.cancel),
-                            onPressed: (){},
-                          ),
-                        ),
-                      ]),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10.0, right: 10.0, bottom: 5.0),
-                        padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
-                        decoration: new BoxDecoration(
-                            color: Colors.black12,
-                            borderRadius: new BorderRadius.only(
-                                topLeft: const Radius.circular(30.0),
-                                topRight: const Radius.circular(30.0),
-                                bottomLeft: const Radius.circular(30.0),
-                                bottomRight: const Radius.circular(30.0))),
-                        child: Row(children: [
+
+    return Container(
+        child: Column(children: [
+      Expanded(
+          child: SizedBox(
+              child: ListView.builder(
+                  controller: scrollController,
+                  itemCount: receivedMessages.length,
+                  itemBuilder: (BuildContext context, int idx) {
+                    return Column(
+                      children: [
+                        Row(children: [
+                          SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: const Icon(Icons.account_circle_rounded)),
                           Expanded(
-                            child: Text(receivedMessages[idx],
-                                textAlign: TextAlign.left,
-                                style: DefaultTextStyle.of(context)
-                                    .style
-                                    .apply(fontSizeFactor: 1.2)),
+                            child: Text('John Doe', textAlign: TextAlign.left),
+                          ),
+                          SizedBox(
+                            child: IconButton(
+                              iconSize: 30,
+                              color: Colors.black,
+                              icon: Icon(Icons.volume_mute),
+                              onPressed: () {},
+                            ),
+                          ),
+                          SizedBox(
+                            child: IconButton(
+                              iconSize: 30,
+                              color: Colors.black,
+                              icon: Icon(Icons.cancel),
+                              onPressed: () {},
+                            ),
                           ),
                         ]),
-                      )
-                    ],
-                  );
-                })));
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 10.0, right: 10.0, bottom: 5.0),
+                          padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
+                          decoration: new BoxDecoration(
+                              color: Colors.black12,
+                              borderRadius: new BorderRadius.only(
+                                  topLeft: const Radius.circular(30.0),
+                                  topRight: const Radius.circular(30.0),
+                                  bottomLeft: const Radius.circular(30.0),
+                                  bottomRight: const Radius.circular(30.0))),
+                          child: Row(children: [
+                            Expanded(
+                              child: Text(receivedMessages[idx],
+                                  textAlign: TextAlign.left,
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .apply(fontSizeFactor: 1.2)),
+                            ),
+                          ]),
+                        )
+                      ],
+                    );
+                  })))
+    ]));
   }
 
   AppBar getAppBar() {
@@ -334,49 +337,65 @@ class _SpeakerPageState extends State<SpeakerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: (index != 0 ? getAppBar() : getAppBarSession()),
-      body: new Stack(
-        children: <Widget>[
-          Offstage(
-            offstage: index != 0,
-            child: new TickerMode(
-              enabled: index == 0,
-              child: new Scaffold(
-                body: new Center(
-                  child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: sessionIDForm,
-                        width: 150,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return new Stack(
+            children: <Widget>[
+              Offstage(
+                offstage: index != 0,
+                child: new TickerMode(
+                  enabled: index == 0,
+                  child: new Scaffold(
+                    body: new Center(
+                      child: new Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: sessionIDForm,
+                            width: 150,
+                          ),
+                          FlatButton(
+                            disabledTextColor: Colors.white,
+                            disabledColor: Colors.white,
+                            color: Colors.blue,
+                            child: Text("Join session"),
+                            onPressed: checkSession,
+                          ),
+                        ],
                       ),
-                      FlatButton(
-                        disabledTextColor: Colors.white,
-                        disabledColor: Colors.white,
-                        color: Colors.blue,
-                        child: Text("Join session"),
-                        onPressed: checkSession,
+                    ),
+                  ),
+                ),
+              ),
+              Offstage(
+                offstage: index != 1,
+                child: new TickerMode(
+                  enabled: index == 1,
+                  child: Column(
+                    children: [
+                      getLangDropdown(),
+                      Expanded(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: constraints.maxHeight,
+                            maxWidth: constraints.maxWidth,
+                          ),
+                          child: SplitView(
+                            initialWeight: splitWeight,
+                            view1: getTranscription(),
+                            view2: getComments(),
+                            viewMode: SplitViewMode.Vertical,
+                            onWeightChanged: (w) => splitWeight = w,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
-            ),
-          ),
-          Offstage(
-            offstage: index != 1,
-            child: new TickerMode(
-              enabled: index == 1,
-              child: Column(
-                children: [
-                  getLangDropdown(),
-                  getTranscription(),
-                  Divider(height: 20, thickness: 5, indent: 15, endIndent: 15),
-                  getComments(),
-                ],
-              ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
@@ -401,8 +420,9 @@ class _SpeakerPageState extends State<SpeakerPage> {
   }
 
   void resultListener(TranscriberResult result) async {
-    if(result.isFinal()){
-      List<String> subscribersTokens = await database.getSubscribersTokens(sessionID);
+    if (result.isFinal()) {
+      List<String> subscribersTokens =
+          await database.getSubscribersTokens(sessionID);
       messaging.sendMessageToList(subscribersTokens, result.getValue());
     }
     setState(() {
