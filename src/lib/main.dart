@@ -178,11 +178,11 @@ class _HomePageState extends State<HomePage> {
           ),
           new BottomNavigationBarItem(
             icon: new Icon(Icons.home),
-            title: new Text("Home"),
+            label: "Home",
           ),
           new BottomNavigationBarItem(
             icon: new Icon(Icons.speaker_phone),
-            title: new Text("Synthesizer"),
+            label: "Synthesizer",
           ),
         ],
       ),

@@ -30,8 +30,6 @@ Como usar:
     messaging.sendMessageToSubscribers(message);
  */
 
-typedef void VoidCallback(String);
-
 class MessagingFirebase extends Messaging {
   VoidCallback callback;
   String token;
