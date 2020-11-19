@@ -301,10 +301,18 @@ class _TranscriberPageState extends State<TranscriberPage> {
         ]);
   }
 
+  AppBar getAppBarSession() {
+    return AppBar(
+      title: const Text(
+        "Speaker",
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: getAppBar(),
+        appBar: (index != 0 ? getAppBar() : getAppBarSession()),
         body: new Stack(children: <Widget>[
           Offstage(
             offstage: index != 0,
