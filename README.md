@@ -139,13 +139,11 @@ This solution's main advantages are that it is free and open-source, in addictio
 - [synthesize-question](#Story-"synthesize-question")
 
 **Should have**:
-- [auto-refresh-questions](#Story-"auto-refresh-questions")
 - [delete-question](#delete-question")
 
 **Could have**:
 - [resize-transcript](#Story-"resize-transcript")
 - [dark-mode](#Story-"dark-mode")
-- [change-auto-refresh-time](#Story-"change-auto-refresh-time")
 - [change-display-name](#Story-"change-display-name")
 - [notes](#Story-"notes")
 - [translate-transcript](#Story-"translate-transcript")
@@ -195,25 +193,6 @@ Scenario: Asking a question
 Value:  Must-Have  
 Effort: XL  
 
-#### Story "manual-refresh-questions"
-As the speaker I want to manually refresh to see all available questions.
-
-##### User interface mockup
-
-![manual-refresh-questions mockup](https://drive.google.com/uc?id=1HzQnVZQ_25992fS3oOcDE_BbaFtu7P8x)
-
-##### Acceptance tests
-```gherkin
-Scenario: Automatic refresh
-  When there are X unanswered questions
-  And the speaker swipes down the screen
-  Then the unanswered questions are updated and shown if there are any
-```
-
-##### Value and effort
-Value: Must Have  
-Effort: XL
-
 #### Story "synthesize-question"
 As the speaker I want to select a specific question and have it synthesized
 
@@ -231,21 +210,6 @@ Scenario: Synthesizing a question
 ##### Value and effort
 Value: Must Have
 Effort: XL
-
-#### Story "auto-refresh-questions"
-As the speaker I want the app to automatically refresh in an interval of time to check on any new questions.
-
-##### Acceptance tests
-```gherkin
-Scenario: Manual refresh
-  When there are X unanswered questions
-  And the app automatically checks for new questions after some time
-  Then the unanswered questions are updated and shown if there are any
-```
-
-##### Value and effort
-Value: Should Have  
-Effort: M
 
 #### Story "delete-question"
 As the speaker I want to delete a question after it has been answered (or not)
