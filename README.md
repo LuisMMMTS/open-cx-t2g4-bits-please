@@ -73,14 +73,14 @@ This solution's main advantages are that it is free and open-source, in addictio
 
 #### Submit question:
 * **Actor:** Attendee
-* **Description:** This use case exists so the atendee can submit questions to the speaker  
-* **Preconditions and Postconditions:** In order to submit a question the atendee must be logged in and signed in a specific talk  
+* **Description:** This use case exists so the attendee can submit questions to the speaker  
+* **Preconditions and Postconditions:** In order to submit a question the attendee must be logged in and signed in a specific talk  
 * **Normal Flow:**
-  1. The atendee writes the question to the speaker and presses the button.
+  1. The attendee writes the question to the speaker and presses the button.
   2. The system stores the question on the server.
 * **Alternative Flows and Exceptions:**
-  1. The atendee writes the question to the speaker and presses the button.
-  2. If the system can't connect to the server, a warning pops up system informs the atendee of the error
+  1. The attendee writes the question to the speaker and presses the button.
+  2. If the system can't connect to the server, a warning pops up system informs the attendee of the error
 
 #### Manage profile:
 * **Actor:** User
@@ -116,18 +116,18 @@ This solution's main advantages are that it is free and open-source, in addictio
 #### Submit talk transcript:
 * **Actor**. Speaker
 * **Description**. This use case exists so that the speaker's voice can be recorded, converted to text and the transcript uploaded to the database for the audience to read it.
-* **Preconditions and Postconditions**. To have his voice transcripted, the speaker must be logged in, be in the talk's page, and have a working microphone. In the end, the speaker's voice transcript is added to the database.
+* **Preconditions and Postconditions**. To have his voice transcribed, the speaker must be logged in, be in the talk's page, and have a working microphone. In the end, the speaker's voice transcript is added to the database.
 * **Normal flow**.
-    1. The speaker presses the button to start transcripting and uploading.
+    1. The speaker presses the button to start transcribing and uploading.
     2. The speaker gives the talk
-    3. The speaker presses the button again to stop transcripting and uploading.
+    3. The speaker presses the button again to stop transcribing and uploading.
 * **Alternative Flows and Exceptions**.
-    1. The speaker presses the button to start transcripting and uploading.
+    1. The speaker presses the button to start transcribing and uploading.
     2. If the speaker has not spoken for some time, he is prompted to confirm he's still in a talk.
     3. If the speaker does not answer, or cancels, recording is stopped.
     4. If the speaker confirms, the recording continues as usual.
     * **OR**
-    1. The speaker presses the button to start transcripting and uploading.
+    1. The speaker presses the button to start transcribing and uploading.
     2. If there is no Internet connection, or the connection drops, a warning pops up.
 
 ### User stories
@@ -165,7 +165,7 @@ As a speaker, I want my speech to be transcribed and sent to the attendees, so t
 Scenario: Transcribing speech  
 	When I press the record button
   And I say "Hello world"
-	Then "Hello world" is sent to all atendees  
+	Then "Hello world" is sent to all attendees  
 ```
 	
 ##### Value and Effort
@@ -230,7 +230,7 @@ Effort: XL
 
 #### Story "resize-transcript"
 
-As a user of the application, I want to change the height of the trascript/questions sections so I can read all questions, or focus on the transcript.
+As a user of the application, I want to change the height of the transcript/questions sections so I can read all questions, or focus on the transcript.
 
 ##### User interface mockup
 
@@ -291,7 +291,7 @@ Effort: M
 
 #### Story "notes"
 
-As an attendee in a conference, I want to be able to take notes and highlights of the speaker apresentation in my device so that I can search than later.
+As an attendee in a conference, I want to be able to take notes and highlights of the speaker presentation in my device so that I can search than later.
 
 ##### User interface mockup
 
@@ -321,7 +321,7 @@ TODO
 ```gherkin
 Scenario: Attending in a conference
   When I can't speak the language spoken
-  And  I select the language I want to be transcripted
+  And  I select the language I want to be transcribed
   Then I get the transcript with my language of choice
 ```
 
