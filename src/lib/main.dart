@@ -152,6 +152,7 @@ class _HomePageState extends State<HomePage> {
                             height: 20,
                           ),
                           FlatButton(
+                            key: Key("speakerBtn"),
                             color: Colors.blue,
                             disabledTextColor: Colors.white,
                             disabledColor: Colors.white,
