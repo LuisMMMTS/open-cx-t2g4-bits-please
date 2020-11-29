@@ -138,7 +138,8 @@ This solution's main advantages are that it is free and open-source, in addictio
 - [synthesize-question](#Story-"synthesize-question")
 
 **Should have**:
-- [delete-question](#delete-question")
+- [delete-question](#Story-"delete-question")
+- [accept-question](#Story-"accept-question")
 
 **Could have**:
 - [resize-transcript](#Story-"resize-transcript")
@@ -247,6 +248,28 @@ Scenario: Attending in a conference
 ##### Value and Effort
 Value:  Should have  
 Effort: S
+
+#### Story "accept-question"
+
+As a speaker, I want to be able to notify my audience on whether I will answer a question or not.
+
+##### User interface mockup
+
+![accept-question mockup](https://drive.google.com/uc?id=1ZxM-Z5XQ1IT4P6-aA_TP5PL04Tr3xzsF)
+
+##### Acceptance tests
+```gherkin
+Scenario: Accept question
+  When I tap the check mark of question "Hello, I have a question"
+  Then The background of question "Hello, I have a question" changes to green
+Scenario: Reject question
+  When I tap the cross mark of question "Hello, I have a question"
+  Then The background of question "Hello, I have a question" changes to red
+```
+
+##### Value and Effort
+Value: Should have  
+Effort: L
 
 #### Story "dark-mode"
 
