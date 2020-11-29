@@ -135,7 +135,6 @@ This solution's main advantages are that it is free and open-source, in addictio
 **Must have**:
 - [transcribe](#Story-"transcribe")
 - [submit-question](#Story-"submit-question")
-- [manual-refresh-questions](#Story-"manual-refresh-questions")
 - [synthesize-question](#Story-"synthesize-question")
 
 **Should have**:
@@ -268,30 +267,6 @@ Scenario: Enable dark mode
 ##### Value and Effort
 Value:  Should have  
 Effort: M
-
-#### Story "change-auto-refresh-time"
-As the speaker I want to set the automatic refresh rate of the app to check on any new questions.
-
-##### Details
-
-Can be inspired in [this post](https://medium.com/@maheshmnj/cupertinopicker-in-flutter-ec7ec7811bf6), namely on CupertinoTimerPicker.
-
-##### User interface mockup
-![change-auto-refresh-time](https://drive.google.com/uc?id=19PlLAWZoV-UhkoWJUBOUb3BRN7LwNg4_)
-
-##### Acceptance tests
-```gherkin
-Scenario: Manual refresh
-  When I am in settings
-  And  The automatic refresh rate is 30 seconds
-  And  I change the automatic refresh rate to 10 seconds
-  Then Settings show the refresh rate is 10 seconds
-  And  The app refreshes questions automatically every 10 seconds
-```
-
-##### Value and effort
-Value: Could Have  
-Effort: S
 
 #### Story "change-display-name"
 
