@@ -38,3 +38,44 @@ class CheckSessionPage extends Then1WithWorld<String, FlutterWorld> {
   @override
   RegExp get pattern => RegExp(r"I should have {string} on screen");
 }
+
+class WriteQuestion extends Then1WithWorld<String, FlutterWorld> {
+  @override
+  Future<void> executeStep(String question) async {
+    // Set up
+    final joinFinder = find.byValueKey("joinBtnAttendee");
+    final inputField = find.byValueKey("sessionIdFieldAttendee");
+    final attendeeButton = find.byValueKey("attendeeBtn");
+    await FlutterDriverUtils.tap(world.driver, attendeeButton);
+    await FlutterDriverUtils.tap(world.driver, inputField);
+    await world.driver.enterText('conferencing101');
+    await FlutterDriverUtils.tap(world.driver, joinFinder);
+
+    // Write Question
+    final questionField = find.byValueKey("questionField");
+    await FlutterDriverUtils.tap(world.driver, questionField);
+    await world.driver.enterText(question);
+  }
+  @override
+  RegExp get pattern => RegExp(r"When I write the question {string}");
+}
+
+class ClickSubmitButton extends Then1WithWorld<String, FlutterWorld> {
+  @override
+  Future<void> executeStep(String submitBtn) async {
+    final submitButton = find.byValueKey(submitBtn);
+    await FlutterDriverUtils.tap(world.driver, submitButton);
+  }
+  @override
+  RegExp get pattern => RegExp(r"And I press the {string}");
+}
+
+class CheckQuestion extends Then1WithWorld<String, FlutterWorld> {
+  @override
+  Future<void> executeStep(String question) async {
+    await world.driver.waitFor(find.text(question));
+  }
+  @override
+  RegExp get pattern => RegExp(r"Then The server must put my question {string} on the queue");
+}
+

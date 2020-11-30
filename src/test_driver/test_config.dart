@@ -11,7 +11,11 @@ Future<void> main() {
     ..stepDefinitions = [
       CheckGivenWidgets(),
       ClickJoinSessionButton(),
-      CheckSessionPage()
+      CheckSessionPage(),
+      
+      WriteQuestion(),
+      ClickSubmitButton(),
+      CheckQuestion()
     ]
     ..restartAppBetweenScenarios = true
     ..targetAppPath = "test_driver/app.dart"

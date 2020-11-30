@@ -142,6 +142,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           FlatButton(
+                            key: Key("attendeeBtn"),
                             disabledTextColor: Colors.white,
                             disabledColor: Colors.white,
                             color: Colors.blue,
