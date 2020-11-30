@@ -265,7 +265,10 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                   iconSize: 30,
                                   color: Colors.black,
                                   icon: Icon(Icons.cancel),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setState(() {
+                                    receivedMessages.removeAt(idx);
+                                  });},
                                 ),
                               ),
                             ]),
