@@ -34,7 +34,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
   String speakerToken = "";
   String talkTitle = "";
   int index = 0;
-  List<String> receivedMessages = new List<String>();
+  List<dynamic> receivedMessages = new List<dynamic>();
   ScrollController scrollController =
   new ScrollController(initialScrollOffset: 50.0);
 
@@ -87,7 +87,6 @@ class _SpeakerPageState extends State<SpeakerPage> {
     setupMessaging();
 
     sessionIDForm = TextFormField(
-      key: Key("sessionIdField"),
       controller: sessionIDController,
       decoration: InputDecoration(
         labelText: "Enter the session ID",
@@ -104,7 +103,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
 
   void getMessage(dynamic r) {
     setState(() {
-      receivedMessages.add(r.toString());
+      receivedMessages.add(r);
     });
     scrollController.animateTo(
         scrollController.position.maxScrollExtent.ceilToDouble() +
@@ -139,7 +138,6 @@ class _SpeakerPageState extends State<SpeakerPage> {
     } else {
       setState(() {
         sessionIDForm = TextFormField(
-          key: Key("sessionIdField"),
           controller: sessionIDController,
           decoration: InputDecoration(
               alignLabelWithHint: true,
@@ -258,7 +256,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                   color: Colors.black,
                                   icon: Icon(Icons.volume_mute),
                                   onPressed: () {
-                                    synthesizer.startSynthesizer(receivedMessages[idx]);
+                                    synthesizer.startSynthesizer(receivedMessages[idx]['message']);
                                   },
                                 ),
                               ),
@@ -274,6 +272,16 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                 ),
                               ),
                             ]),
+                            Row(children: [
+                                Expanded(
+                                  child: Text(receivedMessages[idx]['timestamp'],
+                                      textAlign: TextAlign.right,
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .apply(fontSizeFactor: 0.8)),
+                                ),
+                              ]
+                            ),
                             Container(
                               margin: const EdgeInsets.only(
                                   left: 10.0, right: 10.0, bottom: 5.0),
@@ -287,7 +295,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                       bottomRight: const Radius.circular(30.0))),
                               child: Row(children: [
                                 Expanded(
-                                  child: Text(receivedMessages[idx],
+                                  child: Text(receivedMessages[idx]['message'],
                                       textAlign: TextAlign.left,
                                       style: DefaultTextStyle.of(context)
                                           .style
@@ -371,7 +379,6 @@ class _SpeakerPageState extends State<SpeakerPage> {
                             width: 150,
                           ),
                           FlatButton(
-                            key: Key("joinSessionButton"),
                             disabledTextColor: Colors.white,
                             disabledColor: Colors.white,
                             color: Colors.blue,
@@ -385,7 +392,6 @@ class _SpeakerPageState extends State<SpeakerPage> {
                 ),
               ),
               Offstage(
-                key: Key("sessionPage"),
                 offstage: index != 1,
                 child: new TickerMode(
                   enabled: index == 1,

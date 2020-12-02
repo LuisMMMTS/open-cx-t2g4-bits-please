@@ -22,7 +22,8 @@ class MessagingFirebase extends Messaging {
     }
     if (remoteMessage.from.isNotEmpty &&
         remoteMessage.data['type'] == 'message') {
-      callback(remoteMessage.data["message"]);
+      //callback(remoteMessage.data["message"]);
+      callback(remoteMessage.data);
     }
   }
 
@@ -34,6 +35,8 @@ class MessagingFirebase extends Messaging {
 
   void sendMessage(String token, String message) async {
     print(message);
+    var now = new DateTime.now();
+    print(now.toString());
     http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
@@ -49,7 +52,8 @@ class MessagingFirebase extends Messaging {
             'id': '1',
             'status': 'done',
             'type': 'message',
-            'message': message
+            'message': message,
+            'timestamp': now.toString(),
           },
           'to': token,
         },

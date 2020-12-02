@@ -1,4 +1,4 @@
-typedef void MessageCallback(String string);
+typedef void MessageCallback(dynamic message);
 
 /*
 * Class used to subscribe attendees and send messages in both directions
