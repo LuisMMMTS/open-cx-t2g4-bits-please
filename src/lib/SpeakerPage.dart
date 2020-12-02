@@ -272,15 +272,13 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                 ),
                               ),
                             ]),
-                            Row(children: [
-                                Expanded(
-                                  child: Text(receivedMessages[idx]['timestamp'],
+                            Container(
+                              padding: EdgeInsets.fromLTRB(2.0, 0.2, 0.2, 0.2),
+                              child: Text(receivedMessages[idx]['timestamp'],
                                       textAlign: TextAlign.right,
                                       style: DefaultTextStyle.of(context)
-                                          .style
-                                          .apply(fontSizeFactor: 0.8)),
-                                ),
-                              ]
+                                      .style
+                                      .apply(fontSizeFactor: 0.8)),
                             ),
                             Container(
                               margin: const EdgeInsets.only(
