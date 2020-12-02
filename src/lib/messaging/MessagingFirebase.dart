@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,7 +23,8 @@ class MessagingFirebase extends Messaging {
     }
     if (remoteMessage.from.isNotEmpty &&
         remoteMessage.data['type'] == 'message') {
-      callback(remoteMessage.data["message"]);
+      //callback(remoteMessage.data["message"]);
+      callback(remoteMessage.data);
     }
   }
 
@@ -34,6 +36,9 @@ class MessagingFirebase extends Messaging {
 
   void sendMessage(String token, String message) async {
     print(message);
+    var now = new DateTime.now();
+    var time = DateFormat('HH:mm').format(now);
+    print(time);
     http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
@@ -49,7 +54,8 @@ class MessagingFirebase extends Messaging {
             'id': '1',
             'status': 'done',
             'type': 'message',
-            'message': message
+            'message': message,
+            'timestamp': time,
           },
           'to': token,
         },

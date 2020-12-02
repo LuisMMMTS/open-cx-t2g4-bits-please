@@ -32,6 +32,7 @@ dependencies:
   provider: ^3.0.0
   split_view: ^1.0.1
   flutter_gherkin: ^1.1.9
+  intl: ^0.16.1
 
 
   # The following adds the Cupertino Icons font to your application.
