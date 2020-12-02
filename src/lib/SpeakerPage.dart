@@ -14,7 +14,8 @@ import 'package:com_4_all/messaging/MessagingFirebase.dart';
 import 'package:com_4_all/transcriber/Transcriber.dart';
 import 'package:com_4_all/transcriber/TranscriberResult.dart';
 import 'package:com_4_all/transcriber/TranscriberSpeechToText.dart';
-import 'package:split_view/split_view.dart';
+
+import 'SplitView.dart';
 
 class SpeakerPage extends StatefulWidget {
   final String title;
@@ -27,6 +28,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
   bool _hasSpeech = false;
   Transcriber transcriber;
   Synthesizer synthesizer;
+  int playingMessageId = -1;
 
   TextFormField sessionIDForm;
   var sessionIDController = new TextEditingController();
@@ -37,8 +39,6 @@ class _SpeakerPageState extends State<SpeakerPage> {
   List<dynamic> receivedMessages = new List<dynamic>();
   ScrollController scrollController =
   new ScrollController(initialScrollOffset: 50.0);
-
-  double splitWeight = 0.7;
 
   Messaging messaging;
 
@@ -78,6 +78,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
   String _currentLocaleId = "";
   List<LocaleName> _localeNames = [];
 
+
   @override
   void initState() {
     super.initState();
@@ -98,12 +99,15 @@ class _SpeakerPageState extends State<SpeakerPage> {
   }
 
   void stopPlayingSynthesizer(){
+    setState(() {
 
+    });
   }
 
   void getMessage(dynamic r) {
     setState(() {
-      receivedMessages.add(r);
+      if(r['type']=='message')
+        receivedMessages.add(r);
     });
     scrollController.animateTo(
         scrollController.position.maxScrollExtent.ceilToDouble() +
@@ -254,8 +258,12 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                 child: IconButton(
                                   iconSize: 30,
                                   color: Colors.black,
-                                  icon: Icon(Icons.volume_mute),
+                                  icon: synthesizer.isPlaying() && playingMessageId==idx ? Icon(Icons.volume_mute): Icon(Icons.volume_up),
                                   onPressed: () {
+                                    playingMessageId = idx;
+                                    setState(() {
+
+                                    });
                                     synthesizer.startSynthesizer(receivedMessages[idx]['message']);
                                   },
                                 ),
@@ -267,7 +275,9 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                   icon: Icon(Icons.cancel),
                                   onPressed: () {
                                     setState(() {
+                                      messaging.messageFeedBack(receivedMessages[idx]['uniqueToken'], receivedMessages[idx]['sender'], "a");
                                       receivedMessages.removeAt(idx);
+                                      //print([receivedMessages[idx]['uniqueToken'], receivedMessages[idx]['sender']]);
                                     });},
                                 ),
                               ),
@@ -408,11 +418,8 @@ class _SpeakerPageState extends State<SpeakerPage> {
                             maxWidth: constraints.maxWidth,
                           ),
                           child: SplitView(
-                            initialWeight: splitWeight,
-                            view1: getTranscription(),
-                            view2: getComments(),
-                            viewMode: SplitViewMode.Vertical,
-                            onWeightChanged: (w) => splitWeight = w,
+                            top: getTranscription(),
+                            bottom: getComments(),
                           ),
                         ),
                       ),

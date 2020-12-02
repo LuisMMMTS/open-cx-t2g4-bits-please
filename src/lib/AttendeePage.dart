@@ -3,11 +3,12 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:split_view/split_view.dart';
 import 'package:com_4_all/database/Database.dart';
 import 'package:com_4_all/database/DatabaseFirebase.dart';
 import 'package:com_4_all/messaging/Messaging.dart';
 import 'package:com_4_all/messaging/MessagingFirebase.dart';
+
+import 'SplitView.dart';
 
 
 class AttendeePage extends StatefulWidget {
@@ -25,8 +26,7 @@ class _AttendeePageState extends State<AttendeePage> {
   List<DropdownMenuItem> languagesDropDownList = new List();
   String receivedText = "";
   int index = 0;
-  List<dynamic> sentList = new List();
-  double splitWeight = 0.7;
+  var sentList = [];
 
   Messaging messaging;
 
@@ -52,20 +52,34 @@ class _AttendeePageState extends State<AttendeePage> {
   );
 
   void getMessage(dynamic r) {
-    print("received: "+r['message'].toString());
-    String message = r['message'];
-    if (receivedText.length > 0) message = " " + message;
-    else{
-      message = "${message[0].toUpperCase()}${message.substring(1)}";
+    if(r['type']=='feedback'){
+      setState(() {
+        for(int i = 0; i<sentList.length;i++){
+          print(i);
+          if(sentList[i]['uniqueToken']==r['uniqueToken']){
+            sentList[i]['feedback'] = 'd';
+            break;
+          }
+        }
+      });
     }
-    setState(() {
-      receivedText += message;
-    });
-    transcriptScrollController.animateTo(
-        transcriptScrollController.position.maxScrollExtent.ceilToDouble() +
-            receivedText.length,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.ease);
+    else {
+      print("received: " + r['message'].toString());
+      String message = r['message'];
+      if (receivedText.length > 0)
+        message = " " + message;
+      else {
+        message = "${message[0].toUpperCase()}${message.substring(1)}";
+      }
+      setState(() {
+        receivedText += message;
+      });
+      transcriptScrollController.animateTo(
+          transcriptScrollController.position.maxScrollExtent.ceilToDouble() +
+              receivedText.length,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.ease);
+    }
   }
 
   Future setupMessaging() async {
@@ -134,17 +148,18 @@ class _AttendeePageState extends State<AttendeePage> {
   }
 
   void sendMessage() async {
-    messaging.sendMessage(
-        await database.getToken(sessionID), questionMessageController.text);
+    String uniqueKey = UniqueKey().toString();
+    messaging.sendIdentifiedMessage(
+        await database.getToken(sessionID), questionMessageController.text,uniqueKey);
+    var now = new DateTime.now();
+    var time = now.hour.toString()+":"+now.toLocal().toString().substring(14,16);
+    sentList.add({"message": questionMessageController.text,"timestamp": time,"feedback": "a","uniqueToken": uniqueKey});
+    messagesScrollController.animateTo(
+        messagesScrollController.position.maxScrollExtent.ceilToDouble() +
+            questionMessageController.text.length * 100,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease);
     setState(() {
-      var now = new DateTime.now();
-      var time = now.hour.toString()+":"+now.toLocal().toString().substring(14,16);
-      sentList.add({"message": questionMessageController.text,"timestamp": time});
-      messagesScrollController.animateTo(
-          messagesScrollController.position.maxScrollExtent.ceilToDouble() +
-              questionMessageController.text.length * 100,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.ease);
       questionMessageController.clear();
     });
   }
@@ -245,17 +260,19 @@ class _AttendeePageState extends State<AttendeePage> {
                               maxHeight: constraints.maxHeight,
                               maxWidth: constraints.maxWidth,
                             ),
-                            child: SplitView(
-                              initialWeight: splitWeight,
-                              view1: Container(
+                            child:
+                            SplitView(
+                              top: Container(
                                 padding:
                                 EdgeInsets.all(16.0),
                                 child: scrollView,
                               ),
-                              view2: ListView.builder(
+                              bottom:
+                              ListView.builder(
                                   controller: messagesScrollController,
                                   itemCount: sentList.length,
                                   itemBuilder: (BuildContext context, int idx) {
+
                                     return Column(
                                       children: [
                                         Row(
@@ -282,7 +299,7 @@ class _AttendeePageState extends State<AttendeePage> {
                                               left: 10.0, right: 10.0, bottom: 5.0),
                                           padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
                                           decoration: new BoxDecoration(
-                                              color: Colors.black12,
+                                              color: sentList[idx]['feedback']=='a' ? Colors.black12 : Color.fromRGBO(0xe2,0x97,0x92, 1.0),
                                               borderRadius: new BorderRadius.only(
                                                   topLeft: const Radius.circular(30.0),
                                                   topRight: const Radius.circular(30.0),
@@ -302,9 +319,9 @@ class _AttendeePageState extends State<AttendeePage> {
                                     );
                                   }
                               ),
-                              viewMode: SplitViewMode.Vertical,
-                              onWeightChanged: (w) => splitWeight = w,
+                              ratio: 0.7,
                             ),
+
                           ),
                         ),
                         Row(
@@ -338,3 +355,5 @@ class _AttendeePageState extends State<AttendeePage> {
     );
   }
 }
+
+
