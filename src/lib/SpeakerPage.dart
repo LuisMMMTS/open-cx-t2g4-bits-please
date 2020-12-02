@@ -267,16 +267,16 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                   icon: Icon(Icons.cancel),
                                   onPressed: () {
                                     setState(() {
-                                    receivedMessages.removeAt(idx);
-                                  });},
+                                      receivedMessages.removeAt(idx);
+                                    });},
                                 ),
                               ),
                             ]),
                             Container(
                               padding: EdgeInsets.fromLTRB(2.0, 0.2, 0.2, 0.2),
                               child: Text(receivedMessages[idx]['timestamp'],
-                                      textAlign: TextAlign.right,
-                                      style: DefaultTextStyle.of(context)
+                                  textAlign: TextAlign.right,
+                                  style: DefaultTextStyle.of(context)
                                       .style
                                       .apply(fontSizeFactor: 0.8)),
                             ),
@@ -303,8 +303,13 @@ class _SpeakerPageState extends State<SpeakerPage> {
                             )
                           ],
                         );
-                      })))
-        ]));
+                      }
+                  )
+              )
+          )
+        ]
+        )
+    );
   }
 
   AppBar getAppBar() {

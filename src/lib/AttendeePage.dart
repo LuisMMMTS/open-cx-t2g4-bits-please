@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:split_view/split_view.dart';
 import 'package:com_4_all/database/Database.dart';
@@ -24,8 +25,8 @@ class _AttendeePageState extends State<AttendeePage> {
   List<DropdownMenuItem> languagesDropDownList = new List();
   String receivedText = "";
   int index = 0;
+  List<dynamic> sentList = new List();
   double splitWeight = 0.7;
-  List<Widget> sentList = new List();
 
   Messaging messaging;
 
@@ -34,9 +35,9 @@ class _AttendeePageState extends State<AttendeePage> {
   String localToken;
   String talkTitle = "";
   ScrollController transcriptScrollController =
-      new ScrollController(initialScrollOffset: 50.0);
+  new ScrollController(initialScrollOffset: 50.0);
   ScrollController messagesScrollController =
-      new ScrollController(initialScrollOffset: 50.0);
+  new ScrollController(initialScrollOffset: 50.0);
 
   Text receivedTextField() {
     return Text(
@@ -132,37 +133,13 @@ class _AttendeePageState extends State<AttendeePage> {
     }
   }
 
-  Widget setMessageLayout(String messageText) {
-    return Container(
-      margin: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 2.0),
-      padding: EdgeInsets.all(16.0),
-      decoration: new BoxDecoration(
-        color: Colors.black12,
-        borderRadius: new BorderRadius.only(
-          topLeft: const Radius.circular(30.0),
-          topRight: const Radius.circular(30.0),
-          bottomLeft: const Radius.circular(30.0),
-          bottomRight: const Radius.circular(30.0),
-        ),
-      ),
-      child: IntrinsicWidth(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-              child: Text(messageText, textAlign: TextAlign.center),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   void sendMessage() async {
     messaging.sendMessage(
         await database.getToken(sessionID), questionMessageController.text);
     setState(() {
-      sentList.add(setMessageLayout(questionMessageController.text));
+      var now = new DateTime.now();
+      var time = now.hour.toString()+":"+now.toLocal().toString().substring(14,16);
+      sentList.add({"message": questionMessageController.text,"timestamp": time});
       messagesScrollController.animateTo(
           messagesScrollController.position.maxScrollExtent.ceilToDouble() +
               questionMessageController.text.length * 100,
@@ -232,27 +209,27 @@ class _AttendeePageState extends State<AttendeePage> {
                   enabled: index == 0,
                   child: new Scaffold(
                       body: new Center(
-                    child: new Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          child: sessionIDForm,
-                          width: 150,
+                        child: new Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              child: sessionIDForm,
+                              width: 150,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            FlatButton(
+                              minWidth: 150,
+                              disabledTextColor: Colors.white,
+                              disabledColor: Colors.white,
+                              color: Colors.blue,
+                              child: Text("Enter the Session"),
+                              onPressed: checkSession,
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        FlatButton(
-                          minWidth: 150,
-                          disabledTextColor: Colors.white,
-                          disabledColor: Colors.white,
-                          color: Colors.blue,
-                          child: Text("Enter the Session"),
-                          onPressed: checkSession,
-                        ),
-                      ],
-                    ),
-                  )),
+                      )),
                 ),
               ),
               new Offstage(
@@ -272,22 +249,58 @@ class _AttendeePageState extends State<AttendeePage> {
                               initialWeight: splitWeight,
                               view1: Container(
                                 padding:
-                                    EdgeInsets.all(16.0),
+                                EdgeInsets.all(16.0),
                                 child: scrollView,
                               ),
-                              view2: SingleChildScrollView(
-                                scrollDirection: Axis.vertical, //.horiz
-                                controller: messagesScrollController, // ontal
-                                child: Container(
-                                  alignment: Alignment.topRight,
-                                  padding:
-                                      EdgeInsets.fromLTRB(0.0, 20.0, 0, 20.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: sentList,
-                                  ),
-                                ),
+                              view2: ListView.builder(
+                                  controller: messagesScrollController,
+                                  itemCount: sentList.length,
+                                  itemBuilder: (BuildContext context, int idx) {
+                                    return Column(
+                                      children: [
+                                        Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text('John Doe',textAlign: TextAlign.right),
+                                              ),
+                                              SizedBox(
+                                                  width: 50,
+                                                  height: 50,
+                                                  child: const Icon(Icons.account_circle_rounded)),
+                                            ]
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.fromLTRB(2.0, 0.2, 0.2, 0.2),
+                                          child: Text(sentList[idx]['timestamp'],
+                                              textAlign: TextAlign.right,
+                                              style: DefaultTextStyle.of(context)
+                                                  .style
+                                                  .apply(fontSizeFactor: 0.8)),
+                                        ),
+                                        Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 10.0, right: 10.0, bottom: 5.0),
+                                          padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
+                                          decoration: new BoxDecoration(
+                                              color: Colors.black12,
+                                              borderRadius: new BorderRadius.only(
+                                                  topLeft: const Radius.circular(30.0),
+                                                  topRight: const Radius.circular(30.0),
+                                                  bottomLeft: const Radius.circular(30.0),
+                                                  bottomRight: const Radius.circular(30.0))),
+                                          child: Row(children: [
+                                            Expanded(
+                                              child: Text(sentList[idx]['message'],
+                                                  textAlign: TextAlign.left,
+                                                  style: DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(fontSizeFactor: 1.2)),
+                                            ),
+                                          ]),
+                                        )
+                                      ],
+                                    );
+                                  }
                               ),
                               viewMode: SplitViewMode.Vertical,
                               onWeightChanged: (w) => splitWeight = w,
