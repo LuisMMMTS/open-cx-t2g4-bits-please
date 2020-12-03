@@ -21,8 +21,7 @@ class MessagingFirebase extends Messaging {
     if (remoteMessage.data['type'] == 'subscribe') {
       handleSubscriber(remoteMessage.data['token']);
     }
-    if (remoteMessage.from.isNotEmpty &&
-        remoteMessage.data['type'] == 'message') {
+    if (remoteMessage.from.isNotEmpty) {
       //callback(remoteMessage.data["message"]);
       callback(remoteMessage.data);
     }
@@ -55,7 +54,7 @@ class MessagingFirebase extends Messaging {
             'status': 'done',
             'type': 'message',
             'message': message,
-            'timestamp': time,
+            'timestamp': time
           },
           'to': token,
         },
@@ -67,5 +66,63 @@ class MessagingFirebase extends Messaging {
     String out = await FirebaseMessaging.instance.getToken();
     token = out;
     return out;
+  }
+
+  @override
+  void messageFeedBack(String uniqueKey,String destinyToken,String feedback) {
+    http.post(
+      'https://fcm.googleapis.com/fcm/send',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'notification': <String, dynamic>{'body': '', 'title': ''},
+          'priority': 'high',
+          'data': <String, dynamic>{
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'id': '1',
+            'status': 'done',
+            'type': 'feedback',
+            'feedback': feedback,
+            'uniqueToken': uniqueKey
+          },
+          'to': destinyToken,
+        },
+      ),
+    );
+  }
+
+  @override
+  void sendIdentifiedMessage(String token, String message, String uniqueToken) {
+    print(message);
+    var now = new DateTime.now();
+    var time = DateFormat('HH:mm').format(now);
+    print(time);
+    http.post(
+      'https://fcm.googleapis.com/fcm/send',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'notification': <String, dynamic>{'body': '', 'title': ''},
+          'priority': 'high',
+          'data': <String, dynamic>{
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'id': '1',
+            'status': 'done',
+            'type': 'message',
+            'message': message,
+            'timestamp': time,
+            'uniqueToken': uniqueToken,
+            'sender': this.token
+          },
+          'to': token,
+        },
+      ),
+    );
   }
 }
