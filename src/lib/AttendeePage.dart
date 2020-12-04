@@ -105,6 +105,7 @@ class _AttendeePageState extends State<AttendeePage> {
       minLines: 1,
     );
     sessionIDForm = TextFormField(
+      key: Key("sessionIdFieldAttendee"),
       controller: sessionIDController,
       decoration: InputDecoration(
           fillColor: (darkMode ? Colors.grey : Colors.white),

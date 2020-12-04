@@ -89,6 +89,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
     setupMessaging();
 
     sessionIDForm = TextFormField(
+      key: Key("sessionIdField"),
       controller: sessionIDController,
       decoration: InputDecoration(
         fillColor: (darkMode ? Colors.grey : Colors.white),
@@ -400,6 +401,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                             width: 150,
                           ),
                           FlatButton(
+                            key: Key("joinSessionButton"),
                             disabledTextColor: Colors.white,
                             disabledColor: Colors.white,
                             color: buttonColor(),
@@ -413,6 +415,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                 ),
               ),
               Offstage(
+                key: Key("sessionPage"),
                 offstage: index != 1,
                 child: new TickerMode(
                   enabled: index == 1,
