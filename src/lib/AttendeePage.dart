@@ -93,6 +93,7 @@ class _AttendeePageState extends State<AttendeePage> {
     setupMessaging();
 
     questionMessage = TextField(
+      key: Key("questionField"),
       controller: questionMessageController,
       decoration: InputDecoration(
         hintText: "Enter a Question to ask",
@@ -102,6 +103,7 @@ class _AttendeePageState extends State<AttendeePage> {
       minLines: 1,
     );
     sessionIDForm = TextFormField(
+      key: Key("sessionIdFieldAttendee"),
       controller: sessionIDController,
       decoration: InputDecoration(
         labelText: "Enter the session ID",
@@ -235,6 +237,7 @@ class _AttendeePageState extends State<AttendeePage> {
                               height: 20,
                             ),
                             FlatButton(
+                              key: Key('joinBtnAttendee'),
                               minWidth: 150,
                               disabledTextColor: Colors.white,
                               disabledColor: Colors.white,
@@ -336,6 +339,7 @@ class _AttendeePageState extends State<AttendeePage> {
                               ),
                             ),
                             IconButton(
+                              key: Key("submitButton"),
                               color: Colors.black,
                               splashColor: Colors.blue,
                               icon: Icon(Icons.send),
