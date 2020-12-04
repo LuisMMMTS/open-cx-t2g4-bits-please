@@ -25,6 +25,7 @@ class _AttendeePageState extends State<AttendeePage> {
   TextFormField sessionIDForm(){
     if(sessionsIdError==false)
       return TextFormField(
+        key: Key("sessionIdFieldAttendee"),
         style: whiteBlackTextStyle(),
         controller: sessionIDController,
         decoration: InputDecoration(
@@ -37,6 +38,7 @@ class _AttendeePageState extends State<AttendeePage> {
         minLines: 1,
       );
     return TextFormField(
+      key: Key("sessionIdFieldAttendee"),
       style: whiteBlackTextStyle(),
       controller: sessionIDController,
       decoration: InputDecoration(
