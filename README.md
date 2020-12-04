@@ -73,14 +73,14 @@ This solution's main advantages are that it is free and open-source, in addictio
 
 #### Submit question:
 * **Actor:** Attendee
-* **Description:** This use case exists so the atendee can submit questions to the speaker  
-* **Preconditions and Postconditions:** In order to submit a question the atendee must be logged in and signed in a specific talk  
+* **Description:** This use case exists so the attendee can submit questions to the speaker  
+* **Preconditions and Postconditions:** In order to submit a question the attendee must be logged in and signed in a specific talk  
 * **Normal Flow:**
-  1. The atendee writes the question to the speaker and presses the button.
+  1. The attendee writes the question to the speaker and presses the button.
   2. The system stores the question on the server.
 * **Alternative Flows and Exceptions:**
-  1. The atendee writes the question to the speaker and presses the button.
-  2. If the system can't connect to the server, a warning pops up system informs the atendee of the error
+  1. The attendee writes the question to the speaker and presses the button.
+  2. If the system can't connect to the server, a warning pops up system informs the attendee of the error
 
 #### Manage profile:
 * **Actor:** User
@@ -116,18 +116,18 @@ This solution's main advantages are that it is free and open-source, in addictio
 #### Submit talk transcript:
 * **Actor**. Speaker
 * **Description**. This use case exists so that the speaker's voice can be recorded, converted to text and the transcript uploaded to the database for the audience to read it.
-* **Preconditions and Postconditions**. To have his voice transcripted, the speaker must be logged in, be in the talk's page, and have a working microphone. In the end, the speaker's voice transcript is added to the database.
+* **Preconditions and Postconditions**. To have his voice transcribed, the speaker must be logged in, be in the talk's page, and have a working microphone. In the end, the speaker's voice transcript is added to the database.
 * **Normal flow**.
-    1. The speaker presses the button to start transcripting and uploading.
+    1. The speaker presses the button to start transcribing and uploading.
     2. The speaker gives the talk
-    3. The speaker presses the button again to stop transcripting and uploading.
+    3. The speaker presses the button again to stop transcribing and uploading.
 * **Alternative Flows and Exceptions**.
-    1. The speaker presses the button to start transcripting and uploading.
+    1. The speaker presses the button to start transcribing and uploading.
     2. If the speaker has not spoken for some time, he is prompted to confirm he's still in a talk.
     3. If the speaker does not answer, or cancels, recording is stopped.
     4. If the speaker confirms, the recording continues as usual.
     * **OR**
-    1. The speaker presses the button to start transcripting and uploading.
+    1. The speaker presses the button to start transcribing and uploading.
     2. If there is no Internet connection, or the connection drops, a warning pops up.
 
 ### User stories
@@ -135,17 +135,15 @@ This solution's main advantages are that it is free and open-source, in addictio
 **Must have**:
 - [transcribe](#Story-"transcribe")
 - [submit-question](#Story-"submit-question")
-- [manual-refresh-questions](#Story-"manual-refresh-questions")
 - [synthesize-question](#Story-"synthesize-question")
 
 **Should have**:
-- [auto-refresh-questions](#Story-"auto-refresh-questions")
-- [delete-question](#delete-question")
+- [delete-question](#Story-"delete-question")
+- [accept-question](#Story-"accept-question")
 
 **Could have**:
 - [resize-transcript](#Story-"resize-transcript")
 - [dark-mode](#Story-"dark-mode")
-- [change-auto-refresh-time](#Story-"change-auto-refresh-time")
 - [change-display-name](#Story-"change-display-name")
 - [notes](#Story-"notes")
 - [translate-transcript](#Story-"translate-transcript")
@@ -168,7 +166,7 @@ As a speaker, I want my speech to be transcribed and sent to the attendees, so t
 Scenario: Transcribing speech  
 	When I press the record button
   And I say "Hello world"
-	Then "Hello world" is sent to all atendees  
+	Then "Hello world" is sent to all attendees  
 ```
 	
 ##### Value and Effort
@@ -195,25 +193,6 @@ Scenario: Asking a question
 Value:  Must-Have  
 Effort: XL  
 
-#### Story "manual-refresh-questions"
-As the speaker I want to manually refresh to see all available questions.
-
-##### User interface mockup
-
-![manual-refresh-questions mockup](https://drive.google.com/uc?id=1HzQnVZQ_25992fS3oOcDE_BbaFtu7P8x)
-
-##### Acceptance tests
-```gherkin
-Scenario: Automatic refresh
-  When there are X unanswered questions
-  And the speaker swipes down the screen
-  Then the unanswered questions are updated and shown if there are any
-```
-
-##### Value and effort
-Value: Must Have  
-Effort: XL
-
 #### Story "synthesize-question"
 As the speaker I want to select a specific question and have it synthesized
 
@@ -231,21 +210,6 @@ Scenario: Synthesizing a question
 ##### Value and effort
 Value: Must Have
 Effort: XL
-
-#### Story "auto-refresh-questions"
-As the speaker I want the app to automatically refresh in an interval of time to check on any new questions.
-
-##### Acceptance tests
-```gherkin
-Scenario: Manual refresh
-  When there are X unanswered questions
-  And the app automatically checks for new questions after some time
-  Then the unanswered questions are updated and shown if there are any
-```
-
-##### Value and effort
-Value: Should Have  
-Effort: M
 
 #### Story "delete-question"
 As the speaker I want to delete a question after it has been answered (or not)
@@ -267,7 +231,7 @@ Effort: XL
 
 #### Story "resize-transcript"
 
-As a user of the application, I want to change the height of the trascript/questions sections so I can read all questions, or focus on the transcript.
+As a user of the application, I want to change the height of the transcript/questions sections so I can read all questions, or focus on the transcript.
 
 ##### User interface mockup
 
@@ -284,6 +248,28 @@ Scenario: Attending in a conference
 ##### Value and Effort
 Value:  Should have  
 Effort: S
+
+#### Story "accept-question"
+
+As a speaker, I want to be able to notify my audience on whether I will answer a question or not.
+
+##### User interface mockup
+
+![accept-question mockup](https://drive.google.com/uc?id=1ZxM-Z5XQ1IT4P6-aA_TP5PL04Tr3xzsF)
+
+##### Acceptance tests
+```gherkin
+Scenario: Accept question
+  When I tap the check mark of question "Hello, I have a question"
+  Then The background of question "Hello, I have a question" changes to green
+Scenario: Reject question
+  When I tap the cross mark of question "Hello, I have a question"
+  Then The background of question "Hello, I have a question" changes to red
+```
+
+##### Value and Effort
+Value: Should have  
+Effort: L
 
 #### Story "dark-mode"
 
@@ -304,30 +290,6 @@ Scenario: Enable dark mode
 ##### Value and Effort
 Value:  Should have  
 Effort: M
-
-#### Story "change-auto-refresh-time"
-As the speaker I want to set the automatic refresh rate of the app to check on any new questions.
-
-##### Details
-
-Can be inspired in [this post](https://medium.com/@maheshmnj/cupertinopicker-in-flutter-ec7ec7811bf6), namely on CupertinoTimerPicker.
-
-##### User interface mockup
-![change-auto-refresh-time](https://drive.google.com/uc?id=19PlLAWZoV-UhkoWJUBOUb3BRN7LwNg4_)
-
-##### Acceptance tests
-```gherkin
-Scenario: Manual refresh
-  When I am in settings
-  And  The automatic refresh rate is 30 seconds
-  And  I change the automatic refresh rate to 10 seconds
-  Then Settings show the refresh rate is 10 seconds
-  And  The app refreshes questions automatically every 10 seconds
-```
-
-##### Value and effort
-Value: Could Have  
-Effort: S
 
 #### Story "change-display-name"
 
@@ -352,7 +314,7 @@ Effort: M
 
 #### Story "notes"
 
-As an attendee in a conference, I want to be able to take notes and highlights of the speaker apresentation in my device so that I can search than later.
+As an attendee in a conference, I want to be able to take notes and highlights of the speaker presentation in my device so that I can search than later.
 
 ##### User interface mockup
 
@@ -382,7 +344,7 @@ TODO
 ```gherkin
 Scenario: Attending in a conference
   When I can't speak the language spoken
-  And  I select the language I want to be transcripted
+  And  I select the language I want to be transcribed
   Then I get the transcript with my language of choice
 ```
 

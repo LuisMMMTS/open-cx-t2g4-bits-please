@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:com_4_all/Globals.dart';
 import 'package:com_4_all/synthesizer/Synthesizer.dart';
 import 'package:com_4_all/synthesizer/SynthesizerTextToSpeech.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,8 @@ import 'package:com_4_all/messaging/MessagingFirebase.dart';
 import 'package:com_4_all/transcriber/Transcriber.dart';
 import 'package:com_4_all/transcriber/TranscriberResult.dart';
 import 'package:com_4_all/transcriber/TranscriberSpeechToText.dart';
-import 'package:split_view/split_view.dart';
+
+import 'SplitView.dart';
 
 class SpeakerPage extends StatefulWidget {
   final String title;
@@ -27,6 +29,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
   bool _hasSpeech = false;
   Transcriber transcriber;
   Synthesizer synthesizer;
+  int playingMessageId = -1;
 
   TextFormField sessionIDForm;
   var sessionIDController = new TextEditingController();
@@ -34,11 +37,9 @@ class _SpeakerPageState extends State<SpeakerPage> {
   String speakerToken = "";
   String talkTitle = "";
   int index = 0;
-  List<String> receivedMessages = new List<String>();
+  List<dynamic> receivedMessages = new List<dynamic>();
   ScrollController scrollController =
   new ScrollController(initialScrollOffset: 50.0);
-
-  double splitWeight = 0.7;
 
   Messaging messaging;
 
@@ -78,6 +79,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
   String _currentLocaleId = "";
   List<LocaleName> _localeNames = [];
 
+
   @override
   void initState() {
     super.initState();
@@ -87,9 +89,13 @@ class _SpeakerPageState extends State<SpeakerPage> {
     setupMessaging();
 
     sessionIDForm = TextFormField(
+      key: Key("sessionIdField"),
       controller: sessionIDController,
       decoration: InputDecoration(
+        fillColor: (darkMode ? Colors.grey : Colors.white),
+        filled: true,
         labelText: "Enter the session ID",
+        labelStyle: whiteBlackTextStyle()
       ),
       expands: false,
       maxLines: 1,
@@ -98,12 +104,15 @@ class _SpeakerPageState extends State<SpeakerPage> {
   }
 
   void stopPlayingSynthesizer(){
+    setState(() {
 
+    });
   }
 
   void getMessage(dynamic r) {
     setState(() {
-      receivedMessages.add(r.toString());
+      if(r['type']=='message')
+        receivedMessages.add(r);
     });
     scrollController.animateTo(
         scrollController.position.maxScrollExtent.ceilToDouble() +
@@ -188,7 +197,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
           .map(
             (localeName) => DropdownMenuItem(
           value: localeName.localeId,
-          child: Text(localeName.name),
+          child: Text(localeName.name,style: whiteBlackTextStyle(),),
         ),
       )
           .toList(),
@@ -213,9 +222,8 @@ class _SpeakerPageState extends State<SpeakerPage> {
                 ),
                 TextSpan(
                     text: (transcriber.isListening ? " " + lastWords : null),
-                    style: TextStyle(
-                      color: Colors.grey,
-                    )),
+                    style: whiteBlackTextStyle(),
+                ),
               ],
             ),
           ),
@@ -229,7 +237,9 @@ class _SpeakerPageState extends State<SpeakerPage> {
       return Container(
         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: Text("No Questions",
-            textAlign: TextAlign.center),
+          textAlign: TextAlign.center,
+          style: whiteBlackTextStyle(),
+        ),
       );
 
     return Container(
@@ -248,33 +258,49 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                   height: 50,
                                   child: const Icon(Icons.account_circle_rounded)),
                               Expanded(
-                                child: Text('John Doe', textAlign: TextAlign.left),
+                                child: Text('John Doe', textAlign: TextAlign.left,style: buttonTextStyle()),
                               ),
                               SizedBox(
                                 child: IconButton(
                                   iconSize: 30,
-                                  color: Colors.black,
-                                  icon: Icon(Icons.volume_mute),
+                                  color: darkMode ? Colors.white : Colors.black,
+                                  icon: synthesizer.isPlaying() && playingMessageId==idx ? Icon(Icons.volume_mute): Icon(Icons.volume_up),
                                   onPressed: () {
-                                    synthesizer.startSynthesizer(receivedMessages[idx]);
+                                    playingMessageId = idx;
+                                    setState(() {
+
+                                    });
+                                    synthesizer.startSynthesizer(receivedMessages[idx]['message']);
                                   },
                                 ),
                               ),
                               SizedBox(
                                 child: IconButton(
                                   iconSize: 30,
-                                  color: Colors.black,
+                                  color: darkMode ? Colors.white : Colors.black,
                                   icon: Icon(Icons.cancel),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setState(() {
+                                      messaging.messageFeedBack(receivedMessages[idx]['uniqueToken'], receivedMessages[idx]['sender'], "a");
+                                      receivedMessages.removeAt(idx);
+                                      //print([receivedMessages[idx]['uniqueToken'], receivedMessages[idx]['sender']]);
+                                    });},
                                 ),
                               ),
                             ]),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(2.0, 0.2, 0.2, 0.2),
+                              child: Text(receivedMessages[idx]['timestamp'],
+                                  textAlign: TextAlign.right,
+                                  style: buttonTextStyle(),
+                              ),
+                            ),
                             Container(
                               margin: const EdgeInsets.only(
                                   left: 10.0, right: 10.0, bottom: 5.0),
                               padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
                               decoration: new BoxDecoration(
-                                  color: Colors.black12,
+                                  color: Colors.grey,
                                   borderRadius: new BorderRadius.only(
                                       topLeft: const Radius.circular(30.0),
                                       topRight: const Radius.circular(30.0),
@@ -282,7 +308,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                       bottomRight: const Radius.circular(30.0))),
                               child: Row(children: [
                                 Expanded(
-                                  child: Text(receivedMessages[idx],
+                                  child: Text(receivedMessages[idx]['message'],
                                       textAlign: TextAlign.left,
                                       style: DefaultTextStyle.of(context)
                                           .style
@@ -292,12 +318,18 @@ class _SpeakerPageState extends State<SpeakerPage> {
                             )
                           ],
                         );
-                      })))
-        ]));
+                      }
+                  )
+              )
+          )
+        ]
+        )
+    );
   }
 
   AppBar getAppBar() {
     return AppBar(
+        backgroundColor: buttonColor(),
         leading: GestureDetector(
           onTap: () {
             database.removeToken(sessionID);
@@ -340,6 +372,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
 
   AppBar getAppBarSession() {
     return AppBar(
+      backgroundColor: buttonColor(),
       title: Text(widget.title),
     );
   }
@@ -347,6 +380,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor(),
       appBar: (index != 0 ? getAppBar() : getAppBarSession()),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -357,6 +391,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                 child: new TickerMode(
                   enabled: index == 0,
                   child: new Scaffold(
+                    backgroundColor: backgroundColor(),
                     body: new Center(
                       child: new Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -366,9 +401,10 @@ class _SpeakerPageState extends State<SpeakerPage> {
                             width: 150,
                           ),
                           FlatButton(
+                            key: Key("joinSessionButton"),
                             disabledTextColor: Colors.white,
                             disabledColor: Colors.white,
-                            color: Colors.blue,
+                            color: buttonColor(),
                             child: Text("Join session"),
                             onPressed: checkSession,
                           ),
@@ -379,6 +415,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                 ),
               ),
               Offstage(
+                key: Key("sessionPage"),
                 offstage: index != 1,
                 child: new TickerMode(
                   enabled: index == 1,
@@ -392,11 +429,8 @@ class _SpeakerPageState extends State<SpeakerPage> {
                             maxWidth: constraints.maxWidth,
                           ),
                           child: SplitView(
-                            initialWeight: splitWeight,
-                            view1: getTranscription(),
-                            view2: getComments(),
-                            viewMode: SplitViewMode.Vertical,
-                            onWeightChanged: (w) => splitWeight = w,
+                            top: getTranscription(),
+                            bottom: getComments(),
                           ),
                         ),
                       ),
