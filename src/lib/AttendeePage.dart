@@ -71,6 +71,7 @@ class _AttendeePageState extends State<AttendeePage> {
   Text receivedTextField() {
     return Text(
       receivedText,
+      style: whiteBlackTextStyle(),
       textAlign: TextAlign.left,
     );
   }
