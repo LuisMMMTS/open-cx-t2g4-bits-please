@@ -1,9 +1,11 @@
+import 'package:com_4_all/Globals.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:com_4_all/SpeakerPage.dart';
 import 'package:com_4_all/AttendeePage.dart';
 
 int index = 1;
+bool settings = false;
 Future<FirebaseApp> _initialization = initiateFuture();
 
 Future<FirebaseApp> initiateFuture() async{
@@ -103,11 +105,18 @@ class _HomePageState extends State<HomePage> {
   void goToAttendeePage(){
     setState(() {
       index = 2;
+      settings = false;
     });
   }
   void goToSpeakerPage(){
     setState(() {
       index = 0;
+      settings = false;
+    });
+  }
+  void toggleDarkMode(bool value){
+    setState(() {
+      darkMode = value;
     });
   }
   @override
@@ -116,54 +125,105 @@ class _HomePageState extends State<HomePage> {
       body: new Stack(
         children: <Widget>[
           new Offstage(
-            offstage: index != 2,
+            offstage: settings == false,
+            child: new TickerMode(
+                enabled: index == 2,
+                child:  Scaffold(
+                  appBar: new AppBar(
+                    backgroundColor: buttonColor(),
+                    title: Text("Settings"),
+                    actions: [
+                      GestureDetector(
+                          child: Icon(Icons.keyboard_return),
+                          onTap: (){
+                            setState(() {
+                              settings = false;
+                            });
+                          }
+                      )
+                    ],
+                  ),
+                  body: Scaffold(
+                    backgroundColor: backgroundColor(),
+                    body: Center(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Dark Mode",style: buttonTextStyle(),),
+                              Switch(
+                                value: darkMode,
+                                onChanged: toggleDarkMode,
+                                activeColor: buttonColor(),
+                                activeTrackColor: Colors.grey,
+                              )
+                            ]
+                        )
+                    ),
+                  ),
+                )
+            ),
+          ),
+          new Offstage(
+            offstage: (index != 2) || (settings == true),
             child: new TickerMode(
               enabled: index == 2,
               child: new AttendeePage(title: 'Attendee',),
             ),
           ),
           new Offstage(
-            offstage: index != 0,
+            offstage: (index != 0) || (settings == true),
             child: new TickerMode(
               enabled: index == 0,
               child: new SpeakerPage(title: 'Speaker',),
             ),
           ),
           new Offstage(
-            offstage: index != 1,
+            offstage: (index != 1) || (settings == true),
             child: new TickerMode(
-                enabled: index == 1,
-                child: Scaffold(
-                    appBar: AppBar(
-                      title: Text(widget.title),
+              enabled: index == 1,
+              child: Scaffold(
+                backgroundColor: backgroundColor(),
+                appBar: AppBar(
+                  backgroundColor: buttonColor(),
+                  title: Text(widget.title),
+                  actions: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          settings = true;
+                        });
+                      },
+                      child: Icon(Icons.settings),
                     ),
-                    body:  Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          FlatButton(
-                            key: Key("attendeeBtn"),
-                            disabledTextColor: Colors.white,
-                            disabledColor: Colors.white,
-                            color: Colors.blue,
-                            child: Text("Attendee"),
-                            onPressed: goToAttendeePage,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          FlatButton(
-                            key: Key("speakerBtn"),
-                            color: Colors.blue,
-                            disabledTextColor: Colors.white,
-                            disabledColor: Colors.white,
-                            child: Text("Speaker"),
-                            onPressed: goToSpeakerPage,
-                          ),
-                        ],
-                      ),
-                    ),
+                  ],
                 ),
+                body:  Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      FlatButton(
+                        key: Key("attendeeBtn"),
+                        disabledTextColor: Colors.white,
+                        disabledColor: Colors.white,
+                        color: buttonColor(),
+                        child: Text("Attendee",style:  buttonTextStyle(),),
+                        onPressed: goToAttendeePage,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      FlatButton(
+                        key: Key("speakerBtn"),
+                        color: buttonColor(),
+                        disabledTextColor: Colors.white,
+                        disabledColor: Colors.white,
+                        child: Text("Speaker",style:  buttonTextStyle(),),
+                        onPressed: goToSpeakerPage,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ],
@@ -173,6 +233,7 @@ class _HomePageState extends State<HomePage> {
         onTap: (int i) {
           setState((){
             index = i;
+            settings = false;
           });
         },
         items: <BottomNavigationBarItem>[
@@ -236,3 +297,5 @@ class _LoadingPageState extends State<LoadingPage> {
     );
   }
 }
+
+

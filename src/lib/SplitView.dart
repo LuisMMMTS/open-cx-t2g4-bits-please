@@ -1,3 +1,4 @@
+import 'package:com_4_all/Globals.dart';
 import 'package:flutter/material.dart';
 
 class SplitView extends StatefulWidget {
@@ -55,7 +56,7 @@ class _SplitViewState extends State<SplitView> {
             GestureDetector(
               behavior: HitTestBehavior.translucent,
               child: Container(
-                color: Colors.black12,
+                color: backgroundInverseColor(),
                 child: SizedBox(
                     height: _dividerWidth,
                     width: constraints.maxWidth
