@@ -7,8 +7,8 @@ import 'package:com_4_all/database/Database.dart';
 import 'package:com_4_all/database/DatabaseFirebase.dart';
 import 'package:com_4_all/messaging/Messaging.dart';
 import 'package:com_4_all/messaging/MessagingFirebase.dart';
-import 'package:com_4_all/Globals.dart';
 
+import 'Globals.dart';
 import 'SplitView.dart';
 
 
@@ -21,37 +21,7 @@ class AttendeePage extends StatefulWidget {
 
 class _AttendeePageState extends State<AttendeePage> {
   TextField questionMessage;
-  bool  sessionsIdError = false;
-  TextFormField sessionIDForm(){
-    if(sessionsIdError==false)
-      return TextFormField(
-        key: Key("sessionIdFieldAttendee"),
-        style: whiteBlackTextStyle(),
-        controller: sessionIDController,
-        decoration: InputDecoration(
-          fillColor: backgroundColor(),
-          filled: true,
-          labelText: "Enter the session ID",
-        ),
-        expands: false,
-        maxLines: 1,
-        minLines: 1,
-      );
-    return TextFormField(
-      key: Key("sessionIdFieldAttendee"),
-      style: whiteBlackTextStyle(),
-      controller: sessionIDController,
-      decoration: InputDecoration(
-          fillColor: backgroundColor(),
-          filled: true,
-          alignLabelWithHint: true,
-          labelText: "Enter the session ID",
-          errorText: "Not a valid session ID"),
-      expands: false,
-      maxLines: 1,
-      minLines: 1,
-    );
-  }
+  TextFormField sessionIDForm;
   var questionMessageController = new TextEditingController();
   var sessionIDController = new TextEditingController();
   List<DropdownMenuItem> languagesDropDownList = new List();
@@ -73,8 +43,8 @@ class _AttendeePageState extends State<AttendeePage> {
   Text receivedTextField() {
     return Text(
       receivedText,
-      style: whiteBlackTextStyle(),
       textAlign: TextAlign.left,
+      style: whiteBlackTextStyle(),
     );
   }
 
@@ -119,19 +89,31 @@ class _AttendeePageState extends State<AttendeePage> {
     localToken = await messaging.getToken();
   }
 
-
   @override
   void initState() {
     super.initState();
     setupMessaging();
 
     questionMessage = TextField(
+      key: Key("questionField"),
       controller: questionMessageController,
       decoration: InputDecoration(
         hintText: "Enter a Question to ask",
       ),
       expands: false,
       maxLines: 5,
+      minLines: 1,
+    );
+    sessionIDForm = TextFormField(
+      controller: sessionIDController,
+      decoration: InputDecoration(
+          fillColor: (darkMode ? Colors.grey : Colors.white),
+          filled: true,
+          labelText: "Enter the session ID",
+          labelStyle: whiteBlackTextStyle()
+      ),
+      expands: false,
+      maxLines: 1,
       minLines: 1,
     );
   }
@@ -149,15 +131,28 @@ class _AttendeePageState extends State<AttendeePage> {
         showDialog(
           context: context,
           builder: (_) => new AlertDialog(
-            title: new Text("No such talk ID", style: buttonTextStyle(),),
-            content: new Text("There is no registered talk with that ID.", style: buttonTextStyle(),),
+            title: new Text("No such talk ID"),
+            content: new Text("There is no registered talk with that ID."),
           ),
         );
       }, test: (e) => e is NoSuchTalkException);
     } else {
       setState(() {
         sessionIDController.clear();
-        sessionsIdError = true;
+        sessionIDForm = TextFormField(
+          controller: sessionIDController,
+          decoration: InputDecoration(
+              fillColor: (
+                  darkMode ? Colors.grey : Colors.white),
+              filled: true,
+              labelText: "Enter the session ID",
+              labelStyle: whiteBlackTextStyle(),
+              alignLabelWithHint: true,
+              errorText: "Not a valid session ID"),
+          expands: false,
+          maxLines: 1,
+          minLines: 1,
+        );
       });
     }
   }
@@ -199,8 +194,7 @@ class _AttendeePageState extends State<AttendeePage> {
               "Chat",
               textAlign: TextAlign.left,
               style: TextStyle(
-                  fontSize: 12,
-                  color: darkMode ? Color.fromRGBO(0x6f, 0x6f, 0x6f, 1): Colors.white
+                fontSize: 12,
               ),
             ),
           ),
@@ -208,11 +202,7 @@ class _AttendeePageState extends State<AttendeePage> {
             alignment: Alignment.centerLeft,
             child: Text(
               talkTitle,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: darkMode ? Color.fromRGBO(0x6f, 0x6f, 0x6f, 1): Colors.white
-              ),
-
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -223,7 +213,7 @@ class _AttendeePageState extends State<AttendeePage> {
   AppBar getAppBarSession() {
     return AppBar(
       backgroundColor: buttonColor(),
-      title: Text(widget.title,),
+      title: Text(widget.title),
     );
   }
 
@@ -235,6 +225,7 @@ class _AttendeePageState extends State<AttendeePage> {
       child: receivedTextField(),
     );
     return Scaffold(
+      backgroundColor: backgroundColor(),
       appBar: (index != 0 ? getAppBar() : getAppBarSession()),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -245,25 +236,25 @@ class _AttendeePageState extends State<AttendeePage> {
                 child: new TickerMode(
                   enabled: index == 0,
                   child: new Scaffold(
-                      backgroundColor: backgroundColor(),
+                    backgroundColor: backgroundColor(),
                       body: new Center(
                         child: new Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              child: sessionIDForm(),
+                              child: sessionIDForm,
                               width: 150,
                             ),
                             SizedBox(
                               height: 20,
                             ),
                             FlatButton(
+                              key: Key('joinBtnAttendee'),
                               minWidth: 150,
+                              disabledTextColor: Colors.white,
+                              disabledColor: Colors.white,
                               color: buttonColor(),
-                              child: Text(
-                                "Enter the Session",
-                                style: buttonTextStyle(),
-                              ),
+                              child: Text("Enter the Session",style: buttonTextStyle(),),
                               onPressed: checkSession,
                             ),
                           ],
@@ -303,20 +294,19 @@ class _AttendeePageState extends State<AttendeePage> {
                                         Row(
                                             children: [
                                               Expanded(
-                                                child: Text('John Doe',textAlign: TextAlign.right,style: buttonTextStyle(),),
+                                                child: Text('John Doe',textAlign: TextAlign.right,style: whiteBlackTextStyle(),),
                                               ),
                                               SizedBox(
                                                   width: 50,
                                                   height: 50,
-                                                  child: Icon(Icons.account_circle_rounded)
-                                              ),
+                                                  child: const Icon(Icons.account_circle_rounded)),
                                             ]
                                         ),
                                         Container(
                                           padding: EdgeInsets.fromLTRB(2.0, 0.2, 0.2, 0.2),
                                           child: Text(sentList[idx]['timestamp'],
                                               textAlign: TextAlign.right,
-                                              style: buttonTextStyle()
+                                              style: whiteBlackTextStyle(),
                                           ),
                                         ),
                                         Container(
@@ -334,7 +324,9 @@ class _AttendeePageState extends State<AttendeePage> {
                                             Expanded(
                                               child: Text(sentList[idx]['message'],
                                                   textAlign: TextAlign.left,
-                                              ),
+                                                  style: DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(fontSizeFactor: 1.2)),
                                             ),
                                           ]),
                                         )
@@ -344,7 +336,6 @@ class _AttendeePageState extends State<AttendeePage> {
                               ),
                               ratio: 0.7,
                             ),
-
                           ),
                         ),
                         Row(
@@ -353,13 +344,14 @@ class _AttendeePageState extends State<AttendeePage> {
                               child: Container(
                                 padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
                                 decoration: new BoxDecoration(
-                                  color: Colors.white,
+                                  color: darkMode ? Colors.white : Colors.black12,
                                 ),
                                 child: questionMessage,
                               ),
                             ),
                             IconButton(
-                              color: backgroundInverseColor(),
+                              key: Key("submitButton"),
+                              color: Colors.grey,
                               splashColor: Colors.blue,
                               icon: Icon(Icons.send),
                               onPressed: sendMessage,

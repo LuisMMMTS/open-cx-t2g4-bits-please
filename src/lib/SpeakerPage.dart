@@ -91,7 +91,10 @@ class _SpeakerPageState extends State<SpeakerPage> {
     sessionIDForm = TextFormField(
       controller: sessionIDController,
       decoration: InputDecoration(
+        fillColor: (darkMode ? Colors.grey : Colors.white),
+        filled: true,
         labelText: "Enter the session ID",
+        labelStyle: whiteBlackTextStyle()
       ),
       expands: false,
       maxLines: 1,
@@ -259,7 +262,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                               SizedBox(
                                 child: IconButton(
                                   iconSize: 30,
-                                  color: Colors.black,
+                                  color: darkMode ? Colors.white : Colors.black,
                                   icon: synthesizer.isPlaying() && playingMessageId==idx ? Icon(Icons.volume_mute): Icon(Icons.volume_up),
                                   onPressed: () {
                                     playingMessageId = idx;
@@ -273,7 +276,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                               SizedBox(
                                 child: IconButton(
                                   iconSize: 30,
-                                  color: Colors.black,
+                                  color: darkMode ? Colors.white : Colors.black,
                                   icon: Icon(Icons.cancel),
                                   onPressed: () {
                                     setState(() {
@@ -387,6 +390,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                 child: new TickerMode(
                   enabled: index == 0,
                   child: new Scaffold(
+                    backgroundColor: backgroundColor(),
                     body: new Center(
                       child: new Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -398,7 +402,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                           FlatButton(
                             disabledTextColor: Colors.white,
                             disabledColor: Colors.white,
-                            color: Colors.blue,
+                            color: buttonColor(),
                             child: Text("Join session"),
                             onPressed: checkSession,
                           ),
