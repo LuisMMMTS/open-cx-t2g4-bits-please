@@ -191,6 +191,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
 
   DropdownButton getLangDropdown() {
     return DropdownButton(
+      dropdownColor: darkMode ? Colors.black : Colors.white,
       onChanged: (selectedVal) => _switchLang(selectedVal),
       value: _currentLocaleId,
       items: _localeNames
@@ -282,8 +283,19 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                   onPressed: () {
                                     setState(() {
                                       messaging.messageFeedBack(receivedMessages[idx]['uniqueToken'], receivedMessages[idx]['sender'], "a");
+                                      receivedMessages[idx]['feedback']='d';
+                                    });},
+                                ),
+                              ),
+                              SizedBox(
+                                child: IconButton(
+                                  iconSize: 30,
+                                  color: darkMode ? Colors.white : Colors.black,
+                                  icon: Icon(Icons.delete_forever),
+                                  onPressed: () {
+                                    setState(() {
+                                      messaging.messageFeedBack(receivedMessages[idx]['uniqueToken'], receivedMessages[idx]['sender'], "r");
                                       receivedMessages.removeAt(idx);
-                                      //print([receivedMessages[idx]['uniqueToken'], receivedMessages[idx]['sender']]);
                                     });},
                                 ),
                               ),
@@ -300,7 +312,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
                                   left: 10.0, right: 10.0, bottom: 5.0),
                               padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 8.0),
                               decoration: new BoxDecoration(
-                                  color: Colors.grey,
+                                  color: receivedMessages[idx]['feedback']=='d' ?  Color.fromRGBO(0xe2,0x97,0x92, 1.0): Colors.grey,
                                   borderRadius: new BorderRadius.only(
                                       topLeft: const Radius.circular(30.0),
                                       topRight: const Radius.circular(30.0),

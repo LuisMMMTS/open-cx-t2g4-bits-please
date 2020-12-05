@@ -59,7 +59,9 @@ class _AttendeePageState extends State<AttendeePage> {
         for(int i = 0; i<sentList.length;i++){
           print(i);
           if(sentList[i]['uniqueToken']==r['uniqueToken']){
-            sentList[i]['feedback'] = 'd';
+            if(r['feedback'] == 'r'){
+              sentList.removeAt(i);
+            }else sentList[i]['feedback'] = 'd';
             break;
           }
         }
@@ -260,7 +262,8 @@ class _AttendeePageState extends State<AttendeePage> {
                             ),
                           ],
                         ),
-                      )),
+                      )
+                  ),
                 ),
               ),
               new Offstage(
