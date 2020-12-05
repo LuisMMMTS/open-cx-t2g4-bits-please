@@ -262,7 +262,8 @@ class _AttendeePageState extends State<AttendeePage> {
                             ),
                           ],
                         ),
-                      )),
+                      )
+                  ),
                 ),
               ),
               new Offstage(

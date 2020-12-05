@@ -191,6 +191,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
 
   DropdownButton getLangDropdown() {
     return DropdownButton(
+      dropdownColor: darkMode ? Colors.black : Colors.white,
       onChanged: (selectedVal) => _switchLang(selectedVal),
       value: _currentLocaleId,
       items: _localeNames
