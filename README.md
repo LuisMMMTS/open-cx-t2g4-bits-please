@@ -375,6 +375,9 @@ It can be beneficial to present the system both in a horizontal or vertical deco
 * vertical decomposition can define a hierarchy of subsystems that cover all layers of implementation.
 
 ### Physical architecture
+
+![Physical architecture](https://drive.google.com/uc?id=1rgcc0jQ3XAd2BTVOjhjPFrYSpomnKoAa)
+
 The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams or component diagrams (separate or integrated), showing the physical structure of the system.
 
 It should describe also the technologies considered and justify the selections made. Examples of technologies relevant for openCX are, for example, frameworks for mobile applications (Flutter vs ReactNative vs ...), languages to program with microbit, and communication with things (beacons, sensors, etc.).
@@ -387,16 +390,17 @@ In this subsection please describe in more detail which, and how, user(s) story(
 ---
 
 ## Implementation
-Regular product increments are a good practice of product management. 
 
-While not necessary, sometimes it might be useful to explain a few aspects of the code that have the greatest potential to confuse software engineers about how it works. Since the code should speak by itself, try to keep this section as short and simple as possible.
-
-Use cross-links to the code repository and only embed real fragments of code when strictly needed, since they tend to become outdated very soon.
+Changelogs for the 4 different product increments can be found [here](https://github.com/FEUP-ESOF-2020-21/open-cx-t2g4-bits-please/releases)
 
 ---
 ## Test
 
-There are several ways of documenting testing activities, and quality assurance in general, being the most common: a strategy, a plan, test case specifications, and test checklists.
+To ensure the quality of the application, we performed automated tests with Flutter Gherkin.
+
+The features tested are:
+* [Joining a session](https://github.com/FEUP-ESOF-2020-21/open-cx-t2g4-bits-please/blob/main/src/test_driver/features/join_session.feature)
+* [Asking a question](https://github.com/FEUP-ESOF-2020-21/open-cx-t2g4-bits-please/blob/main/src/test_driver/features/ask_question.feature)
 
 In this section it is only expected to include the following:
 * test plan describing the list of features to be tested and the testing methods and tools;
