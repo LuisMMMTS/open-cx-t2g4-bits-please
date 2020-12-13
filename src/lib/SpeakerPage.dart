@@ -32,7 +32,9 @@ class _SpeakerPageState extends State<SpeakerPage> {
   int playingMessageId = -1;
 
   TextFormField sessionIDForm;
+  TextFormField authCodeForm;
   var sessionIDController = new TextEditingController();
+  var authCodeController = new TextEditingController();
   String sessionID = "";
   String speakerToken = "";
   String talkTitle = "";
@@ -101,6 +103,19 @@ class _SpeakerPageState extends State<SpeakerPage> {
       maxLines: 1,
       minLines: 1,
     );
+    authCodeForm= TextFormField(
+      key: Key("authCodeField"),
+      controller: authCodeController,
+      decoration: InputDecoration(
+          fillColor: (darkMode ? Colors.grey : Colors.white),
+          filled: true,
+          labelText: "Code",
+          labelStyle: whiteBlackTextStyle()
+      ),
+      expands: false,
+      maxLines: 1,
+      minLines: 1,
+    );
   }
 
   void stopPlayingSynthesizer(){
@@ -128,6 +143,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
 
   Future checkSession() async {
     sessionID = sessionIDController.text;
+    String authCode = authCodeController.text;
     if (sessionID != "") {
       database.addToken(sessionID, speakerToken).then((status) async {
         String talkTitleTmp = await database.getTalkTitle(sessionID);
@@ -410,6 +426,10 @@ class _SpeakerPageState extends State<SpeakerPage> {
                         children: [
                           Container(
                             child: sessionIDForm,
+                            width: 150,
+                          ),
+                          Container(
+                            child: authCodeForm,
                             width: 150,
                           ),
                           FlatButton(
