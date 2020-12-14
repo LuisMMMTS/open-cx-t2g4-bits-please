@@ -3,8 +3,9 @@ abstract class Database {
   /// Function that adds the token of an attendee as a child of the speaker token of talk talk_id
   /// @param talk_id Talk ID
   /// @param token attendee token
+  /// @param code Talk code
   /// @return whether tha addition was successful
-  Future<bool> addToken(String talkID, String token);
+  Future<bool> addToken(String talkID, String token, String code);
 
   /// Function that returns the token of speaker with talk_name
   /// @param talk_id Talk ID
@@ -19,6 +20,11 @@ abstract class Database {
   /// @param talk_id Talk ID
   /// @return Title of the talk
   Future<String> getTalkTitle(String talkID);
+
+  /// Get talk code from talk ID.
+  /// @param talk_id Talk ID
+  /// @return Code of the talk
+  Future<String> getTalkCode(String talkID);
 
   /// Subscribes an attendee to the talk indicated 
   /// @param talkID Talk ID
