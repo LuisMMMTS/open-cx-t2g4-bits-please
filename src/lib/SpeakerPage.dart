@@ -109,7 +109,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
       decoration: InputDecoration(
           fillColor: (darkMode ? Colors.grey : Colors.white),
           filled: true,
-          labelText: "Code",
+          labelText: "Authentication Code",
           labelStyle: whiteBlackTextStyle()
       ),
       expands: false,
@@ -145,7 +145,7 @@ class _SpeakerPageState extends State<SpeakerPage> {
     sessionID = sessionIDController.text;
     String authCode = authCodeController.text;
     if (sessionID != "") {
-      database.addToken(sessionID, speakerToken).then((status) async {
+      database.addToken(sessionID, speakerToken, authCode).then((status) async {
         String talkTitleTmp = await database.getTalkTitle(sessionID);
         setState(() {
           index = 1;
@@ -155,8 +155,8 @@ class _SpeakerPageState extends State<SpeakerPage> {
         showDialog(
           context: context,
           builder: (_) => new AlertDialog(
-            title: new Text("No such talk ID"),
-            content: new Text("There is no registered talk with that ID."),
+            title: new Text("Failed to join session"),
+            content: new Text("There is no registered talk with that ID or code is invalid."),
           ),
         );
       }, test: (e) => e is NoSuchTalkException);
